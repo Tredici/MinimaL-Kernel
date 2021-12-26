@@ -9,6 +9,7 @@ Progettino (si spera) molto semplice per scrivere un kernel minimale per x86_64 
 
 # Reference:
 Elenco dei posti dove cercare le informazioni per capire che è stato fatto:
+    - make (build system): https://www.gnu.org/software/make/manual/make.html
     - as (assembler): https://sourceware.org/binutils/docs/as.html
     - ld (linker): https://sourceware.org/binutils/docs/ld.html
     - VGA text mode (memoria video mappata in RAM): https://en.wikipedia.org/wiki/VGA_text_mode
