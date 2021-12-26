@@ -143,6 +143,18 @@ header:
 .code32
 .global _start /* maybe unnecessary */
 _start: /* kernel entrypoint */
+    /**
+     * Prepare stack, always possible because the space is
+     * reserved in the .bss section (see end of this file).
+     *
+     * Remember that stack grows downside!
+     *
+     * [3.2 Machine state]
+     *  ‘ESP’
+     *      The OS image must create its own stack as soon as
+     *      it needs one.
+     */
+    mov $(stack + STACK_SIZE), %esp
     /* print 7 on the screen and terminate */
     mov $'7', %al
 	mov  $15, %ah
@@ -158,6 +170,5 @@ _start: /* kernel entrypoint */
  * one or two pages.
  */
 stack:
-    nop
-	;.skip STACK_SIZE 
+	.skip STACK_SIZE
 
