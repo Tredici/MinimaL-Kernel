@@ -18,8 +18,8 @@ MINIKERNEL := minikernel
 #
 #		In pratica, usarlo quando si compila qualcosa bare metal
 #		tipo un OS per far quadrare i pezzi.
-$(MINIKERNEL): header.o likerops.ld
-	gcc -g -m32 -nostdlib -T likerops.ld header.o -o $(MINIKERNEL)
+$(MINIKERNEL): header.o error.o
+	gcc -g -m32 -nostdlib -T likerops.ld $^ -o $(MINIKERNEL)
 
 # Opzioni:
 #	-c		è per arrestarsi subito dopo la compilazione
@@ -32,6 +32,9 @@ $(MINIKERNEL): header.o likerops.ld
 #	https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/x86-Options.html#x86-Options
 header.o: header.S
 	gcc -m32 -c header.S
+
+error.o: error.S
+	gcc -m32 -c $<
 
 clean:
 	rm -f *.o $(MINIKERNEL)
