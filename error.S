@@ -92,8 +92,8 @@ end_printstr:
  * Does NOT return!
  */
 _abort:
-    /* clear inttupt to not resume execution */
     call printstr
+    /* clear interrupt to not resume execution */
     cli
     hlt
 
