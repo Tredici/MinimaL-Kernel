@@ -12,6 +12,16 @@
 #define STACK_SIZE 0x4000
 
 /**
+ * Value expected to be found in the EAX register after a
+ * multiboot compliant bootloader as started the kernel.
+ * It must be checked in order to ensure that everything
+ * went well. See [3.2 Machine state] in the standard
+ * definition at:
+ *  https://www.gnu.org/software/grub/manual/multiboot/multiboot.html#Machine-state
+ */
+#define MULTIBOOT_EAX_SIGNATURE 0x2BADB002
+
+/**
  * Per i valori da usare:
  *  https://www.gnu.org/software/grub/manual/multiboot/multiboot.html
  */
