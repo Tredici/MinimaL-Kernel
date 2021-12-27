@@ -21,6 +21,10 @@ MINIKERNEL := minikernel
 $(MINIKERNEL): header.o error.o
 	gcc -g -m32 -nostdlib -T likerops.ld $^ -o $(MINIKERNEL)
 
+.PHONY: launch
+launch: $(MINIKERNEL)
+	./launch.sh
+
 # Opzioni:
 #	-c		è per arrestarsi subito dopo la compilazione
 #	-m32	dalla doc
