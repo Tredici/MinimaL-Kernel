@@ -70,6 +70,18 @@
 #define CHECKSUM -(MAGIC + FLAGS)
 
 /**
+ * Test string to be printed at the beginning
+ */
+.data
+HELLO_STRING:
+    /**
+     * Zero 'z' terminated ascii string
+     * See:
+     *  https://sourceware.org/binutils/docs/as.html#Asciz
+     */
+    .asciz "HELLO PANINOOOOO"
+
+/**
  * This section will be inserted at the beginning of the text
  * segment as the standard require with a linker trick.
  *
@@ -159,6 +171,11 @@ _start: /* kernel entrypoint */
     mov $'7', %al
 	mov  $15, %ah
 	mov  %ax,         (0xb8000)
+
+    /* TEST HELLO WORLD! */
+    mov $HELLO_STRING, %eax
+    call _abort
+
 	cli
 	hlt
 /* Check section [3.2 Machine state] for TODO */
