@@ -91,6 +91,9 @@ HELLO_STRING:
      */
     .asciz "HELLO PANINOOOOO"
 
+EAX_FAILED:
+    .asciz "EAX does not contain multiboot signature!"
+
 /**
  * This section will be inserted at the beginning of the text
  * segment as the standard require with a linker trick.
@@ -177,10 +180,13 @@ _start: /* kernel entrypoint */
      *      it needs one.
      */
     mov $(stack + STACK_SIZE), %esp
-    /* print 7 on the screen and terminate */
-    mov $'7', %al
-	mov  $15, %ah
-	mov  %ax,         (0xb8000)
+
+    /**
+     * Ensure machine state is the one specified by the
+     * multiboot specification
+     */
+    call check_machine_state
+    /* If here machine state is ok */
 
     /* TEST HELLO WORLD! */
     mov $HELLO_STRING, %eax
@@ -188,7 +194,20 @@ _start: /* kernel entrypoint */
 
 	cli
 	hlt
+
 /* Check section [3.2 Machine state] for TODO */
+check_machine_state:
+    /* check multiboot signature */
+    cmp $MULTIBOOT_EAX_SIGNATURE, %eax
+        /* if fail call _abort */
+        jne check_EAX_failed
+    ret
+
+check_EAX_failed:
+    mov $EAX_FAILED, %eax
+    call _abort
+    /* Never reached! */
+    hlt
 
 .bss
 /**
