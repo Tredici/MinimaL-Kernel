@@ -160,7 +160,7 @@ header:
  * Manuale as [9.16.14 Writing 16-bit Code]
  *  [...] You can switch as to writing 32-bit code with the
  *  ‘.code32’ directive or 64-bit code with the ‘.code64’
- *  directive. 
+ *  directive.
  */
 .code32
 .global _start /* maybe unnecessary */
