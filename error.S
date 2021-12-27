@@ -22,7 +22,8 @@
 /* Point at the beginning */
 VIDEO_BUFFER:
     .long VIDEO_MEMORY
-
+ABORT_MSG:
+    .asciz "ABORTED: "
 
 .text
 .code32
@@ -92,6 +93,10 @@ end_printstr:
  * Does NOT return!
  */
 _abort:
+    push %eax
+    mov $ABORT_MSG, %eax
+    call printstr
+    pop %eax
     call printstr
     /* clear interrupt to not resume execution */
     cli
