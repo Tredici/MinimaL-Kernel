@@ -36,6 +36,7 @@ header.o: header.S
 error.o: error.S
 	gcc -m32 -c $<
 
+.PHONY: clean
 clean:
 	rm -f *.o $(MINIKERNEL)
 
