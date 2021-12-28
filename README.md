@@ -20,6 +20,10 @@ Elenco dei posti dove cercare le informazioni per capire che è stato fatto:
     video dal bootloader come visto in alcuni esempi con QEMU
     preimpostato dal BIOS): https://en.wikipedia.org/wiki/INT_10H
     - Text based console (tutorial): http://kernelx.weebly.com/text-console.html
+    - Manipulating the Text-mode Cursor (VGA info): http://www.osdever.net/FreeVGA/vga/textcur.htm
+    - CRT Controller Registers (VGA register): http://www.osdever.net/FreeVGA/vga/crtcreg.htm
+        Data are sent using tho registers, the first one to specify the "control register" receiving the data and the
+        second for the data itself
     - Come viene realizzato il mapping: https://stackoverflow.com/questions/17367618/address-of-video-memory
     - .bss (variabili non inizializzate a compile time): https://en.wikipedia.org/wiki/.bss
 
