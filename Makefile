@@ -1,6 +1,29 @@
 # Makefile per compilare tutti gli elementi del progetto
 
+CC := gcc
+CC32 := $(CC) -m32
+
 MINIKERNEL := minikernel
+
+# Da man gcc
+#	-ffreestanding
+#		Assert that compilation targets a freestanding environment.  This implies
+#		-fno-builtin.  A freestanding environment is one in which the standard library may not
+#		exist, and program startup may not necessarily be at "main".  The most obvious example
+#		is an OS kernel.  This is equivalent to -fno-hosted.
+#
+#	-fstack-protector
+#		Emit extra code to check for buffer overflows, such as stack smashing attacks.  This
+#		is done by adding a guard variable to functions with vulnerable objects.  This
+#		includes functions that call "alloca", and functions with buffers larger than or equal
+#		to 8 bytes.  The guards are initialized when a function is entered and then checked
+#		when the function exits.  If a guard check fails, an error message is printed and the
+#		program exits.  Only variables that are actually allocated on the stack are
+#		considered, optimized away variables or variables allocated in registers don't count.
+#
+#	-no-pie
+#		Don't produce a dynamically linked position independent executable.
+CFLAGS=-fno-pic -no-pie -fno-stack-protector -ffreestanding -g3 -Wall
 
 # Da man gcc
 #	-nostdlib
@@ -18,8 +41,11 @@ MINIKERNEL := minikernel
 #
 #		In pratica, usarlo quando si compila qualcosa bare metal
 #		tipo un OS per far quadrare i pezzi.
-$(MINIKERNEL): header.o error.o
+$(MINIKERNEL): header.o error.o trampoline.o helpers_32bit.o video32bit.o kmain32.o
 	gcc -g -m32 -nostdlib -T likerops.ld $^ -o $(MINIKERNEL)
+
+.PHONY: rebuild
+rebuild: clean $(MINIKERNEL)
 
 .PHONY: launch
 launch: $(MINIKERNEL)
@@ -43,6 +69,18 @@ header.o: header.S
 
 error.o: error.S
 	gcc -m32 -c $<
+
+trampoline.o: trampoline.S
+	gcc -m32 -c $<
+
+helpers_32bit.o: helpers_32bit.c helpers_32bit.h
+	gcc -m32 $(CFLAGS) -c $^ 
+
+video32bit.o: video32bit.c video32bit.h
+	gcc -m32 $(CFLAGS) -c $^
+
+kmain32.o: kmain32.c
+	gcc -m32 $(CFLAGS) -c $^
 
 .PHONY: clean
 clean:

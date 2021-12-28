@@ -95,6 +95,8 @@ HELLO_STRING:
      *  https://sourceware.org/binutils/docs/as.html#Asciz
      */
     .asciz "HELLO PANINOOOOO"
+UNEXPECTED_RETURN:
+    .asciz "Unexpected return in _start function!"
 
 EAX_FAILED:
     .asciz "EAX does not contain multiboot signature!"
@@ -199,8 +201,10 @@ _start: /* kernel entrypoint */
     /* save pointer to Multiboot structure */
     mov %ebx, multiboot_info_structure
 
-    /* TEST HELLO WORLD! */
-    mov $HELLO_STRING, %eax
+    jmp trampoline
+
+    /* Should never be reached! */
+    mov $UNEXPECTED_RETURN, %eax
     call _abort
 
 	cli
