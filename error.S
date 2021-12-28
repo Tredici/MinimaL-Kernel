@@ -29,6 +29,14 @@ ABORT_MSG:
 .code32
 .global _abort
 
+.global c_abort
+/**
+ * To be used to invoke _abort from C code
+ */
+c_abort:
+    mov 4(%esp), %eax
+    call _abort
+
 /**
  * Expect character in AL. Print it on the screen.
  * Next character will be printed.
