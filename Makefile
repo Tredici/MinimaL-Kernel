@@ -41,7 +41,7 @@ CFLAGS=-fno-pic -no-pie -fno-stack-protector -ffreestanding -g3 -Wall
 #
 #		In pratica, usarlo quando si compila qualcosa bare metal
 #		tipo un OS per far quadrare i pezzi.
-$(MINIKERNEL): header.o error.o trampoline.o helpers_32bit.o video32bit.o kmain32.o
+$(MINIKERNEL): header.o error.o trampoline.o helpers_32bit.o video32bit.o kmain32.o string32.o
 	gcc -g -m32 -nostdlib -T likerops.ld $^ -o $(MINIKERNEL)
 
 .PHONY: rebuild
@@ -77,6 +77,9 @@ helpers_32bit.o: helpers_32bit.c helpers_32bit.h
 	gcc -m32 $(CFLAGS) -c $^ 
 
 video32bit.o: video32bit.c video32bit.h
+	gcc -m32 $(CFLAGS) -c $^
+
+string32.o: string32.c string32.h
 	gcc -m32 $(CFLAGS) -c $^
 
 kmain32.o: kmain32.c
