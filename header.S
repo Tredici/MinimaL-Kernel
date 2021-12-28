@@ -196,6 +196,9 @@ _start: /* kernel entrypoint */
     call check_machine_state
     /* If here machine state is ok */
 
+    /* save pointer to Multiboot structure */
+    mov %ebx, multiboot_info_structure
+
     /* TEST HELLO WORLD! */
     mov $HELLO_STRING, %eax
     call _abort
@@ -250,4 +253,6 @@ check_EFLAGS_failed:
  */
 stack:
 	.skip STACK_SIZE
-
+.global multiboot_info_structure
+multiboot_info_structure:
+    .skip 4
