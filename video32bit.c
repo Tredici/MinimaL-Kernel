@@ -49,6 +49,9 @@ void putc(char c)
 
 void printline(const char *str)
 {
+    if (!str)
+        return;
+
     while (*str != 0)
         putc(*(str++));
     
