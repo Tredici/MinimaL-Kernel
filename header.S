@@ -22,6 +22,11 @@
 #define MULTIBOOT_EAX_SIGNATURE 0x2BADB002
 
 /**
+ * Used to check VM bit (17th bit) in EFLAGS.
+ */
+#define BIT_VM_EFLAGS 0x020
+
+/**
  * Per i valori da usare:
  *  https://www.gnu.org/software/grub/manual/multiboot/multiboot.html
  */
@@ -93,6 +98,9 @@ HELLO_STRING:
 
 EAX_FAILED:
     .asciz "EAX does not contain multiboot signature!"
+
+EFLAGS_FAILED:
+    .asciz "EFLAGS(17) is set!"
 
 /**
  * This section will be inserted at the beginning of the text
@@ -197,10 +205,28 @@ _start: /* kernel entrypoint */
 
 /* Check section [3.2 Machine state] for TODO */
 check_machine_state:
+    push %eax
     /* check multiboot signature */
     cmp $MULTIBOOT_EAX_SIGNATURE, %eax
         /* if fail call _abort */
         jne check_EAX_failed
+    /**
+     * Check EFLAGS Register
+     * From Multiboot Specs:
+     *      Bit 17 (VM) must be cleared. Bit 9 (IF) must be
+     *      cleared. Other bits are all undefined.
+     *  From Intel manual 1 cap. [3.4.3 EFLAGS Register]
+     *      VM (bit 17) Virtual-8086 mode flag - Set to enable
+     *      virtual-8086 mode; clear to return to protected
+     *      mode without virtual-8086 mode semantics.
+     */
+    pushf
+    pop %eax
+    /* EAX contains now EFLAGS */
+    test $BIT_VM_EFLAGS, %eax
+        jnz check_EFLAGS_failed
+
+    pop %eax
     ret
 
 check_EAX_failed:
@@ -208,6 +234,13 @@ check_EAX_failed:
     call _abort
     /* Never reached! */
     hlt
+
+check_EFLAGS_failed:
+    mov $EFLAGS_FAILED, %eax
+    call _abort
+    /* Never reached! */
+    hlt
+
 
 .bss
 /**
