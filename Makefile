@@ -25,6 +25,10 @@ $(MINIKERNEL): header.o error.o
 launch: $(MINIKERNEL)
 	./launch.sh
 
+.PHONY: debug
+debug: $(MINIKERNEL)
+	./debugging.sh
+
 # Opzioni:
 #	-c		è per arrestarsi subito dopo la compilazione
 #	-m32	dalla doc
