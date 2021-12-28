@@ -15,9 +15,11 @@ Elenco dei posti dove cercare le informazioni per capire che è stato fatto:
     - ld (linker): https://sourceware.org/binutils/docs/ld.html
     - VGA text mode (memoria video mappata in RAM): https://en.wikipedia.org/wiki/VGA_text_mode
     - Video BIOS (quello che permette di stampare testo su schermo dal bootloader usando l'interrrupt 0x10 predisposto dal BIOS): https://en.wikipedia.org/wiki/Video_BIOS
+    - Text mode cursor (how to control it): https://wiki.osdev.org/Text_Mode_Cursor
     - INT 10H (l'interrupt handler che permette di scrivere a
     video dal bootloader come visto in alcuni esempi con QEMU
     preimpostato dal BIOS): https://en.wikipedia.org/wiki/INT_10H
+    - Text based console (tutorial): http://kernelx.weebly.com/text-console.html
     - Come viene realizzato il mapping: https://stackoverflow.com/questions/17367618/address-of-video-memory
     - .bss (variabili non inizializzate a compile time): https://en.wikipedia.org/wiki/.bss
 
