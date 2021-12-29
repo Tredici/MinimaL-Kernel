@@ -67,7 +67,7 @@ void putc(char c)
         row = (row+1) % TEXT_ROWS;
     }
     cc = col; cr = row;
-    next_position(cr, cc);
+    next_position(&cr, &cc);
     move_cursor(cr, cc);
 }
 
