@@ -23,7 +23,29 @@ MINIKERNEL := minikernel
 #
 #	-no-pie
 #		Don't produce a dynamically linked position independent executable.
-CFLAGS=-fno-pic -no-pie -fno-stack-protector -ffreestanding -g3 -Wall
+#
+#	-fno-common
+#	-fcommon
+#		In C code, this option controls the placement of global variables defined without an
+#		initializer, known as tentative definitions in the C standard.  Tentative definitions
+#		are distinct from declarations of a variable with the "extern" keyword, which do not
+#		allocate storage.
+#
+#		The default is -fno-common, which specifies that the compiler places uninitialized
+#		global variables in the BSS section of the object file.  This inhibits the merging of
+#		tentative definitions by the linker so you get a multiple-definition error if the same
+#		variable is accidentally defined in more than one compilation unit.
+#
+#		The -fcommon places uninitialized global variables in a common block.  This allows the
+#		linker to resolve all tentative definitions of the same variable in different
+#		compilation units to the same object, or to a non-tentative definition.  This behavior
+#		is inconsistent with C++, and on many targets implies a speed and code size penalty on
+#		global variable references.  It is mainly useful to enable legacy code to link without
+#		errors.
+#
+#		Usato perché un compilatore che ho utilizzato da problemi altrimenti poiché sembra
+#		usare l'opzione -fcommon di default.
+CFLAGS=-fno-pic -no-pie -fno-stack-protector -ffreestanding -g3 -Wall -fno-common
 
 # Da man gcc
 #	-nostdlib
@@ -41,6 +63,9 @@ CFLAGS=-fno-pic -no-pie -fno-stack-protector -ffreestanding -g3 -Wall
 #
 #		In pratica, usarlo quando si compila qualcosa bare metal
 #		tipo un OS per far quadrare i pezzi.
+#
+#		Per info:
+#			https://stackoverflow.com/questions/28474675/arm-common-section-and-fno-common-flag
 $(MINIKERNEL): header.o error.o trampoline.o helpers_32bit.o video32bit.o kmain32.o string32.o io32.o
 	gcc -g -m32 -nostdlib -T likerops.ld $^ -o $(MINIKERNEL)
 
