@@ -12,5 +12,6 @@ void printline(const char *str);
 void newline();
 void disable_cursor();
 void enable_cursor();
+void move_cursor(int row, int col);
 
 #endif
