@@ -116,5 +116,5 @@ void move_cursor(int row, int col)
 	outputb32(0x3D5, (unsigned char)position & 0xff);
  
 	outputb32(0x3D4, 0x0e);
-	outputb32(0x3D5, (unsigned char)position >> 8 & 0xff);
+	outputb32(0x3D5, (unsigned char)(position >> 8) & 0xff);
 }
