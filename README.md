@@ -26,7 +26,7 @@ Elenco dei posti dove cercare le informazioni per capire che è stato fatto:
         second for the data itself
     - Come viene realizzato il mapping: https://stackoverflow.com/questions/17367618/address-of-video-memory
     - .bss (variabili non inizializzate a compile time): https://en.wikipedia.org/wiki/.bss
-
+    - Setting Up Long Mode (tutorial): https://wiki.osdev.org/Setting_Up_Long_Mode
 
 Da leggere (forse) in futuro:
 System address map initialization in x86/x64 architecture part 1: PCI-based systems
