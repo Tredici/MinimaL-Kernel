@@ -27,6 +27,25 @@ video_array * const video_memory = (video_array * const)VIDEO_MEMORY;
 /* Current position of the cursor */
 int col, row;
 
+static inline void next_position(int *row, int *col)
+{
+    if (!row || !col)
+    {
+        return;
+    }
+
+    if (!(0 <= *col && *col < TEXT_COLS) || !(0 <= *row && *row < TEXT_ROWS))
+    {
+        return;
+    }
+
+    if (++*col == TEXT_COLS)
+    {
+        *col = 0;
+        *row = (1 + *row) % TEXT_ROWS;
+    }
+}
+
 void clear_screen()
 {
     int i;
@@ -40,12 +59,16 @@ void clear_screen()
 
 void putc(char c)
 {
+    int cc, cr;
     (*video_memory)[row][col++] = FOREGROUND_COLOR | BACKGROUND_COLOR | c;
     if (col == TEXT_COLS)
     {
         col = 0;
         row = (row+1) % TEXT_ROWS;
     }
+    cc = col; cr = row;
+    next_position(cr, cc);
+    move_cursor(cr, cc);
 }
 
 void printline(const char *str)
