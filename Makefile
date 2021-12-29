@@ -76,6 +76,9 @@ trampoline.o: trampoline.S
 helpers_32bit.o: helpers_32bit.c helpers_32bit.h
 	gcc -m32 $(CFLAGS) -c $^ 
 
+io32.o: io32.S io32.h
+	gcc -m32 $(CFLAGS) -c $^
+
 video32bit.o: video32bit.c video32bit.h
 	gcc -m32 $(CFLAGS) -c $^
 
