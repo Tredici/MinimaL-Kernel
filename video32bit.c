@@ -68,6 +68,15 @@ void putc(char c)
     move_cursor(row, col);
 }
 
+void putstr(const char *str)
+{
+    if (!str)
+        return;
+
+    while (*str != 0)
+        putc(*(str++));
+}
+
 void printline(const char *str)
 {
     if (!str)
