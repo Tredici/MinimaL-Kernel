@@ -8,6 +8,7 @@
 
 #include "helpers_32bit.h"
 #include "video32bit.h"
+#include "io32.h"
 
 #define TEXT_ROWS 25
 #define TEXT_COLS 80
@@ -86,10 +87,10 @@ void enable_cursor()
      *  http://www.osdever.net/FreeVGA/vga/crtcreg.htm#0A
      */
     outputb32(0x3D4, 0x0A);
-	outputb32(0x3D5, (~0x20) & 0xe0 & inputb32(0x3D5) | 12);
+	outputb32(0x3D5, ((~0x20) & 0xe0 & inputb32(0x3D5)) | 12);
 
     outputb32(0x3D4, 0x0B);
-	outputb32(0x3D5, 0xe0 & inputb32(0x3D5) | 15);
+	outputb32(0x3D5, (0xe0 & inputb32(0x3D5)) | 15);
 }
 
 /**
@@ -107,7 +108,9 @@ void move_cursor(int row, int col)
 
     /* Check console boundaries */
     if (!(0 <= col && col < TEXT_COLS) || !(0 <= row && row < TEXT_ROWS))
+    {
         return;
+    }
 
 	outputb32(0x3D4, 0x0f);
 	outputb32(0x3D5, (unsigned char)position & 0xff);
