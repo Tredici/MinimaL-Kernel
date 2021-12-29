@@ -104,7 +104,7 @@ helpers_32bit.o: helpers_32bit.c helpers_32bit.h
 io32.o: io32.S io32.h
 	gcc -m32 $(CFLAGS) -c $^
 
-video32bit.o: video32bit.c video32bit.h
+video32bit.o: video32bit.c video32bit.h string32.h
 	gcc -m32 $(CFLAGS) -c $^
 
 string32.o: string32.c string32.h

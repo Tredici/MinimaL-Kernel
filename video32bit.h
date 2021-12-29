@@ -8,6 +8,7 @@
 void clear_screen();
 
 void putc(char c);
+void puti(int n);
 void putstr(const char *str);
 void printline(const char *str);
 void newline();

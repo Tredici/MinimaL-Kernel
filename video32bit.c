@@ -9,6 +9,7 @@
 #include "helpers_32bit.h"
 #include "video32bit.h"
 #include "io32.h"
+#include "string32.h"
 
 #define TEXT_ROWS 25
 #define TEXT_COLS 80
@@ -66,6 +67,11 @@ void putc(char c)
         row = (row+1) % TEXT_ROWS;
     }
     move_cursor(row, col);
+}
+
+void puti(int n)
+{
+    putstr(itoa32(n));
 }
 
 void putstr(const char *str)
