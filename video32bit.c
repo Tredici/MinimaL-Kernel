@@ -59,16 +59,13 @@ void clear_screen()
 
 void putc(char c)
 {
-    int cc, cr;
     (*video_memory)[row][col++] = FOREGROUND_COLOR | BACKGROUND_COLOR | c;
     if (col == TEXT_COLS)
     {
         col = 0;
         row = (row+1) % TEXT_ROWS;
     }
-    cc = col; cr = row;
-    next_position(&cr, &cc);
-    move_cursor(cr, cc);
+    move_cursor(row, col);
 }
 
 void printline(const char *str)
