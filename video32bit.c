@@ -64,3 +64,54 @@ void newline()
     col = 0;
     row = (row+1) % TEXT_ROWS;
 }
+
+void disable_cursor()
+{
+    /**
+     * The first command select the
+     * "Cursor Start Register (Index 0Ah)"
+     * and the second one disable the cursor
+     *  http://www.osdever.net/FreeVGA/vga/crtcreg.htm#0A
+     */
+    outputb32(0x3D4, 0x0A);
+	outputb32(0x3D5, 0x20);
+}
+
+void enable_cursor()
+{
+    /**
+     * The first command select the
+     * "Cursor Start Register (Index 0Ah)"
+     * and the second one disable the cursor
+     *  http://www.osdever.net/FreeVGA/vga/crtcreg.htm#0A
+     */
+    outputb32(0x3D4, 0x0A);
+	outputb32(0x3D5, (~0x20) & 0xe0 & inputb32(0x3D5) | 12);
+
+    outputb32(0x3D4, 0x0B);
+	outputb32(0x3D5, 0xe0 & inputb32(0x3D5) | 15);
+}
+
+/**
+ * @brief Move the cursor to the given position.
+ * Note: cursor will not be automatically enabled!
+ *
+ * An example of this function can be foundgere:
+ *  http://kernelx.weebly.com/text-console.html
+ * @param row 
+ * @param col 
+ */
+void move_cursor(int row, int col)
+{
+    unsigned short position = (unsigned short) row*TEXT_COLS + col;
+
+    /* Check console boundaries */
+    if (!(0 <= col && col < TEXT_COLS) || !(0 <= row && row < TEXT_ROWS))
+        return;
+
+	outputb32(0x3D4, 0x0f);
+	outputb32(0x3D5, (unsigned char)position & 0xff);
+ 
+	outputb32(0x3D4, 0x0e);
+	outputb32(0x3D5, (unsigned char)position >> 8 & 0xff);
+}
