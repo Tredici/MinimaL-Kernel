@@ -20,7 +20,7 @@ void print_multiboot(struct multiboot_info *mi)
     else printline("MEMORY info not availabe!");
 
     putstr("CMDLINE:      ");
-    if (mi->flags & MULTIBOOT_FLAG_2)   printline(mi->cmdline);
+    if (mi->flags & MULTIBOOT_FLAG_2)   printline((const char*)mi->cmdline);
     else    printline("(Unspecified!)");
 
     if (mi->flags & MULTIBOOT_FLAG_5)
@@ -30,7 +30,7 @@ void print_multiboot(struct multiboot_info *mi)
 
     putstr("BOOTLOADER:   ");
     if (mi->flags & MULTIBOOT_FLAG_9)
-        printline(mi->boot_loader_name);
+        printline((const char*)mi->boot_loader_name);
     else
         printline("(Unspecified!)");
 
