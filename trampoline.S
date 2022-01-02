@@ -20,6 +20,41 @@
 #define CR0_BIT_PG (1 << 31)
 
 /**
+ * See Intel Manual Vol. 4
+ *  [CHAPTER 2 MODEL-SPECIFIC REGISTERS (MSRS)]
+ *  in particular
+ *  [2.1 ARCHITECTURAL MSRS]
+ *
+ * These register are managed using specific
+ * instructions (they are not accessible directly
+ * like general purpose registers or control
+ * register) like:
+ *  +RDMSR—Read from Model Specific Register
+ *      Read MSR specified by ECX into EDX:EAX.
+ *  +WRMSR—Write to Model Specific Register
+ *      Write the value in EDX:EAX to MSR specified
+ *      by ECX.
+ *
+ * See Intel Manual Vol. 2 for details.
+ * Register structure is described in:
+ *  [2.2.1 Extended Feature Enable Register]
+ *  [Figure 2-4. IA32_EFER MSR Layout]
+ *  [Table 2-1. IA32_EFER MSR Information]
+ */
+#define IA32_EFER_ADDR 0xc0000080
+/**
+ * Position of the bit in the MSR
+ *
+ * LME (probably) stand for Long Mode Enable
+ *
+ * From:
+ *  IA-32e Mode Enable: IA32_EFER.LME (R/W)
+ *  Enables IA-32e mode operation.
+ */
+#define IA32_EFER_LME (1 << 8)
+
+
+/**
  * Value to be used in EAX to query
  * limits for 'Extended Function CPUID Information'
  *
@@ -123,6 +158,13 @@ trampoline:
     hlt
 
 /**
+ * Handle 64 bit initialization
+ */
+trampoline64:
+    call initialize_64bit_paging
+    hlt
+
+/**
  * Manipulate control registers to enable paging
  * and 64 bit mode.
  *
@@ -132,10 +174,48 @@ trampoline:
  *  [2.5 CONTROL REGISTERS]
  */
 initialize_64bit_paging:
+    /**
+     * For a recap see Vol. 3
+     *  [9.8.5 Initializing IA-32e Mode]
+     */
 #pragma GCC warning "To be complete"
+    /* Initialize 64 bit page tables structure */
+    pushl $PDT
+    pushl $PDPT
+    pushl $PML4
+    call initialize_64bits_page_tables
+    /* clear stack */
+    add $12, %esp
+
     /* Initialize CR3 */
         mov $PML4, %eax
         mov %eax, %cr3
+    
+    /**
+     * See Intel Manual Vol. 3
+     *  [Figure 4-1. Enabling and Changing Paging Modes]
+     *
+     * Must access Model Specific Registers
+     *  IA32_EFER.LME = 1
+     *
+     * To access MSR use rdmsr and wrmsr.
+     * See comment near macro definition for details
+     */
+    mov $IA32_EFER_ADDR, %ecx
+    rdmsr
+    or $IA32_EFER_LME, %eax
+    wrmsr
+    /**
+     * Also CR4 must be set
+     *  CR4.PAE = 1
+     */
+    mov %cr4, %eax
+    or $CR4_PAE, %eax
+    mov %eax, %cr4
+    /**
+     * Also CR0 must be set
+     *  CR0.PG = 1
+     */
     /* Enable paging setting CR0 */
         /* Get current value of CR0 */
         mov %cr0, %eax
@@ -146,6 +226,11 @@ initialize_64bit_paging:
         /* Overwrite CR0 */
         mov %eax, %cr0
 
+    /* Now LONG MODE is ENABLED! */
+    /**
+     * ret WILL work because THIS
+     * CODE is compiled as 32 bit
+     */
     ret
 
 /**
