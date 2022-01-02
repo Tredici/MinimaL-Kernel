@@ -110,7 +110,14 @@ trampoline:
      */
     call initialize_32bit_paging
 
+    /**
+     * Pass multiboot info to the main
+     * function. See Multiboot specification
+     * for details.
+     */
+    pushl multiboot_info_structure
     call main32
+    pop %eax
 
     /* Should never be reached */
     hlt
