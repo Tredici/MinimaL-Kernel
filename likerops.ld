@@ -14,7 +14,7 @@
  *      If both are used, the command line option takes
  *      precedence.
  */
-OUTPUT_FORMAT(elf32-i386)
+/* OUTPUT_FORMAT(elf64-little) */
 
 /**
  * [3.4.5 Other Linker Script Commands]
@@ -31,7 +31,7 @@ OUTPUT_FORMAT(elf32-i386)
  *      your configuration.
  *  objdump: https://sourceware.org/binutils/docs/binutils/objdump.html#objdump
  */
-OUTPUT_ARCH(i386)
+/* OUTPUT_ARCH(i386) */
 /**
  * [3.4.1 Setting the Entry Point]
  * Non dovrebbe servire (ci pensa il bootloader a invocare la

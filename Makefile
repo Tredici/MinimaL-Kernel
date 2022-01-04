@@ -45,6 +45,7 @@ MINIKERNEL := minikernel
 #
 #		Usato perché un compilatore che ho utilizzato da problemi altrimenti poiché sembra
 #		usare l'opzione -fcommon di default.
+#CFLAGS=-fno-pic -no-pie -fno-stack-protector -ffreestanding -g3 -Wall -fno-common
 CFLAGS=-fno-pic -no-pie -fno-stack-protector -ffreestanding -g3 -Wall -fno-common
 
 # Da man gcc
@@ -69,7 +70,7 @@ CFLAGS=-fno-pic -no-pie -fno-stack-protector -ffreestanding -g3 -Wall -fno-commo
 LINKER := -nostdlib -T likerops.ld
 
 $(MINIKERNEL): header.o error.o trampoline.o helpers_32bit.o video32bit.o kmain32.o string32.o io32.o
-	gcc -g -m32 $(LINKER) $^ -o $(MINIKERNEL)
+	gcc -g $(CFLAGS) $(LINKER) $^ -o $(MINIKERNEL)
 
 .PHONY: rebuild
 rebuild: clean $(MINIKERNEL)
@@ -92,28 +93,36 @@ debug: $(MINIKERNEL)
 # Per approfondire:
 #	https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/x86-Options.html#x86-Options
 header.o: header.S
-	gcc -m32 -c header.S
+	gcc -m32 $(CFLAGS) -c header.S
+	objcopy -O elf64-x86-64 $@
 
 error.o: error.S
-	gcc -m32 -c $<
+	gcc -m32 $(CFLAGS) -c $<
+	objcopy -O elf64-x86-64 $@
 
 trampoline.o: trampoline.S
-	gcc -m32 -c $<
+	gcc -m32 $(CFLAGS) -c $<
+	objcopy -O elf64-x86-64 $@
 
 helpers_32bit.o: helpers_32bit.c helpers_32bit.h
 	gcc -m32 $(CFLAGS) -c $^ 
+	objcopy -O elf64-x86-64 $@
 
 io32.o: io32.S io32.h
 	gcc -m32 $(CFLAGS) -c $^
+	objcopy -O elf64-x86-64 $@
 
 video32bit.o: video32bit.c video32bit.h string32.h
 	gcc -m32 $(CFLAGS) -c $^
+	objcopy -O elf64-x86-64 $@
 
 string32.o: string32.c string32.h
 	gcc -m32 $(CFLAGS) -c $^
+	objcopy -O elf64-x86-64 $@
 
 kmain32.o: kmain32.c
 	gcc -m32 $(CFLAGS) -c $^
+	objcopy -O elf64-x86-64 $@
 
 .PHONY: clean
 clean:
