@@ -69,7 +69,7 @@ CFLAGS=-fno-pic -no-pie -fno-stack-protector -ffreestanding -g3 -Wall -fno-commo
 #			https://stackoverflow.com/questions/28474675/arm-common-section-and-fno-common-flag
 LINKER := -nostdlib -T likerops.ld
 
-$(MINIKERNEL): header.o error.o trampoline.o helpers_32bit.o video32bit.o kmain32.o string32.o io32.o
+$(MINIKERNEL): header.o error.o trampoline.o helpers_32bit.o video32bit.o kmain32.o string32.o io32.o kmain64.o
 	gcc -g $(CFLAGS) $(LINKER) $^ -o $(MINIKERNEL)
 
 .PHONY: rebuild
@@ -123,6 +123,9 @@ string32.o: string32.c string32.h
 kmain32.o: kmain32.c
 	gcc -m32 $(CFLAGS) -c $^
 	objcopy -O elf64-x86-64 $@
+
+kmain64.o: kmain64.c
+	gcc -m64 $(CFLAGS) -c $^
 
 .PHONY: clean
 clean:
