@@ -23,10 +23,10 @@
  */
 #define VIDEO_MEMORY 0xB8000
 typedef short int video_array[TEXT_ROWS][TEXT_COLS];
-video_array * const video_memory = (video_array * const)VIDEO_MEMORY;
+static video_array * const video_memory = (video_array * const)VIDEO_MEMORY;
 
 /* Current position of the cursor */
-int col, row;
+static int col, row;
 
 static inline void next_position(int *row, int *col)
 {
