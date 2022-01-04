@@ -94,6 +94,11 @@ debug: $(MINIKERNEL)
 #	https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/x86-Options.html#x86-Options
 header.o: header.S
 	gcc -m32 $(CFLAGS) -c header.S
+# I have found how to use objcopy using grep on
+# linux source, in particular it was inspired by:
+#	linux-5.15.12/scripts/recordmcount.pl:207:    $objcopy .= " -O elf64-x86-64";
+#
+# It converts "elf32" to "elf64" permitting linking
 	objcopy -O elf64-x86-64 $@
 
 error.o: error.S
