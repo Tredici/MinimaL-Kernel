@@ -108,6 +108,26 @@ OK_64BIT:
 PAGING_32_BIT_ENABLED:
     .asciz "32 BIT paging working!"
 
+/**
+ * Used to load GDT pointer with lgdt
+ * instruction. This instruction, in 32
+ * bit mode, require one word followed
+ * by a double word.
+ *
+ * See Intel manual Vol. 2:
+ *  [LGDT/LIDT—Load Global/Interrupt
+ *  Descriptor Table Register]
+ */
+GDT_POINTER:
+    .word (SEGMENT_DESCRIPTOR_TABLE_64_END - SEGMENT_DESCRIPTOR_TABLE_64)
+    .long SEGMENT_DESCRIPTOR_TABLE_64
+/**
+ * Used to debug lgdt
+ *
+GDT_POINTER_CP:
+    .skip 10
+ */
+
 .global trampoline
 .text
 .code32
@@ -126,9 +146,9 @@ PAGING_32_BIT_ENABLED:
 trampoline:
     /* Can we use the CPUID istruction? */
     call ensure_cpuid_available
-    /* Is 64 bit mode supported? */
-    call ensure_64bit_mode_available
 
+    jmp trampoline64
+    hlt
     /**
      * Initialize paging
      * See Intel manual 3 chapter
@@ -161,8 +181,61 @@ trampoline:
  * Handle 64 bit initialization
  */
 trampoline64:
+    /* Is 64 bit mode supported? */
+    call ensure_64bit_mode_available
     call initialize_64bit_paging
+    call initialize_64bit_data_structure
+
+    /**
+     * For far jump in AT&T syntax.
+     *
+     * See as manual:
+     * [9.16.3.1 AT&T Syntax versus Intel Syntax]
+     *  Immediate form long jumps and calls are
+     *  ‘lcall/ljmp $section, $offset’ in AT&T syntax;
+     *  the Intel syntax is ‘call/jmp far section:offset’.
+     *  Also, the far return instruction is ‘lret $stack-adjust’
+     *  in AT&T syntax; Intel syntax is ‘ret far stack-adjust’.
+     *
+     * https://sourceware.org/binutils/docs/as.html#i386_002dVariations
+     *
+     * Reference first entry of GDT for code segment
+     */
+    ljmp $0x08, $_start64
+
     hlt
+
+/**
+ * This function will initialise remaining
+ * data structure other than page tables
+ *
+ * An useful tutorial is this:
+ *  https://www.youtube.com/watch?v=wz9CZBeXR6U
+ *  [Write Your Own 64-bit Operating System Kernel #2
+ *  - Stack, long mode and printing using C code]
+ *
+ * For details see Intel Manual Vol. 3:
+ *  [9.8.5 Initializing IA-32e Mode]
+ *  [9.8.5.1 IA-32e Mode System Data Structures]
+ */
+initialize_64bit_data_structure:
+    pushl $SEGMENT_DESCRIPTOR_TABLE_64
+    call intialise_gdt
+    add $4, %esp
+GDT:
+    /**
+     * In 32 bit mode this instruction require
+     * a m16&32 argument from memory
+     *
+     * See comment near GDT_POINTER for details
+     */
+    lgdt GDT_POINTER
+    /**
+     * Used for debugging purposes
+     *
+    sgdt GDT_POINTER_CP
+     */
+    ret
 
 /**
  * Manipulate control registers to enable paging
@@ -178,7 +251,6 @@ initialize_64bit_paging:
      * For a recap see Vol. 3
      *  [9.8.5 Initializing IA-32e Mode]
      */
-#pragma GCC warning "To be complete"
     /* Initialize 64 bit page tables structure */
     pushl $PDT
     pushl $PDPT
@@ -404,4 +476,41 @@ PT:
 
 /* Next are pages to be used in 32 byt paging */
 PD_32bit:
+    .skip 4096
+
+/**
+ * Here will be stored the GDT
+ * used when jumping to 64 bit
+ * code.
+ *
+ * Max size would be 8 * 8192 fields.
+ * Just one page will be sufficient
+ * for this simple project.
+ *
+ * Will be initialised before jumping
+ * to 64 bit code.
+ *
+ * See Intel manual Vol. 3:
+ *  [3.4.5 Segment Descriptors]
+ *  [3.5 SYSTEM DESCRIPTOR TYPES]
+ */
+SEGMENT_DESCRIPTOR_TABLE_64:
+    .skip 4096
+SEGMENT_DESCRIPTOR_TABLE_64_END:
+
+/**
+ * Will be initialised if required when
+ * activating 64 bit mode.
+ *
+ * One TSS will be useful in 64 bit mode.
+ *
+ * See Intel Manual Vol. 3:
+ *  [7.7 TASK MANAGEMENT IN 64-BIT MODE]
+ *  [Figure 7-11. 64-Bit TSS Format]
+ *
+ * More less than 4KB are required but
+ * to simplify code...
+ */
+#pragma warning GCC "To be used..."
+INITIAL_TSS_64:
     .skip 4096

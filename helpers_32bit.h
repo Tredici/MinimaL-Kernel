@@ -16,4 +16,6 @@ void initialize_page_directory(void *pd);
 
 void initialize_64bits_page_tables(void *pml4, void *pdpt, void *pdt);
 
+void intialise_gdt(void *ptr);
+
 #endif
