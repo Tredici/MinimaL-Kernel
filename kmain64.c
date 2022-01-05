@@ -1,9 +1,14 @@
+/**
+ * 64 bit main
+ */
 
-
+#include "video64bit.h"
 
 void main64()
 {
-    *((short*)0xB8000) = (1 << 12) | (15 << 8) | 'U';
-    *((short*)0xB8002) = (1 << 12) | (15 << 8) | 'E';
+    clear_screen64();
+    printline64("Hello 64 bit!");
+    printline64("Long Mode Activated!");
+    printline64("Good Bye!");
 }
 
