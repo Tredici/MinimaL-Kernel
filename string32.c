@@ -6,7 +6,7 @@
  * @param c 
  * @return int 
  */
-int idigit32(char c)
+int isdigit32(char c)
 {
     return '0' <= c && c <= '9';
 }
@@ -117,13 +117,13 @@ int atoi32(const char* str)
     }
 
     /* There is a number? */
-    if (!idigit32(*str))
+    if (!isdigit32(*str))
         return 0;
 
     do
     {
         number = number*10 + (*str - '0');
-    } while (idigit32(*++str));
+    } while (isdigit32(*++str));
 
     return negative ? -number : number;
 }

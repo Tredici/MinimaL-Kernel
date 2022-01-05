@@ -5,15 +5,15 @@
  * @brief clear console
  * 
  */
-void clear_screen();
+void clear_screen32();
 
-void putc(char c);
-void puti(int n);
-void putstr(const char *str);
-void printline(const char *str);
-void newline();
-void disable_cursor();
-void enable_cursor();
-void move_cursor(int row, int col);
+void putc32(char c);
+void puti32(int n);
+void putstr32(const char *str);
+void printline32(const char *str);
+void newline32();
+void disable_cursor32();
+void enable_cursor32();
+void move_cursor32(int row, int col);
 
 #endif

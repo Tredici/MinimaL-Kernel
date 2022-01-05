@@ -47,18 +47,18 @@ static inline void next_position(int *row, int *col)
     }
 }
 
-void clear_screen()
+void clear_screen32()
 {
     int i;
     col = 0; row = 0;
     for (i = 0; i != TEXT_ROWS * TEXT_COLS; ++i)
     {
-        putc('\0');
+        putc32('\0');
     }
     col = 0; row = 0;
 }
 
-void putc(char c)
+void putc32(char c)
 {
     (*video_memory)[row][col++] = FOREGROUND_COLOR | BACKGROUND_COLOR | c;
     if (col == TEXT_COLS)
@@ -66,42 +66,42 @@ void putc(char c)
         col = 0;
         row = (row+1) % TEXT_ROWS;
     }
-    move_cursor(row, col);
+    move_cursor32(row, col);
 }
 
-void puti(int n)
+void puti32(int n)
 {
-    putstr(itoa32(n));
+    putstr32(itoa32(n));
 }
 
-void putstr(const char *str)
-{
-    if (!str)
-        return;
-
-    while (*str != 0)
-        putc(*(str++));
-}
-
-void printline(const char *str)
+void putstr32(const char *str)
 {
     if (!str)
         return;
 
     while (*str != 0)
-        putc(*(str++));
+        putc32(*(str++));
+}
+
+void printline32(const char *str)
+{
+    if (!str)
+        return;
+
+    while (*str != 0)
+        putc32(*(str++));
     
     if (col != 0)
-        newline();
+        newline32();
 }
 
-void newline()
+void newline32()
 {
     col = 0;
     row = (row+1) % TEXT_ROWS;
 }
 
-void disable_cursor()
+void disable_cursor32()
 {
     /**
      * The first command select the
@@ -113,7 +113,7 @@ void disable_cursor()
 	outputb32(0x3D5, 0x20);
 }
 
-void enable_cursor()
+void enable_cursor32()
 {
     /**
      * The first command select the
@@ -137,7 +137,7 @@ void enable_cursor()
  * @param row 
  * @param col 
  */
-void move_cursor(int row, int col)
+void move_cursor32(int row, int col)
 {
     unsigned short position = (unsigned short) row*TEXT_COLS + col;
 

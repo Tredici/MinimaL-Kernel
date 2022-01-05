@@ -11,33 +11,33 @@
  */
 void print_multiboot(struct multiboot_info *mi)
 {
-    putstr("FLAGS: "); puti(mi->flags); newline();
+    putstr32("FLAGS: "); puti32(mi->flags); newline32();
     if (mi->flags & MULTIBOOT_FLAG_0)
     {
-        putstr("MEMORY lower: "); puti(mi->mem_lower); putc('K'); newline();
-        putstr("MEMORY upper: "); puti(mi->mem_upper); putc('K'); newline();
+        putstr32("MEMORY lower: "); puti32(mi->mem_lower); putc32('K'); newline32();
+        putstr32("MEMORY upper: "); puti32(mi->mem_upper); putc32('K'); newline32();
     }
-    else printline("MEMORY info not availabe!");
+    else printline32("MEMORY info not availabe!");
 
-    putstr("CMDLINE:      ");
-    if (mi->flags & MULTIBOOT_FLAG_2)   printline((const char*)mi->cmdline);
-    else    printline("(Unspecified!)");
+    putstr32("CMDLINE:      ");
+    if (mi->flags & MULTIBOOT_FLAG_2)   printline32((const char*)mi->cmdline);
+    else    printline32("(Unspecified!)");
 
     if (mi->flags & MULTIBOOT_FLAG_5)
     {
-        printline("ELF Kernel!");
+        printline32("ELF Kernel!");
     }
 
-    putstr("BOOTLOADER:   ");
+    putstr32("BOOTLOADER:   ");
     if (mi->flags & MULTIBOOT_FLAG_9)
-        printline((const char*)mi->boot_loader_name);
+        printline32((const char*)mi->boot_loader_name);
     else
-        printline("(Unspecified!)");
+        printline32("(Unspecified!)");
 
     if (mi->flags & MULTIBOOT_FLAG_11)
-        printline("VBE info available!");
+        printline32("VBE info available!");
     else
-        printline("VBE info NOT available!");
+        printline32("VBE info NOT available!");
 }
 
 /**
@@ -47,15 +47,15 @@ void print_multiboot(struct multiboot_info *mi)
  */
 int main32(struct multiboot_info *mi)
 {
-    clear_screen();
-    putstr("Multiboot info: "); puti((int)mi); newline();
+    clear_screen32();
+    putstr32("Multiboot info: "); puti32((int)mi); newline32();
     if (mi)
         print_multiboot(mi);
 
-    printline("HELLO PANINARO!!!");
-    printline("Uomo cactus!");
-    printline(itoa32(10000));
-    printline("XXXXXXXX");
-    printline(itoa32(atoi32("")));
+    printline32("HELLO PANINARO!!!");
+    printline32("Uomo cactus!");
+    printline32(itoa32(10000));
+    printline32("XXXXXXXX");
+    printline32(itoa32(atoi32("")));
     return 0;
 }

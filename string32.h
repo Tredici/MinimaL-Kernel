@@ -6,7 +6,7 @@
 #ifndef STRING32
 #define STRING32
 
-int idigit32(char c);
+int isdigit32(char c);
 
 char *strcpy32(char *dst, const char *src);
 
