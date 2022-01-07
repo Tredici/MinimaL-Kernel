@@ -52,6 +52,15 @@ struct idt_gate_descriptor
  */
 struct idt_gate_descriptor idt[IDT_ENTRYES]  __attribute__ ((aligned (4096)));
 
+
+static void set_pointer_to_handler(struct idt_gate_descriptor *idt_entry, u64 rip_handler)
+{
+    // Pointer to handler
+    idt_entry->offset_15_0 = rip_handler & ((1 << 16) - 1);
+    idt_entry->offset_31_16 = (rip_handler >> 16) & ((1 << 16) - 1);
+    idt_entry->offset_63_32 = (rip_handler >> 32) & ((1 << 32) - 1);
+}
+
 /**
  * @brief Initialize DIV BY 0 handler
  *
@@ -69,10 +78,7 @@ void initialize_DIV0(struct idt_gate_descriptor idt[])
     idt[0].present = 1;
     idt[0].type = TYPE_64B_INTERRUPT_GATE;
     idt[0].segment_selector = 0x08; /* Always this for code */
-    // Pointer to handler
-    idt[0].offset_15_0 = rip_handler & ((1 << 16) - 1);
-    idt[0].offset_31_16 = (rip_handler >> 16) & ((1 << 16) - 1);
-    idt[0].offset_63_32 = (rip_handler >> 32) & ((1 << 32) - 1);
+    set_pointer_to_handler(&idt[0], rip_handler);
 }
 
 void initialize_idt()
