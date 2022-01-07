@@ -7,3 +7,8 @@ void handle_div0()
 {
     panic64("Exception DIV0!");
 }
+
+void handle_int3()
+{
+    panic64("Exception Breakpoint!");
+}

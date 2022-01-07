@@ -20,4 +20,11 @@
  */
 void handle_div0();
 
+/**
+ * @brief Function handling INT3 (breakpoint) exception
+ *
+ */
+void handle_int3();
+
+
 #endif
