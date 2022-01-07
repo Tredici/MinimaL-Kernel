@@ -3,6 +3,9 @@
 #include "error64.h"
 #include "interrupt64_handlers.h"
 
+#define INT_DIV0    0
+#define INT_DBG     3
+#define INT_GPE     13
 
 #define IDT_ENTRYES 256
 #define IDT_LIMIT (256*16 - 1)
@@ -62,67 +65,20 @@ static void set_pointer_to_handler(struct idt_gate_descriptor *idt_entry, u64 ri
 }
 
 /**
- * @brief Initialize DIV BY 0 handler
+ * @brief Initialize entry in IDT. Avoi code repetition.
  *
- * @param idt
- *
- * See Intel Manual Vol. 3
- *  [6.15 EXCEPTION AND INTERRUPT REFERENCE]
- *  [Interrupt 0—Divide Error Exception (#DE)]
+ * @param idt               - pointer to the IDT
+ * @param exception_number  - exception number in the IDT
+ * @param type              - TRAP or INTERRUPT (fault)?
+ * @param rip_handler       - pointer to handler
  */
-void initialize_DIV0(struct idt_gate_descriptor idt[])
+static inline void initialize_idt_entry(struct idt_gate_descriptor idt[], int exception_number, int type, u64 rip_handler)
 {
-    const int int_number = 0;
-    u64 rip_handler = (u64)&handle_div0;
-
-    idt[int_number] = (struct idt_gate_descriptor){};
-    idt[int_number].present = 1;
-    idt[int_number].type = TYPE_64B_INTERRUPT_GATE;
-    idt[int_number].segment_selector = 0x08; /* Always this for code */
-    set_pointer_to_handler(&idt[int_number], rip_handler);
-}
-
-
-/**
- * @brief Initialize INT3 (debug) handler
- *
- * @param idt
- *
- * See Intel Manual Vol. 3
- *  [6.15 EXCEPTION AND INTERRUPT REFERENCE]
- *  [Interrupt 3—Breakpoint Exception (#BP)]
- */
-void initialize_INT3(struct idt_gate_descriptor idt[])
-{
-    const int int_number = 3;
-    u64 rip_handler = (u64)&handle_int3;
-
-    idt[int_number] = (struct idt_gate_descriptor){};
-    idt[int_number].present = 1;
-    idt[int_number].type = TYPE_64B_TRAP_GATE;
-    idt[int_number].segment_selector = 0x08; /* Always this for code */
-    set_pointer_to_handler(&idt[int_number], rip_handler);
-}
-
-/**
- * @brief Initialize GPE (General Protection Exception) handler
- *
- * @param idt
- *
- * See Intel Manual Vol. 3
- *  [6.15 EXCEPTION AND INTERRUPT REFERENCE]
- *  [Interrupt 0—Divide Error Exception (#DE)]
- */
-static void initialize_GPE(struct idt_gate_descriptor idt[])
-{
-    const int int_number = 13;
-    u64 rip_handler = (u64)&handle_gpe;
-
-    idt[int_number] = (struct idt_gate_descriptor){};
-    idt[int_number].present = 1;
-    idt[int_number].type = TYPE_64B_INTERRUPT_GATE;
-    idt[int_number].segment_selector = 0x08; /* Always this for code */
-    set_pointer_to_handler(&idt[int_number], rip_handler);
+    idt[exception_number] = (struct idt_gate_descriptor){};
+    idt[exception_number].present = 1;
+    idt[exception_number].type = type;
+    idt[exception_number].segment_selector = 0x08; /* Always this for code */
+    set_pointer_to_handler(&idt[exception_number], rip_handler);
 }
 
 void initialize_idt()
@@ -132,9 +88,16 @@ void initialize_idt()
         panic64("sizeof(struct idt_gate_descriptor) != 16");
     }
 
-    initialize_DIV0(idt);
-    initialize_INT3(idt);
-    initialize_GPE(idt);
+    /**
+     * See Intel Manual Vol. 3
+     *  [6.15 EXCEPTION AND INTERRUPT REFERENCE]
+     */
+    /* [Interrupt 0—Divide Error Exception (#DE)] */
+    initialize_idt_entry(idt, INT_DIV0, TYPE_64B_INTERRUPT_GATE, (u64)&handle_div0);
+    /* [Interrupt 3—Breakpoint Exception (#BP)] */
+    initialize_idt_entry(idt, INT_DBG, TYPE_64B_TRAP_GATE, (u64)&handle_int3);
+    /* Interrupt 13—General Protection Exception (#GP) */
+    initialize_idt_entry(idt, INT_GPE, TYPE_64B_INTERRUPT_GATE, (u64)&handle_gpe);
 
     load_idt_register(idt, IDT_LIMIT);
 }
