@@ -72,13 +72,14 @@ static void set_pointer_to_handler(struct idt_gate_descriptor *idt_entry, u64 ri
  */
 void initialize_DIV0(struct idt_gate_descriptor idt[])
 {
+    const int int_number = 0;
     u64 rip_handler = (u64)&handle_div0;
 
-    idt[0] = (struct idt_gate_descriptor){};
-    idt[0].present = 1;
-    idt[0].type = TYPE_64B_INTERRUPT_GATE;
-    idt[0].segment_selector = 0x08; /* Always this for code */
-    set_pointer_to_handler(&idt[0], rip_handler);
+    idt[int_number] = (struct idt_gate_descriptor){};
+    idt[int_number].present = 1;
+    idt[int_number].type = TYPE_64B_INTERRUPT_GATE;
+    idt[int_number].segment_selector = 0x08; /* Always this for code */
+    set_pointer_to_handler(&idt[int_number], rip_handler);
 }
 
 
