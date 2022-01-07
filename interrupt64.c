@@ -104,6 +104,27 @@ void initialize_INT3(struct idt_gate_descriptor idt[])
     set_pointer_to_handler(&idt[int_number], rip_handler);
 }
 
+/**
+ * @brief Initialize GPE (General Protection Exception) handler
+ *
+ * @param idt
+ *
+ * See Intel Manual Vol. 3
+ *  [6.15 EXCEPTION AND INTERRUPT REFERENCE]
+ *  [Interrupt 0—Divide Error Exception (#DE)]
+ */
+static void initialize_GPE(struct idt_gate_descriptor idt[])
+{
+    const int int_number = 13;
+    u64 rip_handler = (u64)&handle_gpe;
+
+    idt[int_number] = (struct idt_gate_descriptor){};
+    idt[int_number].present = 1;
+    idt[int_number].type = TYPE_64B_INTERRUPT_GATE;
+    idt[int_number].segment_selector = 0x08; /* Always this for code */
+    set_pointer_to_handler(&idt[int_number], rip_handler);
+}
+
 void initialize_idt()
 {
     if (sizeof(struct idt_gate_descriptor) != 16)
@@ -113,6 +134,7 @@ void initialize_idt()
 
     initialize_DIV0(idt);
     initialize_INT3(idt);
+    initialize_GPE(idt);
 
     load_idt_register(idt, IDT_LIMIT);
 }

@@ -26,5 +26,10 @@ void handle_div0();
  */
 void handle_int3();
 
+/**
+ * @brief Function handling General Protection Exception
+ *
+ */
+void handle_gpe();
 
 #endif

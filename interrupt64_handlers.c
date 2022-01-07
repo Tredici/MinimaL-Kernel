@@ -12,3 +12,9 @@ void handle_int3()
 {
     panic64("Exception Breakpoint!");
 }
+
+
+void handle_gpe()
+{
+    panic64("General Protection Exception!");
+}
