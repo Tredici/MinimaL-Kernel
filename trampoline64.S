@@ -37,6 +37,9 @@ _start64:
     xor %rsi, %rsi
     xor %rdi, %rdi
 
+    /* Initialize interrupt handling */
+    call initialize_idt
+
     /* Call main function */
     call main64
     
