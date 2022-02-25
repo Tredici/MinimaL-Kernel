@@ -25,6 +25,15 @@ _start64:
     mov %ax, %es
     mov %ax, %gs
     mov %ax, %fs
+    /**
+     * Intel Manual Vol. 3
+     *
+     * [6.8.3 Masking Exceptions and Interrupts When Switching Stacks]
+     *  Intel recommends that software use the LSS instruction to
+     *  load the SS register and ESP together. The problem identified
+     *  earlier does not apply to LSS, and the LSS instruction does
+     *  not inhibit events as detailed above.
+     */
 
     /* initialize stack pointer */
     mov $(STACK_64 + STACK_64_SIZE), %rsp
