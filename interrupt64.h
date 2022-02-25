@@ -16,6 +16,7 @@
 #ifndef INTERRUPT64
 #define INTERRUPT64
 
+struct idt_gate_descriptor;
 
 void initialize_idt(void);
 void load_idt_register(struct idt_gate_descriptor *idt, unsigned short limit);
