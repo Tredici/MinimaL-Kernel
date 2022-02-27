@@ -73,6 +73,16 @@ void puti64(int n)
     putstr64(itoa64(n));
 }
 
+void putu64(unsigned n)
+{
+    putstr64(ltoa64((long)n));
+}
+
+void putl64(long n)
+{
+    putstr64(ltoa64(n));
+}
+
 void putstr64(const char *str)
 {
     if (!str)
