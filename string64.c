@@ -97,6 +97,47 @@ const char* itoa64(int n)
     return buffer;
 }
 
+const char* ltoa64(long n)
+{
+    static char buffer[22];
+    int i = 0;
+    int digits = 0; /* number of digits in n */
+    long copy;
+
+    if (n == 0)
+    {
+        strcpy64(buffer, "0");
+        return buffer;
+    }
+
+    if (n < 0)
+    {
+        n = -n;
+        buffer[0] = '-';
+        ++i;
+    }
+
+    /* Count digits */
+    copy = n;
+    while (n)
+    {
+        ++digits;
+        n /= 10;
+    }
+    i += digits;
+    /* Place zero terminator */
+    buffer[i--] = '\0';
+    while (copy)
+    {
+        buffer[i] = '0' + (copy % 10);
+        copy /= 10;
+        --i;
+    }
+
+    return buffer;
+}
+
+
 int atoi64(const char* str)
 {
     int number = 0;
