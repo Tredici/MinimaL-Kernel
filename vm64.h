@@ -16,8 +16,10 @@
 int start_vm();
 void enable_vmx();
 void enter_vmx();
+void set_cr4_vmxe();
 int check_vm_support();
 void init_vm64_data_structures();
 unsigned int read_IA32_VMX_BASIC();
+unsigned int read_vmcs_revision_identifier();
 
 #endif

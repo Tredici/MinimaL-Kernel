@@ -55,6 +55,29 @@ vm64:
 
     ret
 
+.global set_cr4_vmxe
+set_cr4_vmxe:
+    /**
+     *  [22.7 ENABLING AND ENTERING VMX OPERATION]
+     *  Before system software can enter VMX operation,
+     *  it enables VMX by setting CR4.VMXE[bit 13] = 1.
+     *  VMX operation is then entered by executing the
+     *  VMXON instruction.
+     *  VMXON causes an invalid-opcode exception (#UD)
+     *  if executed with CR4.VMXE = 0.
+     *  Once in VMX operation, it is not possible to clear
+     *  CR4.VMXE (see Section 22.8). System software leaves
+     *  VMX operation by executing the VMXOFF instruction.
+     *  CR4.VMXE can be cleared outside of VMX operation
+     *  after executing of VMXOFF.
+     *
+     * Set CR4_VMXE
+     */
+    mov %cr4, %rax
+    or $CR4_VMXE, %rax
+    mov %rax, %cr4
+    ret
+
 /**
  * See Intel Manual Vol. 3
  *  [22.7 ENABLING AND ENTERING VMX OPERATION]
@@ -65,19 +88,9 @@ vm64:
 enable_vmx:
     mov $IA32_FEATURE_CONTROL, %rcx
     rdmsr
-    /* set enabling bits */
-    or $(IA32_FEATURE_CONTROL_VMXON_IN_SMX | IA32_FEATURE_CONTROL_VMXON_OUTSIDE_SMX), %rax
-    /* clear lock bit */
-    xor $IA32_FEATURE_CONTROL_LOCK, %rax
+    /* set enabling bits and lock bit */
+    or $(IA32_FEATURE_CONTROL_VMXON_OUTSIDE_SMX | IA32_FEATURE_CONTROL_VMXON_IN_SMX | IA32_FEATURE_CONTROL_LOCK), %rax
     wrmsr
-
-    /**
-     * Set CR4_VMXE
-     */
-    mov %cr4, %rax
-    or $CR4_VMXE, %rax
-    mov %rax, %cr4
-
     ret
 
 /**
@@ -90,6 +103,7 @@ enable_vmx:
  *  that a processor uses by reading the VMX capa-bility
  *  MSR IA32_VMX_BASIC (see Appendix A.1).
  */
+.global read_vmcs_revision_identifier
 read_vmcs_revision_identifier:
     call read_IA32_VMX_BASIC
     /* now %rax contains all IA32_VMX_BASIC */
@@ -139,16 +153,15 @@ enter_vmx:
     /* Put processor VMCS revision identifier in %rax */
     call read_vmcs_revision_identifier
     /* Write VMCS revision identifier in VMXON region */
-    lea VMXON_region, %rdx
-    mov %eax, (%rdx)
-    /* Put VMX pointer in rax just for readability */
-    mov %rdx, %rax
+    lea VMXON_region, %rbx
+    mov %eax, (%rbx)
     /**
      * Enter VMX mode.
      * See Intel Manual Vol. 3
      *  [VMXON—Enter VMX Operation]
      */
-    vmxon (%rax)
+    /*vmxon (%rax)*/
+    vmxon (%rbx)
 
     ret
 

@@ -14,21 +14,12 @@ int start_vm()
         panic64("VMX not supported!");
     }
     printline64("Ciaooooooooooooo");
-    if (0)
-    {
-        enter_vmx();
-        printline64("VMX entered!");
-    }
-    else
-    {
-        // enable_vmx();
-        // printline64("VMX enabled!");
-        // //init_vm64_data_structures();
-        // //printline64("VMX data structures initialised!");
-        unsigned vmx = read_IA32_VMX_BASIC();
-        putstr64("VMX = "); putl64(vmx); newline64();
-    }
-    
+    putstr64("Rev Id = "); putu64(read_vmcs_revision_identifier()); newline64();
+    putstr64("VMX    = "); putl64(read_IA32_VMX_BASIC()); newline64();
+    set_cr4_vmxe();
+    printline64("CR4.VMXE set!");
+    enter_vmx();
+    printline64("VMX entered!");
 
     return 0;
 }
