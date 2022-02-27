@@ -4,7 +4,8 @@
 
 void panic64(const char *msg)
 {
-    clear_screen64();
+    set_background_color(7);
+    set_foreground_color(8);
     printline64(msg);
     halt();
 }
