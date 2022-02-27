@@ -13,8 +13,8 @@
 #define TEXT_ROWS 25
 #define TEXT_COLS 80
 
-#define FOREGROUND_COLOR (15 << 8)
-#define BACKGROUND_COLOR (1 << 12)
+static int FOREGROUND_COLOR = (15 << 8);
+static int BACKGROUND_COLOR = (1 << 12);
 
 
 /**
@@ -161,4 +161,28 @@ void move_cursor64(int row, int col)
  
 	outputb64(0x3D4, 0x0e);
 	outputb64(0x3D5, (unsigned char)(position >> 8) & 0xff);
+}
+
+int get_foreground_color()
+{
+    return FOREGROUND_COLOR >> 8;
+}
+
+int set_foreground_color(int fc)
+{
+    int old = get_foreground_color();
+    FOREGROUND_COLOR = (fc & 15) << 8;
+    return old;
+}
+
+int get_background_color(void)
+{
+    return BACKGROUND_COLOR >> 12;
+}
+
+int set_background_color(int bc)
+{
+    int old = get_background_color();
+    BACKGROUND_COLOR = (bc & 7) << 8;
+    return old;
 }

@@ -17,5 +17,9 @@ void newline64();
 void disable_cursor64();
 void enable_cursor64();
 void move_cursor64(int row, int col);
+int get_foreground_color();
+int set_foreground_color(int fc);
+int get_background_color();
+int set_background_color(int bc);
 
 #endif
