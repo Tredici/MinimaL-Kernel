@@ -83,6 +83,16 @@ void putl64(long n)
     putstr64(ltoa64(n));
 }
 
+void putlu64(unsigned long n)
+{
+    putstr64(ultoa64(n));
+}
+
+void puthex64(unsigned long n)
+{
+    putstr64(hex64(n));
+}
+
 void putstr64(const char *str)
 {
     if (!str)

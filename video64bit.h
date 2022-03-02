@@ -11,6 +11,8 @@ void putc64(char c);
 void puti64(int n);
 void putu64(unsigned n);
 void putl64(long n);
+void putlu64(unsigned long n);
+void puthex64(unsigned long n);
 void putstr64(const char *str);
 void printline64(const char *str);
 void newline64();
