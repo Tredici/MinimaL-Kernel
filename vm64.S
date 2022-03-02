@@ -27,14 +27,27 @@
 #define IA32_FEATURE_CONTROL_VMXON_OUTSIDE_SMX (1 << 2)
 
 /**
+ * See Intel manual Vol. 3
+ *  [29.2 CONVENTIONS]
+ *
+ *  CF:  0
+ *  PF:  2
+ *  AF:  4
+ *  ZF:  6
+ *  SF:  7
+ *  OF: 11
+ */
+#define VMmask (1<<0 | 1<<2 | 1<<4 | 1<<6 | 1<<7 | 1<<11)
+
+/**
  * MSR for VMX data
  */
 #define IA32_VMX_BASIC 0x480
 
 .data
-VMCS_POINTER:
+/*VMCS_POINTER:
     .long VMCS
-/*VMXON_POINTER:
+VMXON_POINTER:
     .long VMXON_region*/
 
 VM64_MSG:
@@ -76,6 +89,7 @@ set_cr4_vmxe:
     mov %cr4, %rax
     or $CR4_VMXE, %rax
     mov %rax, %cr4
+    xor %rax, %rax
     ret
 
 /**
@@ -86,121 +100,6 @@ set_cr4_vmxe:
  */
 .global enable_vmx
 enable_vmx:
-    mov $IA32_FEATURE_CONTROL, %rcx
-    rdmsr
-    /* set enabling bits and lock bit */
-    or $(IA32_FEATURE_CONTROL_VMXON_OUTSIDE_SMX | IA32_FEATURE_CONTROL_VMXON_IN_SMX | IA32_FEATURE_CONTROL_LOCK), %rax
-    wrmsr
-    ret
-
-/**
- * Read the VMCS revision identifier for the current
- * processor and put it in %rax
- *
- * See Intel Manual Vol. 3
- *  [23.2 FORMAT OF THE VMCS REGION]
- *  Software can discover the VMCS revision identifier
- *  that a processor uses by reading the VMX capa-bility
- *  MSR IA32_VMX_BASIC (see Appendix A.1).
- */
-.global read_vmcs_revision_identifier
-read_vmcs_revision_identifier:
-    call read_IA32_VMX_BASIC
-    /* now %rax contains all IA32_VMX_BASIC */
-    /* maintains only lower 4 bytes */
-    mov %eax, %eax
-    /* now %rax contains VMX revision identifier */
-    ret
-
-/**
- * See Intel Manual Vol. 3
- *  [22.7 ENABLING AND ENTERING VMX OPERATION]
- *  VMX operation is then entered by executing the
- *  VMXON instruction.
- */
-.global enter_vmx
-enter_vmx:
-    /**
-     * See Intel Manual Vol. 3
-     *  [22.7 ENABLING AND ENTERING VMX OPERATION]
-     *  Before executing VMXON, software should allocate
-     *  a naturally aligned 4-KByte region of memory that
-     *  a logical processor may use to support VMX operation.
-     *  1 This region is called the VMXON region. The address
-     *  of the VMXON region (the VMXON pointer) is provided
-     *  in an operand to VMXON.
-     *  Section 23.11.5, “VMXON Region,” details how
-     *  software should initialize and access the VMXON region.
-     */
-    /**
-     * See Intel Manual Vol. 3
-     *  [23.11.5 VMXON Region]
-     *  Before executing VMXON, software should write the VMCS
-     *  revision identifier (see Section 23.2) to the VMXON
-     *  region.
-     *  (Specifically, it should write the 31-bit VMCS revision
-     *  identifier to bits 30:0 of the first 4 bytes of the VMXON
-     *  region; bit 31 should be cleared to 0.)
-     *  It need not initialize the VMXON region in any other way.
-     *  Software should use a separate region for each logical
-     *  processor and should not access or modify the VMXON region
-     *  of a logical processor between execution of VMXON and
-     *  VMXOFF on that logical processor. Doing otherwise may lead
-     *  to unpre-dictable behavior (including behaviors identified
-     *  in Section 23.11.1).
-     */
-
-    /* Put processor VMCS revision identifier in %rax */
-    call read_vmcs_revision_identifier
-    /* Write VMCS revision identifier in VMXON region */
-    lea VMXON_region, %rbx
-    mov %eax, (%rbx)
-    /**
-     * Enter VMX mode.
-     * See Intel Manual Vol. 3
-     *  [VMXON—Enter VMX Operation]
-     */
-    /*vmxon (%rax)*/
-    vmxon (%rbx)
-
-    ret
-
-/**
- * Read MSR IA32_VMX_BASIC and return
- * value in EAX
- *
- * 
- */
-.global read_IA32_VMX_BASIC
-read_IA32_VMX_BASIC:
-    push %rcx
-    push %rdx
-    
-    xor %rax, %rax /* maybe unnecessary */
-    xor %rdx, %rdx
-
-    /**
-     * From Intel Manual Vol. 3
-     *
-     * [A.1 BASIC VMX INFORMATION]
-     *  Bits 30:0 contain the 31-bit VMCS revision
-     *  identifier used by the processor. Processors
-     *  that use the same VMCS revision identifier use
-     *  the same size for VMCS regions (see subsequent
-     *  item on bits 44:32).
-     */
-    mov $IA32_VMX_BASIC, %rcx
-    rdmsr
-    sal $32, %rdx /* Move result to the top 32 bits */
-    or %rdx, %rax /* Move all result in RAX */
-
-    pop %rdx
-    pop %rcx
-    ret
-
-.global init_vm64_data_structures
-init_vm64_data_structures:
-
     /**
      * From Intel Manual Vol. 3:
      * [22.7 ENABLING AND ENTERING VMX OPERATION]
@@ -243,28 +142,166 @@ init_vm64_data_structures:
      *  that a processor uses by reading the VMX capa-bility MSR
      *  IA32_VMX_BASIC (see Appendix A.1).
      */
+    mov $IA32_FEATURE_CONTROL, %rcx
+    rdmsr
+    /* set enabling bits and lock bit */
+    or $(IA32_FEATURE_CONTROL_VMXON_OUTSIDE_SMX | IA32_FEATURE_CONTROL_VMXON_IN_SMX | IA32_FEATURE_CONTROL_LOCK), %rax
+    wrmsr
+    xor %rax, %rax
+    ret
+
+/**
+ * Read the VMCS revision identifier for the current
+ * processor and put it in %rax
+ *
+ * See Intel Manual Vol. 3
+ *  [23.2 FORMAT OF THE VMCS REGION]
+ *  Software can discover the VMCS revision identifier
+ *  that a processor uses by reading the VMX capa-bility
+ *  MSR IA32_VMX_BASIC (see Appendix A.1).
+ */
+.global read_vmcs_revision_identifier
+read_vmcs_revision_identifier:
     call read_IA32_VMX_BASIC
+    /* now %rax contains all IA32_VMX_BASIC */
+    /* maintains only lower 4 bytes */
+    mov %eax, %eax
+    /* now %rax contains VMX revision identifier */
+    ret
+
+.global get_vmx_region
+get_vmx_region:
+    lea VMXON_region, %rbx
+    /* Put processor VMCS revision identifier in %rax */
+    call read_vmcs_revision_identifier
+    /* Write VMCS revision identifier in VMXON region */
+    mov %eax, (%rbx)
+    mov %rbx, %rax
+    ret
+
+/**
+ * See Intel Manual Vol. 3
+ *  [22.7 ENABLING AND ENTERING VMX OPERATION]
+ *  VMX operation is then entered by executing the
+ *  VMXON instruction.
+ *
+ * Receive as argument the pointer to the page
+ * designed as vmx_region
+ */
+.global enter_vmx
+enter_vmx:
+    /**
+     * See Intel Manual Vol. 3
+     *  [22.7 ENABLING AND ENTERING VMX OPERATION]
+     *  Before executing VMXON, software should allocate
+     *  a naturally aligned 4-KByte region of memory that
+     *  a logical processor may use to support VMX operation.
+     *  1 This region is called the VMXON region. The address
+     *  of the VMXON region (the VMXON pointer) is provided
+     *  in an operand to VMXON.
+     *  Section 23.11.5, “VMXON Region,” details how
+     *  software should initialize and access the VMXON region.
+     */
+    /**
+     * See Intel Manual Vol. 3
+     *  [23.11.5 VMXON Region]
+     *  Before executing VMXON, software should write the VMCS
+     *  revision identifier (see Section 23.2) to the VMXON
+     *  region.
+     *  (Specifically, it should write the 31-bit VMCS revision
+     *  identifier to bits 30:0 of the first 4 bytes of the VMXON
+     *  region; bit 31 should be cleared to 0.)
+     *  It need not initialize the VMXON region in any other way.
+     *  Software should use a separate region for each logical
+     *  processor and should not access or modify the VMXON region
+     *  of a logical processor between execution of VMXON and
+     *  VMXOFF on that logical processor. Doing otherwise may lead
+     *  to unpre-dictable behavior (including behaviors identified
+     *  in Section 23.11.1).
+     */
+    /**
+     * Enter VMX mode.
+     * See Intel Manual Vol. 3
+     *  [29.3 VMXON—Enter VMX Operation]
+     */
+    vmxon (%rdi)
+    pushfq
+    pop %rax
+    and $VMmask, %rax
+    ret
+
+.global get_current_vmcs
+get_current_vmcs:
+    push %rax
+    vmptrst (%rsp)
+    pop %rax
+    ret
+
+/**
+ * Read MSR IA32_VMX_BASIC and return
+ * value in EAX
+ *
+ * 
+ */
+.global read_IA32_VMX_BASIC
+read_IA32_VMX_BASIC:
+    push %rcx
+    push %rdx
+    
+    xor %rax, %rax /* maybe unnecessary */
+    xor %rdx, %rdx
+
+    /**
+     * From Intel Manual Vol. 3
+     *
+     * [A.1 BASIC VMX INFORMATION]
+     *  Bits 30:0 contain the 31-bit VMCS revision
+     *  identifier used by the processor. Processors
+     *  that use the same VMCS revision identifier use
+     *  the same size for VMCS regions (see subsequent
+     *  item on bits 44:32).
+     */
+    mov $IA32_VMX_BASIC, %rcx
+    rdmsr
+    sal $32, %rdx /* Move result to the top 32 bits */
+    or %rdx, %rax /* Move all result in RAX */
+
+    pop %rdx
+    pop %rcx
+    ret
+
+.global init_vm64_data_structures
+init_vm64_data_structures:
+    /**
+     *  [23.11.3 Initializing a VMCS]
+     *  Software should initialize fields in a VMCS (using
+     *  VMWRITE) before using the VMCS for VM entry.
+     *
+     *  1.  VMCLEAR should be executed for a VMCS before
+     *      it is used for VM entry for the first time.
+     *  2.  VMLAUNCH should be used for the first VM entry
+     *      using a VMCS after VMCLEAR has been executed for
+     *      that VMCS.
+     *  3.  VMRESUME should be used for any subsequent VM
+     *      entry using a VMCS (until the next execution of
+     *      VMCLEAR for the VMCS).
+     */
+    call read_vmcs_revision_identifier
     /**
      * Now bit 30:0 contains VMCS revision identifier
      * used by the processor (bit 31 is always 0 and
      * this is always ok), this must be copied in
      * the first four bytes of the VMCS
      */
-    mov %eax, VMCS
-
+    lea VMCS_region, %rbx
+    mov %eax, (%rbx)
     /**
      * Load VMCS pointer.
      * See Intel Manual Vol. 3
      *  [22.5 VIRTUAL-MACHINE CONTROL STRUCTURE]
+     *  [29.3 VMPTRLD—Load Pointer to Virtual-Machine Control Structure]
      */
-    vmptrld VMCS_POINTER
-
-    mov $VM64_MSG, %rdi
-    call panic64
-    
-    vmxon VMCS_POINTER
-
-
+    vmptrld (%rbx)
     ret
 
 /**
@@ -289,7 +326,6 @@ check_vm_support:
      xor %rcx, %rcx
     cpuid
 
-
     /* Check ECX.VMX[bit 5] */
     xor %rax, %rax
     test $(1 << 5), %ecx
@@ -309,7 +345,7 @@ check_vm_support:
  *  [23.1 OVERVIEW]
  */
 .align 4096
-VMCS:
+VMCS_region:
     .skip 4096
 
 /**
@@ -321,6 +357,7 @@ VMCS:
  *  address of this region (the VMXON pointer) is provided
  *  in an operand to VMXON.
  */
+.align 4096
 VMXON_region:
     .skip 4096
 
