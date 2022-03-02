@@ -14,6 +14,8 @@ int strlen64(const char *str);
 
 const char* itoa64(int n);
 const char* ltoa64(long n);
+const char* ultoa64(unsigned long n);
+const char* hex64(unsigned long n);
 
 int atoi64(const char* str);
 
