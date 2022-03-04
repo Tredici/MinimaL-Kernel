@@ -179,6 +179,16 @@ get_vmx_region:
     mov %rbx, %rax
     ret
 
+.global get_vmcs_region
+get_vmcs_region:
+    /* Put processor VMCS revision identifier in %rax */
+    call read_vmcs_revision_identifier
+    /* Write VMCS revision identifier in VMXON region */
+    lea VMCS_region, %rbx
+    mov %eax, (%rbx)
+    mov %rbx, %rax
+    ret
+
 /**
  * See Intel Manual Vol. 3
  *  [22.7 ENABLING AND ENTERING VMX OPERATION]
