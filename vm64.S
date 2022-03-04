@@ -224,7 +224,9 @@ enter_vmx:
      * See Intel Manual Vol. 3
      *  [29.3 VMXON—Enter VMX Operation]
      */
-    vmxon (%rdi)
+    push %rdi
+    vmxon (%rsp)
+    pop %rax
     pushfq
     pop %rax
     and $VMmask, %rax
