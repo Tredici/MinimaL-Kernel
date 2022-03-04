@@ -171,10 +171,10 @@ read_vmcs_revision_identifier:
 
 .global get_vmx_region
 get_vmx_region:
-    lea VMXON_region, %rbx
     /* Put processor VMCS revision identifier in %rax */
     call read_vmcs_revision_identifier
     /* Write VMCS revision identifier in VMXON region */
+    lea VMXON_region, %rbx
     mov %eax, (%rbx)
     mov %rbx, %rax
     ret
