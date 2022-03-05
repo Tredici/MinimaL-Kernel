@@ -211,6 +211,22 @@ vmx_enable_vmcs_region:
     and $VMmask, %rax
     ret
 
+
+.global vmx_clear_vmcs_region
+vmx_clear_vmcs_region:
+    push %rdi
+    /**
+     * See Intel Manual Vol. 3
+     *  [VMCLEAR—Clear Virtual-Machine Control Structure]
+     */
+    vmclear (%rsp)
+    pop %rax
+    pushfq
+    pop %rax
+    and $VMmask, %rax
+    ret
+    ret
+
 /**
  * See Intel Manual Vol. 3
  *  [22.7 ENABLING AND ENTERING VMX OPERATION]

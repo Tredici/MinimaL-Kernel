@@ -24,6 +24,7 @@ void *get_current_vmcs();
 void init_vm64_data_structures();
 unsigned int read_IA32_VMX_BASIC();
 unsigned int read_vmcs_revision_identifier();
+int vmx_clear_vmcs_region(void *vmcs_region);
 int vmx_enable_vmcs_region(void *vmcs_region);
 
 #endif
