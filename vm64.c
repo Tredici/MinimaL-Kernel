@@ -70,3 +70,12 @@ int start_vm()
     return 0;
 }
 
+/**
+ * See Intel manual Vol. 3
+ *  [23.2 FORMAT OF THE VMCS REGION]
+ */
+int vmx_get_vmcs_region_abort_status(void *vmcs_region)
+{
+    return !vmcs_region ? -1 : *(1 + (int *)vmcs_region);
+}
+
