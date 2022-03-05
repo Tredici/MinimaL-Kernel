@@ -19,6 +19,8 @@ static int vmx_fail_invalid(int status)
 
 int start_vm()
 {
+    int status;
+
     if (check_vm_support())
     {
         printline64("VMX supported!");
@@ -37,12 +39,8 @@ int start_vm()
     putstr64("vmx_region = "); puti64(vmx_region); newline64();
     putstr64("*vmx_region = "); puthex64(*(unsigned long*)vmx_region); newline64();
 
-    int status = enter_vmx(vmx_region);
-    if (vmx_success(status))
-    {
-        printline64("enter_vmx success");
-    }
-    else
+    status = enter_vmx(vmx_region);
+    if (!vmx_success(status))
     {
         printline64("enter_vmx failed!");
         if (vmx_fail_invalid(status))
@@ -50,8 +48,15 @@ int start_vm()
             panic64("vmx_fail_invalid");
         }
     }
-    printline64("VMX entered!");
-    init_vm64_data_structures();
+
+    printline64("enter_vmx success");
+    void *vmcs_region = get_vmcs_region();
+    status = vmx_enable_vmcs_region(vmcs_region);
+    if (!vmx_success(status))
+    {
+        panic64("Disaster VMPTRLD");
+    }
+    printline64("VMCS region enabled!");
     printline64("Paninooo");
 
     return 0;

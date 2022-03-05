@@ -191,6 +191,28 @@ get_vmcs_region:
 
 /**
  * See Intel Manual Vol. 3
+ *  [23.1 OVERVIEW]
+ *
+ * Receive a pointer to the a page
+ * to be used as VMCS regiont and
+ * activate it
+ */
+.global vmx_enable_vmcs_region
+vmx_enable_vmcs_region:
+    push %rdi
+    /**
+     * See Intel Manual Vol. 3
+     *  [VMPTRLD—Load Pointer to Virtual-Machine Control Structure]
+     */
+    vmptrld (%rsp)
+    pop %rax
+    pushfq
+    pop %rax
+    and $VMmask, %rax
+    ret
+
+/**
+ * See Intel Manual Vol. 3
  *  [22.7 ENABLING AND ENTERING VMX OPERATION]
  *  VMX operation is then entered by executing the
  *  VMXON instruction.
