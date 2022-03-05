@@ -212,8 +212,8 @@ vmx_enable_vmcs_region:
     ret
 
 
-.global vmx_clear_vmcs_region
-vmx_clear_vmcs_region:
+.global vmx_clear_vmcs
+vmx_clear_vmcs:
     push %rdi
     /**
      * See Intel Manual Vol. 3

@@ -58,7 +58,7 @@ int start_vm()
     }
     printline64("VMCS region enabled!");
 
-    status = vmx_clear_vmcs_region(vmcs_region);
+    status = vmx_clear_vmcs(vmcs_region);
     if (!vmx_success(status))
     {
         panic64("Disaster VMCLEAR");
