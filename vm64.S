@@ -280,6 +280,19 @@ enter_vmx:
     and $VMmask, %rax
     ret
 
+.global vmxoff
+vmxoff:
+    /**
+     * Enter VMX mode.
+     * See Intel Manual Vol. 3
+     *  [29.3 VMXOFF—Leave VMX Operation]
+     */
+    vmxoff
+    pushf
+    pop %rax
+    and $VMmask, %rax
+    ret
+
 .global get_current_vmcs
 get_current_vmcs:
     push %rax

@@ -16,6 +16,7 @@
 int start_vm();
 void enable_vmx();
 int enter_vmx(void *vmx_region);
+int vmxoff();
 void set_cr4_vmxe();
 int check_vm_support();
 void *get_vmx_region();
