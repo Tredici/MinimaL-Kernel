@@ -28,5 +28,7 @@ unsigned int read_vmcs_revision_identifier();
 int vmx_clear_vmcs(void *vmcs_region);
 int vmx_enable_vmcs_region(void *vmcs_region);
 int vmx_get_vmcs_region_abort_status(void *vmcs_region);
+int vmx_read_vmcs_field(long *data, long field);
+int vmx_write_vmcs_field(long field, long data);
 
 #endif

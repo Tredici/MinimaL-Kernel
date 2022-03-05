@@ -333,6 +333,29 @@ read_IA32_VMX_BASIC:
     pop %rcx
     ret
 
+.global vmx_read_vmcs_field
+vmx_read_vmcs_field:
+    /**
+     *  [VMREAD—Read Field from Virtual-Machine Control Structure]
+     */
+    vmread %rsi, (%rdi)
+    pushf
+    pop %rax
+    and $VMmask, %rax
+    ret
+
+
+.global vmx_write_vmcs_field
+vmx_write_vmcs_field:
+    /**
+     *  [VMREAD—Read Field from Virtual-Machine Control Structure]
+     */
+    vmwrite %rsi, %rdi
+    pushf
+    pop %rax
+    and $VMmask, %rax
+    ret
+
 .global init_vm64_data_structures
 init_vm64_data_structures:
     /**
