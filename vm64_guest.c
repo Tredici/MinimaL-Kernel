@@ -176,3 +176,102 @@ int vmx_guest_read_guest_vm_exit_instruction_information()
     return ans;
 }
 
+
+/*
+ * See Intel Manual Vol. 3
+ *  [Table B-10. Encodings for 32-Bit Guest-State Fields (0100_10xx_xxxx_xxx0B)]
+ *  Field Name          Index       Encoding
+ *  Guest ES limit      000000000B  00004800H
+ *  Guest CS limit      000000001B  00004802H
+ *  Guest SS limit      000000010B  00004804H
+ *  Guest DS limit      000000011B  00004806H
+ *  Guest FS limit      000000100B  00004808H
+ *  Guest GS limit      000000101B  0000480AH
+ *  Guest LDTR limit    000000110B  0000480CH
+ *  Guest TR limit      000000111B  0000480EH
+ */
+#define GUEST_ES_LIMIT      0x00004800
+#define GUEST_CS_LIMIT      0x00004802
+#define GUEST_SS_LIMIT      0x00004804
+#define GUEST_DS_LIMIT      0x00004806
+#define GUEST_FS_LIMIT      0x00004808
+#define GUEST_GS_LIMIT      0x0000480A
+#define GUEST_LDTR_LIMIT    0x0000480C
+#define GUEST_TR_LIMIT      0x0000480E
+
+int vmx_guest_read_cs_limit()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, GUEST_CS_LIMIT);
+    return ans;
+}
+
+void vmx_guest_write_cs_limit(int ans)
+{
+    vmx_write_vmcs_field(GUEST_CS_LIMIT, ans);
+}
+
+
+int vmx_guest_read_ds_limit()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, GUEST_DS_LIMIT);
+    return ans;
+}
+
+void vmx_guest_write_ds_limit(int ans)
+{
+    vmx_write_vmcs_field(GUEST_DS_LIMIT, ans);
+}
+
+
+int vmx_guest_read_ss_limit()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, GUEST_SS_LIMIT);
+    return ans;
+}
+
+void vmx_guest_write_ss_limit(int ans)
+{
+    vmx_write_vmcs_field(GUEST_SS_LIMIT, ans);
+}
+
+
+int vmx_guest_read_es_limit()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, GUEST_ES_LIMIT);
+    return ans;
+}
+
+void vmx_guest_write_es_limit(int ans)
+{
+    vmx_write_vmcs_field(GUEST_ES_LIMIT, ans);
+}
+
+
+int vmx_guest_read_fs_limit()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, GUEST_FS_LIMIT);
+    return ans;
+}
+
+void vmx_guest_write_fs_limit(int ans)
+{
+    vmx_write_vmcs_field(GUEST_FS_LIMIT, ans);
+}
+
+
+int vmx_guest_read_gs_limit()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, GUEST_GS_LIMIT);
+    return ans;
+}
+
+void vmx_guest_write_gs_limit(int ans)
+{
+    vmx_write_vmcs_field(GUEST_GS_LIMIT, ans);
+}

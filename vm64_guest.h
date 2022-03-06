@@ -16,6 +16,20 @@ void vmx_guest_write_es(short val);
 void vmx_guest_write_fs(short val);
 void vmx_guestw_itrd_gs(short val);
 
+int vmx_guest_read_cs_limit();
+int vmx_guest_read_ds_limit();
+int vmx_guest_read_ss_limit();
+int vmx_guest_read_es_limit();
+int vmx_guest_read_fs_limit();
+int vmx_guest_read_gs_limit();
+
+void vmx_guest_write_cs_limit(int ans);
+void vmx_guest_write_ds_limit(int ans);
+void vmx_guest_write_ss_limit(int ans);
+void vmx_guest_write_es_limit(int ans);
+void vmx_guest_write_fs_limit(int ans);
+void vmx_guest_write_gs_limit(int ans);
+
 int vmx_guest_read_vm_instruction_error();
 int vmx_guest_read_vm_exit_reason();
 int vmx_guest_read_vm_exit_interruption_information();
