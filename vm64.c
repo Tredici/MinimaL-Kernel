@@ -79,3 +79,12 @@ int vmx_get_vmcs_region_abort_status(void *vmcs_region)
     return !vmcs_region ? -1 : *(1 + (int *)vmcs_region);
 }
 
+int vmx_vmcs_field_encoding(enum vmx_vmcs_field_access_type access, int index, enum vmx_vmcs_field_type type, enum vmx_vmcs_field_width width)
+{
+    if (! ((access & 1) == access && (index & 0x1ff) == index
+        && (type & 3) == type && (width & 3) == width) )
+    {
+        return -1;
+    }
+    return access | index << 1 | type << 10 | width << 13;
+}
