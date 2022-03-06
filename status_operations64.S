@@ -50,3 +50,40 @@ so_read_cr7:
 so_read_cr8:
     mov %cr8, %rax
     ret
+
+.global so_read_cs
+so_read_cs:
+    xor %rax, %rax
+    mov %cs, %ax
+    ret
+
+.global so_read_ds
+so_read_ds:
+    xor %rax, %rax
+    mov %ds, %ax
+    ret
+
+.global so_read_ss
+so_read_ss:
+    xor %rax, %rax
+    mov %ss, %ax
+    ret
+
+.global so_read_es
+so_read_es:
+    xor %rax, %rax
+    mov %es, %ax
+    ret
+
+.global so_read_fs
+so_read_fs:
+    xor %rax, %rax
+    mov %fs, %ax
+    ret
+
+.global so_read_gs
+so_read_gs:
+    xor %rax, %rax
+    mov %gs, %ax
+    ret
+
