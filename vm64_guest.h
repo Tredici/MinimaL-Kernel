@@ -39,4 +39,24 @@ int vmx_guest_read_guest_idt_vectoring_error_code();
 int vmx_guest_read_guest_vm_exit_instruction_length();
 int vmx_guest_read_guest_vm_exit_instruction_information();
 
+long vmx_guest_read_cr0();
+long vmx_guest_read_cr3();
+long vmx_guest_read_cr4();
+long vmx_guest_read_es_base();
+long vmx_guest_read_cs_base();
+long vmx_guest_read_ss_base();
+long vmx_guest_read_ds_base();
+long vmx_guest_read_fs_base();
+long vmx_guest_read_gs_base();
+
+void vmx_guest_write_cr0(long val);
+void vmx_guest_write_cr3(long val);
+void vmx_guest_write_cr4(long val);
+void vmx_guest_write_es_base(long val);
+void vmx_guest_write_cs_base(long val);
+void vmx_guest_write_ss_base(long val);
+void vmx_guest_write_ds_base(long val);
+void vmx_guest_write_fs_base(long val);
+void vmx_guest_write_gs_base(long val);
+
 #endif
