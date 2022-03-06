@@ -87,3 +87,8 @@ so_read_gs:
     mov %gs, %ax
     ret
 
+.global so_read_rflags
+so_read_rflags:
+    pushf
+    pop %rax
+    ret
