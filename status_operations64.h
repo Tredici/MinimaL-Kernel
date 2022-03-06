@@ -25,5 +25,10 @@ short so_read_es();
 short so_read_fs();
 short so_read_gs();
 
+/**
+ * Read RFLAGS register
+ */
+long so_read_rflags();
+
 
 #endif
