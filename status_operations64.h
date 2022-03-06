@@ -3,7 +3,7 @@
 #define STATUS_OPERATIONS
 
 /**
- * Function to read Control Registers
+ * Functions to read Control Registers
  */
 long so_read_cr0();
 long so_read_cr1();
