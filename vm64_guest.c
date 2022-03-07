@@ -420,3 +420,133 @@ void vmx_guest_write_gs_base(long val)
 {
     vmx_write_vmcs_field(GUEST_GS_BASE, val);
 }
+
+
+/**
+ * Following functions are used to manage control
+ * and segment registers
+ *
+ * See Intel Manual Vol. 3
+ *  [B.4.3 Natural-Width Guest-State Fields]
+ *  [Table B-14. Encodings for Natural-Width Guest-State Fields (0110_10xx_xxxx_xxx0B)]
+ *  Field Name          Index       Encoding
+ *  Guest LDTR base     000001001B  00006812H
+ *  Guest TR base       000001010B  00006814H
+ *  Guest GDTR base     000001011B  00006816H
+ *  Guest IDTR base     000001100B  00006818H
+ *  Guest DR7           000001101B  0000681AH
+ *  Guest RSP           000001110B  0000681CH
+ *  Guest RIP           000001111B  0000681EH
+ *  Guest RFLAGS        000010000B  00006820H
+ */
+#define GUEST_LDTR_BASE     0x00006812
+#define GUEST_TR_BASE       0x00006814
+#define GUEST_GDTR_BASE     0x00006816
+#define GUEST_IDTR_BASE     0x00006818
+#define GUEST_DR7           0x0000681A
+#define GUEST_RSP           0x0000681C
+#define GUEST_RIP           0x0000681E
+#define GUEST_RFLAGS        0x00006820
+
+long vmx_guest_read_ldtr_base()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_LDTR_BASE);
+    return ans;
+}
+
+void vmx_guest_write_ldtr_base(long val)
+{
+    vmx_write_vmcs_field(GUEST_LDTR_BASE, val);
+}
+
+
+long vmx_guest_read_tr_base()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_TR_BASE);
+    return ans;
+}
+
+void vmx_guest_write_tr_base(long val)
+{
+    vmx_write_vmcs_field(GUEST_TR_BASE, val);
+}
+
+
+long vmx_guest_read_gdtr_base()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_GDTR_BASE);
+    return ans;
+}
+
+void vmx_guest_write_gdtr_base(long val)
+{
+    vmx_write_vmcs_field(GUEST_GDTR_BASE, val);
+}
+
+
+long vmx_guest_read_idtr_base()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_IDTR_BASE);
+    return ans;
+}
+
+void vmx_guest_write_idtr_base(long val)
+{
+    vmx_write_vmcs_field(GUEST_IDTR_BASE, val);
+}
+
+
+long vmx_guest_read_dr7()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_DR7);
+    return ans;
+}
+
+void vmx_guest_write_dr7(long val)
+{
+    vmx_write_vmcs_field(GUEST_DR7, val);
+}
+
+
+long vmx_guest_read_rsp()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_RSP);
+    return ans;
+}
+
+void vmx_guest_write_rsp(long val)
+{
+    vmx_write_vmcs_field(GUEST_RSP, val);
+}
+
+
+long vmx_guest_read_rip()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_RIP);
+    return ans;
+}
+
+void vmx_guest_write_rip(long val)
+{
+    vmx_write_vmcs_field(GUEST_RIP, val);
+}
+
+
+long vmx_guest_read_rflags()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_RFLAGS);
+    return ans;
+}
+
+void vmx_guest_write_rflags(long val)
+{
+    vmx_write_vmcs_field(GUEST_RFLAGS, val);
+}

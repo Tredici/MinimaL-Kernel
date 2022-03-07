@@ -59,4 +59,22 @@ void vmx_guest_write_ds_base(long val);
 void vmx_guest_write_fs_base(long val);
 void vmx_guest_write_gs_base(long val);
 
+long vmx_guest_read_ldtr_base();
+long vmx_guest_read_tr_base();
+long vmx_guest_read_gdtr_base();
+long vmx_guest_read_idtr_base();
+long vmx_guest_read_dr7();
+long vmx_guest_read_rsp();
+long vmx_guest_read_rip();
+long vmx_guest_read_rflags();
+
+void vmx_guest_write_ldtr_base(long val);
+void vmx_guest_write_tr_base(long val);
+void vmx_guest_write_gdtr_base(long val);
+void vmx_guest_write_idtr_base(long val);
+void vmx_guest_write_dr7(long val);
+void vmx_guest_write_rsp(long val);
+void vmx_guest_write_rip(long val);
+void vmx_guest_write_rflags(long val);
+
 #endif
