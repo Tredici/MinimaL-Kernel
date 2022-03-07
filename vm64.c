@@ -35,8 +35,8 @@ int start_vm()
     set_cr4_vmxe();
     printline64("CR4.VMXE set!");
     void *vmx_region = get_vmx_region();
-    putstr64("vmx_region = "); puthex64(vmx_region); newline64();
-    putstr64("vmx_region = "); puti64(vmx_region); newline64();
+    putstr64("vmx_region = "); puthex64((unsigned long)vmx_region); newline64();
+    putstr64("vmx_region = "); puti64((unsigned long)vmx_region); newline64();
     putstr64("*vmx_region = "); puthex64(*(unsigned long*)vmx_region); newline64();
 
     status = enter_vmx(vmx_region);
