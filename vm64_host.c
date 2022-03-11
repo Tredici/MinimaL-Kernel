@@ -1,4 +1,5 @@
 #include "vm64_host.h"
+#include "vm64.h"
 
 /**
  * See Intel Manual Vol. 3
