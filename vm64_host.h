@@ -62,4 +62,8 @@ void vmx_host_write_ia32_efer(long val);
 void vmx_host_write_ia32_perf_global_ctrl(long val);
 void vmx_host_write_ia32_pkrs(long val);
 
+long vmx_host_read_ia32_sysenter_cs();
+
+void vmx_host_write_ia32_sysenter_cs(long val);
+
 #endif

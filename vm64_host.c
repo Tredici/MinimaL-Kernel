@@ -368,3 +368,27 @@ void vmx_host_write_ia32_pkrs(long val)
 {
     vmx_write_vmcs_field(HOST_IA32_PKRS, val);
 }
+
+
+/**
+ * See Intel Manual Vol. 3
+ *  [Table B-11. Encoding for 32-Bit Host-State Field (0100_11xx_xxxx_xxx0B)]
+ *  Field Name              Index       Encoding
+ *  Host IA32_SYSENTER_CS   000000000B  00004C00H
+ */
+#define HOST_IA32_SYSENTER_CS   0x00004C00
+
+long vmx_host_read_ia32_sysenter_cs()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, HOST_IA32_SYSENTER_CS);
+    return ans;
+}
+
+void vmx_host_write_ia32_sysenter_cs(long val)
+{
+    vmx_write_vmcs_field(HOST_IA32_SYSENTER_CS, val);
+}
+
+
+
