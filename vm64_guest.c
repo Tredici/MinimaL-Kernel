@@ -470,3 +470,212 @@ void vmx_guest_write_rflags(long val)
 {
     vmx_write_vmcs_field(GUEST_RFLAGS, val);
 }
+
+/**
+ * See Intel Manual Vol. 3
+ *  [Table B-6. Encodings for 64-Bit Guest-State Fields (0010_10xx_xxxx_xxxAb)]
+ *  Field Name                  Encoding
+ *  VMCS link pointer           00002800H
+ *  Guest IA32_DEBUGCTL         00002802H
+ *  Guest IA32_PAT              00002804H
+ *  Guest IA32_EFER             00002806H
+ *  Guest IA32_PERF_GLOBAL_CTRL 00002808H
+ *  Guest PDPTE0                0000280AH
+ *  Guest PDPTE1                0000280CH
+ *  Guest PDPTE2                0000280EH
+ *  Guest PDPTE3                00002810H
+ *  Guest IA32_BNDCFGS          00002812H
+ *  Guest IA32_RTIT_CTL         00002814H
+ *  Guest IA32_PKRS             00002818H
+ */
+/**
+ * See Intel Manual Vol. 3
+ *  [23.1 OVERVIEW]
+ *  The VMCS link pointer field in the current
+ *  VMCS (see Section 23.4.2) is itself the
+ *  address of a VMCS. If VM entry is performed
+ *  successfully with the 1-setting of the “VMCS
+ *  shadowing” VM-execution control, the VMCS
+ *  referenced by the VMCS link pointer field
+ *  becomes active on the logical processor.
+ *  The identity of the current VMCS does not
+ *  change.
+ *
+ * See Intel Manual Vol. 3
+ *  [23.4.2 Guest Non-Register State]
+ *  VMCS link pointer (64 bits). If the “VMCS
+ *  shadowing” VM-execution control is 1, the
+ *  VMREAD and VMWRITE instructions access the
+ *  VMCS referenced by this pointer (see Section
+ *  23.10). Otherwise, software should set this
+ *  field to FFFFFFFF_FFFFFFFFH to avoid VM-entry
+ *  failures (see Section 25.3.1.5).
+ */
+#define VMCS_LINK_POINTER           0x00002800
+#define GUEST_IA32_DEBUGCTL         0x00002802
+#define GUEST_IA32_PAT              0x00002804
+#define GUEST_IA32_EFER             0x00002806
+#define GUEST_IA32_PERF_GLOBAL_CTRL 0x00002808
+#define GUEST_PDPTE0                0x0000280A
+#define GUEST_PDPTE1                0x0000280C
+#define GUEST_PDPTE2                0x0000280E
+#define GUEST_PDPTE3                0x00002810
+#define GUEST_IA32_BNDCFGS          0x00002812
+#define GUEST_IA32_RTIT_CTL         0x00002814
+#define GUEST_IA32_PKRS             0x00002818
+
+long vmx_guest_read_vmcs_link_pointer()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMCS_LINK_POINTER);
+    return ans;
+}
+
+void vmx_guest_write_vmcs_link_pointer(long val)
+{
+    vmx_write_vmcs_field(VMCS_LINK_POINTER, val);
+}
+
+
+long vmx_guest_read_ia32_debugctl()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_IA32_DEBUGCTL);
+    return ans;
+}
+
+void vmx_guest_write_ia32_debugctl(long val)
+{
+    vmx_write_vmcs_field(GUEST_IA32_DEBUGCTL, val);
+}
+
+
+long vmx_guest_read_ia32_pat()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_IA32_PAT);
+    return ans;
+}
+
+void vmx_guest_write_ia32_pat(long val)
+{
+    vmx_write_vmcs_field(GUEST_IA32_PAT, val);
+}
+
+
+long vmx_guest_read_ia32_efer()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_IA32_EFER);
+    return ans;
+}
+
+void vmx_guest_write_ia32_efer(long val)
+{
+    vmx_write_vmcs_field(GUEST_IA32_EFER, val);
+}
+
+
+long vmx_guest_read_ia32_perf_global_ctrl()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_IA32_PERF_GLOBAL_CTRL);
+    return ans;
+}
+
+void vmx_guest_write_ia32_perf_global_ctrl(long val)
+{
+    vmx_write_vmcs_field(GUEST_IA32_PERF_GLOBAL_CTRL, val);
+}
+
+
+long vmx_guest_read_pdpte0()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_PDPTE0);
+    return ans;
+}
+
+void vmx_guest_write_pdpte0(long val)
+{
+    vmx_write_vmcs_field(GUEST_PDPTE0, val);
+}
+
+
+long vmx_guest_read_pdpte1()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_PDPTE1);
+    return ans;
+}
+
+void vmx_guest_write_pdpte1(long val)
+{
+    vmx_write_vmcs_field(GUEST_PDPTE1, val);
+}
+
+
+long vmx_guest_read_pdpte2()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_PDPTE2);
+    return ans;
+}
+
+void vmx_guest_write_pdpte2(long val)
+{
+    vmx_write_vmcs_field(GUEST_PDPTE2, val);
+}
+
+
+long vmx_guest_read_pdpte3()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_PDPTE3);
+    return ans;
+}
+
+void vmx_guest_write_pdpte3(long val)
+{
+    vmx_write_vmcs_field(GUEST_PDPTE3, val);
+}
+
+
+long vmx_guest_read_ia32_bndcfgs()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_IA32_BNDCFGS);
+    return ans;
+}
+
+void vmx_guest_write_ia32_bndcfgs(long val)
+{
+    vmx_write_vmcs_field(GUEST_IA32_BNDCFGS, val);
+}
+
+
+long vmx_guest_read_ia32_rtit_ctl()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_IA32_RTIT_CTL);
+    return ans;
+}
+
+void vmx_guest_write_ia32_rtit_ctl(long val)
+{
+    vmx_write_vmcs_field(GUEST_IA32_RTIT_CTL, val);
+}
+
+
+long vmx_guest_read_ia32_pkrs()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, GUEST_IA32_PKRS);
+    return ans;
+}
+
+void vmx_guest_write_ia32_pkrs(long val)
+{
+    vmx_write_vmcs_field(GUEST_IA32_PKRS, val);
+}
+

@@ -68,4 +68,31 @@ void vmx_guest_write_rsp(long val);
 void vmx_guest_write_rip(long val);
 void vmx_guest_write_rflags(long val);
 
+long vmx_guest_read_vmcs_link_pointer();
+long vmx_guest_read_ia32_debugctl();
+long vmx_guest_read_ia32_pat();
+long vmx_guest_read_ia32_efer();
+long vmx_guest_read_ia32_perf_global_ctrl();
+long vmx_guest_read_pdpte0();
+long vmx_guest_read_pdpte1();
+long vmx_guest_read_pdpte2();
+long vmx_guest_read_pdpte3();
+long vmx_guest_read_ia32_bndcfgs();
+long vmx_guest_read_ia32_rtit_ctl();
+long vmx_guest_read_ia32_pkrs();
+
+void vmx_guest_write_vmcs_link_pointer(long val);
+void vmx_guest_write_ia32_debugctl(long val);
+void vmx_guest_write_ia32_pat(long val);
+void vmx_guest_write_ia32_efer(long val);
+void vmx_guest_write_ia32_perf_global_ctrl(long val);
+void vmx_guest_write_pdpte0(long val);
+void vmx_guest_write_pdpte1(long val);
+void vmx_guest_write_pdpte2(long val);
+void vmx_guest_write_pdpte3(long val);
+void vmx_guest_write_ia32_bndcfgs(long val);
+void vmx_guest_write_ia32_rtit_ctl(long val);
+void vmx_guest_write_ia32_pkrs(long val);
+
+
 #endif
