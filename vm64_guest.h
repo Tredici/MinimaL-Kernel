@@ -30,15 +30,6 @@ void vmx_guest_write_es_limit(int ans);
 void vmx_guest_write_fs_limit(int ans);
 void vmx_guest_write_gs_limit(int ans);
 
-int vmx_guest_read_vm_instruction_error();
-int vmx_guest_read_vm_exit_reason();
-int vmx_guest_read_vm_exit_interruption_information();
-int vmx_guest_read_vm_exit_interruption_error_code();
-int vmx_guest_read_idt_vectoring_information_field();
-int vmx_guest_read_guest_idt_vectoring_error_code();
-int vmx_guest_read_guest_vm_exit_instruction_length();
-int vmx_guest_read_guest_vm_exit_instruction_information();
-
 long vmx_guest_read_cr0();
 long vmx_guest_read_cr3();
 long vmx_guest_read_cr4();
