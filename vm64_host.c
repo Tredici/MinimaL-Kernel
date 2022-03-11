@@ -303,3 +303,68 @@ void vmx_host_write_ia32_s_cet(long val)
     vmx_write_vmcs_field(HOST_IA32_S_CET, val);
 }
 
+
+/**
+ * See Intel Manual Vol. 3
+ *  [Table B-7. Encodings for 64-Bit Host-State Fields (0010_11xx_xxxx_xxxAb)]
+ *  Field Name                  Encoding
+ *  Host IA32_PAT               00002C00H
+ *  Host IA32_EFER              00002C02H
+ *  Host IA32_PERF_GLOBAL_CTRL  00002C04H
+ *  Host IA32_PKRS              00002C06H
+ */
+#define HOST_IA32_PAT               0x00002C00
+#define HOST_IA32_EFER              0x00002C02
+#define HOST_IA32_PERF_GLOBAL_CTRL  0x00002C04
+#define HOST_IA32_PKRS              0x00002C06
+
+long vmx_host_read_ia32_pat()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, HOST_IA32_PAT);
+    return ans;
+}
+
+void vmx_host_write_ia32_pat(long val)
+{
+    vmx_write_vmcs_field(HOST_IA32_PAT, val);
+}
+
+
+long vmx_host_read_ia32_efer()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, HOST_IA32_EFER);
+    return ans;
+}
+
+void vmx_host_write_ia32_efer(long val)
+{
+    vmx_write_vmcs_field(HOST_IA32_EFER, val);
+}
+
+
+long vmx_host_read_ia32_perf_global_ctrl()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, HOST_IA32_PERF_GLOBAL_CTRL);
+    return ans;
+}
+
+void vmx_host_write_ia32_perf_global_ctrl(long val)
+{
+    vmx_write_vmcs_field(HOST_IA32_PERF_GLOBAL_CTRL, val);
+}
+
+
+long vmx_host_read_ia32_pkrs()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, HOST_IA32_PKRS);
+    return ans;
+}
+
+void vmx_host_write_ia32_pkrs(long val)
+{
+    vmx_write_vmcs_field(HOST_IA32_PKRS, val);
+}

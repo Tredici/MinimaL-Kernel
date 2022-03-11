@@ -52,4 +52,14 @@ void vmx_host_write_rsp(long val);
 void vmx_host_write_rip(long val);
 void vmx_host_write_ia32_s_cet(long val);
 
+long vmx_host_read_ia32_pat();
+long vmx_host_read_ia32_efer();
+long vmx_host_read_ia32_perf_global_ctrl();
+long vmx_host_read_ia32_pkrs();
+
+void vmx_host_write_ia32_pat(long val);
+void vmx_host_write_ia32_efer(long val);
+void vmx_host_write_ia32_perf_global_ctrl(long val);
+void vmx_host_write_ia32_pkrs(long val);
+
 #endif
