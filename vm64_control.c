@@ -410,5 +410,130 @@ int vmx_read_vm_exit_instruction_information()
     return ans;
 }
 
+/**
+ * See Intel Manual Vol. 3
+ *  [Table B-12. Encodings for Natural-Width Control Fields (0110_00xx_xxxx_xxx0B)]
+ *  Field Name          Index       Encoding
+ *  CR0 guest/host mask 000000000B  00006000H
+ *  CR4 guest/host mask 000000001B  00006002H
+ *  CR0 read shadow     000000010B  00006004H
+ *  CR4 read shadow     000000011B  00006006H
+ *  CR3-target value 0  000000100B  00006008H
+ *  CR3-target value 1  000000101B  0000600AH
+ *  CR3-target value 2  000000110B  0000600CH
+ *  CR3-target value 3  000000111B  0000600EH
+ */
+
+#define VMX_CR0_GUEST_HOST_MASK 0x00006000
+#define VMX_CR4_GUEST_HOST_MASK 0x00006002
+#define VMX_CR0_READ_SHADOW     0x00006004
+#define VMX_CR4_READ_SHADOW     0x00006006
+#define VMX_CR3_TARGET_VALUE_0  0x00006008
+#define VMX_CR3_TARGET_VALUE_1  0x0000600A
+#define VMX_CR3_TARGET_VALUE_2  0x0000600C
+#define VMX_CR3_TARGET_VALUE_3  0x0000600E
+
+long vmx_read_cr0_guest_host_mask()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_CR0_GUEST_HOST_MASK);
+    return ans;
+}
+
+void vmx_write_cr0_guest_host_mask(long val)
+{
+    vmx_write_vmcs_field(VMX_CR0_GUEST_HOST_MASK, val);
+}
+
+
+long vmx_read_cr4_guest_host_mask()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_CR4_GUEST_HOST_MASK);
+    return ans;
+}
+
+void vmx_write_cr4_guest_host_mask(long val)
+{
+    vmx_write_vmcs_field(VMX_CR4_GUEST_HOST_MASK, val);
+}
+
+
+long vmx_read_cr0_read_shadow()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_CR0_READ_SHADOW);
+    return ans;
+}
+
+void vmx_write_cr0_read_shadow(long val)
+{
+    vmx_write_vmcs_field(VMX_CR0_READ_SHADOW, val);
+}
+
+
+long vmx_read_cr4_read_shadow()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_CR4_READ_SHADOW);
+    return ans;
+}
+
+void vmx_write_cr4_read_shadow(long val)
+{
+    vmx_write_vmcs_field(VMX_CR4_READ_SHADOW, val);
+}
+
+
+long vmx_read_cr3_target_value_0()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_CR3_TARGET_VALUE_0);
+    return ans;
+}
+
+void vmx_write_cr3_target_value_0(long val)
+{
+    vmx_write_vmcs_field(VMX_CR3_TARGET_VALUE_0, val);
+}
+
+
+long vmx_read_cr3_target_value_1()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_CR3_TARGET_VALUE_1);
+    return ans;
+}
+
+void vmx_write_cr3_target_value_1(long val)
+{
+    vmx_write_vmcs_field(VMX_CR3_TARGET_VALUE_1, val);
+}
+
+
+long vmx_read_cr3_target_value_2()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_CR3_TARGET_VALUE_2);
+    return ans;
+}
+
+void vmx_write_cr3_target_value_2(long val)
+{
+    vmx_write_vmcs_field(VMX_CR3_TARGET_VALUE_2, val);
+}
+
+
+long vmx_read_cr3_target_value_3()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_CR3_TARGET_VALUE_3);
+    return ans;
+}
+
+void vmx_write_cr3_target_value_3(long val)
+{
+    vmx_write_vmcs_field(VMX_CR3_TARGET_VALUE_3, val);
+}
 
 

@@ -60,5 +60,25 @@ void vmx_write_secondary_processor_based_vm_execution_controls(long val);
 void vmx_write_ple_gap(long val);
 void vmx_write_ple_window(long val);
 
+/* Read Write Natural-Width Control Fields */
+long vmx_read_cr0_guest_host_mask();
+long vmx_read_cr4_guest_host_mask();
+long vmx_read_cr0_read_shadow();
+long vmx_read_cr4_read_shadow();
+long vmx_read_cr3_target_value_0();
+long vmx_read_cr3_target_value_1();
+long vmx_read_cr3_target_value_2();
+long vmx_read_cr3_target_value_3();
+
+void vmx_write_cr0_guest_host_mask(long val);
+void vmx_write_cr4_guest_host_mask(long val);
+void vmx_write_cr0_read_shadow(long val);
+void vmx_write_cr4_read_shadow(long val);
+void vmx_write_cr3_target_value_0(long val);
+void vmx_write_cr3_target_value_1(long val);
+void vmx_write_cr3_target_value_2(long val);
+void vmx_write_cr3_target_value_3(long val);
+
+
 #endif
 
