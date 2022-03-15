@@ -79,6 +79,13 @@ void vmx_write_cr3_target_value_1(long val);
 void vmx_write_cr3_target_value_2(long val);
 void vmx_write_cr3_target_value_3(long val);
 
+/* Read Only Natural */
+long vmx_read_exit_qualification();
+long vmx_read_io_rcx();
+long vmx_read_io_rsi();
+long vmx_read_io_rdi();
+long vmx_read_io_rip();
+long vmx_read_guest_linear_address();
 
 #endif
 

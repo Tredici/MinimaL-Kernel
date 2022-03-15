@@ -536,4 +536,68 @@ void vmx_write_cr3_target_value_3(long val)
     vmx_write_vmcs_field(VMX_CR3_TARGET_VALUE_3, val);
 }
 
+/**
+ * See Intel Manual Vol. 3
+ *  [Table B-13. Encodings for Natural-Width Read-Only Data Fields (0110_01xx_xxxx_xxx0B)]
+ *  Field Name              Index       Encoding
+ *  Exit qualification      000000000B  00006400H
+ *  I/O RCX                 000000001B  00006402H
+ *  I/O RSI                 000000010B  00006404H
+ *  I/O RDI                 000000011B  00006406H
+ *  I/O RIP                 000000100B  00006408H
+ *  Guest-linear address    000000101B  0000640AH
+ */
+#define VMX_EXIT_QUALIFICATION      0x00006400
+#define VMX_IO_RCX                  0x00006402
+#define VMX_IO_RSI                  0x00006404
+#define VMX_IO_RDI                  0x00006406
+#define VMX_IO_RIP                  0x00006408
+#define VMX_GUEST_LINEAR_ADDRESS    0x0000640A
+
+long vmx_read_exit_qualification()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_EXIT_QUALIFICATION);
+    return ans;
+}
+
+
+long vmx_read_io_rcx()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_IO_RCX);
+    return ans;
+}
+
+
+long vmx_read_io_rsi()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_IO_RSI);
+    return ans;
+}
+
+
+long vmx_read_io_rdi()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_IO_RDI);
+    return ans;
+}
+
+
+long vmx_read_io_rip()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_IO_RIP);
+    return ans;
+}
+
+
+long vmx_read_guest_linear_address()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_LINEAR_ADDRESS);
+    return ans;
+}
 
