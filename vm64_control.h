@@ -2,6 +2,7 @@
 #ifndef VM64_CONTROL
 #define VM64_CONTROL
 
+/* Read Only fields! */
 int vmx_guest_read_vm_instruction_error();
 int vmx_guest_read_vm_exit_reason();
 int vmx_guest_read_vm_exit_interruption_information();
