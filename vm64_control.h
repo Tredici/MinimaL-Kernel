@@ -2,6 +2,16 @@
 #ifndef VM64_CONTROL
 #define VM64_CONTROL
 
+/* Read Write 16 bits control fields */
+short vmx_read_virtual_processor_identifier();
+short vmx_read_posted_interrupt_notification_vector();
+short vmx_read_eptp_index();
+
+void vmx_write_virtual_processor_identifier(short val);
+void vmx_write_posted_interrupt_notification_vector(short val);
+void vmx_write_eptp_index(short val);
+
+
 /* Read Only fields! */
 int vmx_guest_read_vm_instruction_error();
 int vmx_guest_read_vm_exit_reason();

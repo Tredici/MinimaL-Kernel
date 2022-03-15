@@ -4,6 +4,57 @@
 
 /**
  * See Intel Manual Vol. 3
+ *  [Table B-1. Encoding for 16-Bit Control Fields (0000_00xx_xxxx_xxx0B)]
+ *  Field Name                              Index       Encoding
+ *  Virtual-processor identifier (VPID)     000000000B  00000000H
+ *  Posted-interrupt notification vector    000000001B  00000002H
+ *  EPTP index                              000000010B  00000004H
+ */
+#define VMX_VIRTUAL_PROCESSOR_IDENTIFIER            0x00000000
+#define VMX_POSTED_INTERRUPT_NOTIFICATION_VECTOR    0x00000002
+#define VMX_EPTP_INDEX                              0x00000004
+
+
+short vmx_read_virtual_processor_identifier()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_VIRTUAL_PROCESSOR_IDENTIFIER);
+    return ans;
+}
+
+void vmx_write_virtual_processor_identifier(short val)
+{
+    vmx_write_vmcs_field(VMX_VIRTUAL_PROCESSOR_IDENTIFIER, (long)val);
+}
+
+
+short vmx_read_posted_interrupt_notification_vector()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_POSTED_INTERRUPT_NOTIFICATION_VECTOR);
+    return ans;
+}
+
+void vmx_write_posted_interrupt_notification_vector(short val)
+{
+    vmx_write_vmcs_field(VMX_POSTED_INTERRUPT_NOTIFICATION_VECTOR, (long)val);
+}
+
+
+short vmx_read_eptp_index()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_EPTP_INDEX);
+    return ans;
+}
+
+void vmx_write_eptp_index(short val)
+{
+    vmx_write_vmcs_field(VMX_EPTP_INDEX, (long)val);
+}
+
+/**
+ * See Intel Manual Vol. 3
  *  [Table B-8. Encodings for 32-Bit Control Fields (0100_00xx_xxxx_xxx0B)]
  *  Field Name                                      Index       Encoding
  *  Pin-based VM-execution controls                 000000000B  00004000H
