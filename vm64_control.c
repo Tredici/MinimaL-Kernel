@@ -601,3 +601,433 @@ long vmx_read_guest_linear_address()
     return ans;
 }
 
+
+/**
+ * See Intel Manual Vol. 3
+ *  [Table B-4. Encodings for 64-Bit Control Fields (0010_00xx_xxxx_xxxAb)]
+ *  Field Name                                      Encoding
+ *  Address of I/O bitmap A                         00002000H
+ *  Address of I/O bitmap B                         00002002H
+ *  Address of MSR bitmaps                          00002004H
+ *  VM-exit MSR-store address                       00002006H
+ *
+ *  VM-exit MSR-load address                        00002008H
+ *  VM-entry MSR-load address                       0000200AH
+ *  Executive-VMCS pointer                          0000200CH
+ *  PML address                                     0000200EH
+ *  TSC offset                                      00002010H
+ *  Virtual-APIC address                            00002012H
+ *  APIC-access address                             00002014H
+ *  Posted-interrupt descriptor address             00002016H
+ *  VM-function controls                            00002018H
+ *  EPT pointer (EPTP)                              0000201AH
+ *  EOI-exit bitmap 0 (EOI_EXIT0)                   0000201CH
+ *  EOI-exit bitmap 1 (EOI_EXIT1)                   0000201EH
+ *  EOI-exit bitmap 2 (EOI_EXIT2)                   00002020H
+ *  EOI-exit bitmap 3 (EOI_EXIT3)                   00002022H
+ *  EPTP-list address                               00002024H
+ *  VMREAD-bitmap address                           00002026H
+ *  VMWRITE-bitmap address                          00002028H
+ *  Virtualization-exception information address    0000202AH
+ *  XSS-exiting bitmap                              0000202CH
+ *
+ *  ENCLS-exiting bitmap                            0000202EH
+ *  Sub-page-permission-table pointer               00002030H
+ *  TSC multiplier                                  00002032H
+ *  Tertiary processor-based VM-execution controls  00002034H
+ *  ENCLV-exiting bitmap                            00002036H
+ */
+/* 1st block */
+#define VMX_ADDRESS_OF_IO_BITMAP_A      0x00002000
+#define VMX_ADDRESS_OF_IO_BITMAP_B      0x00002002
+#define VMX_ADDRESS_OF_MSR_BITMAPS      0x00002004
+#define VMX_VM_EXIT_MSR_STORE_ADDRESS   0x00002006
+
+long vmx_read_address_of_io_bitmap_a()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_ADDRESS_OF_IO_BITMAP_A);
+    return ans;
+}
+
+void vmx_write_address_of_io_bitmap_a(long val)
+{
+    vmx_write_vmcs_field(VMX_ADDRESS_OF_IO_BITMAP_A, val);
+}
+
+
+long vmx_read_address_of_io_bitmap_b()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_ADDRESS_OF_IO_BITMAP_B);
+    return ans;
+}
+
+void vmx_write_address_of_io_bitmap_b(long val)
+{
+    vmx_write_vmcs_field(VMX_ADDRESS_OF_IO_BITMAP_B, val);
+}
+
+
+long vmx_read_address_of_msr_bitmaps()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_ADDRESS_OF_MSR_BITMAPS);
+    return ans;
+}
+
+void vmx_write_address_of_msr_bitmaps(long val)
+{
+    vmx_write_vmcs_field(VMX_ADDRESS_OF_MSR_BITMAPS, val);
+}
+
+
+long vmx_read_vm_exit_msr_store_address()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_VM_EXIT_MSR_STORE_ADDRESS);
+    return ans;
+}
+
+void vmx_write_vm_exit_msr_store_address(long val)
+{
+    vmx_write_vmcs_field(VMX_VM_EXIT_MSR_STORE_ADDRESS, val);
+}
+
+/* 2nd block */
+#define VMX_VM_EXIT_MSR_LOAD_ADDRESS                        0x00002008
+#define VMX_VM_ENTRY_MSR_LOAD_ADDRESS                       0x0000200A
+#define VMX_EXECUTIVE_VMCS_POINTER                          0x0000200C
+#define VMX_PML_ADDRESS                                     0x0000200E
+#define VMX_TSC_OFFSET                                      0x00002010
+#define VMX_VIRTUAL_APIC_ADDRESS                            0x00002012
+#define VMX_APIC_ACCESS_ADDRESS                             0x00002014
+#define VMX_POSTED_INTERRUPT_DESCRIPTOR_ADDRESS             0x00002016
+#define VMX_VM_FUNCTION_CONTROLS                            0x00002018
+#define VMX_EPT_POINTER                                     0x0000201A
+#define VMX_EOI_EXIT_BITMAP_0                               0x0000201C
+#define VMX_EOI_EXIT_BITMAP_1                               0x0000201E
+#define VMX_EOI_EXIT_BITMAP_2                               0x00002020
+#define VMX_EOI_EXIT_BITMAP_3                               0x00002022
+#define VMX_EPTP_LIST_ADDRESS                               0x00002024
+#define VMX_VMREAD_BITMAP_ADDRESS                           0x00002026
+#define VMX_VMWRITE_BITMAP_ADDRESS                          0x00002028
+#define VMX_VIRTUALIZATION_EXCEPTION_INFORMATION_ADDRESS    0x0000202A
+#define VMX_XSS_EXITING_BITMAP                              0x0000202C
+
+long vmx_read_vm_exit_msr_load_address()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_VM_EXIT_MSR_LOAD_ADDRESS);
+    return ans;
+}
+
+void vmx_write_vm_exit_msr_load_address(long val)
+{
+    vmx_write_vmcs_field(VMX_VM_EXIT_MSR_LOAD_ADDRESS, val);
+}
+
+
+long vmx_read_vm_entry_msr_load_address()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_VM_ENTRY_MSR_LOAD_ADDRESS);
+    return ans;
+}
+
+void vmx_write_vm_entry_msr_load_address(long val)
+{
+    vmx_write_vmcs_field(VMX_VM_ENTRY_MSR_LOAD_ADDRESS, val);
+}
+
+
+long vmx_read_executive_vmcs_pointer()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_EXECUTIVE_VMCS_POINTER);
+    return ans;
+}
+
+void vmx_write_executive_vmcs_pointer(long val)
+{
+    vmx_write_vmcs_field(VMX_EXECUTIVE_VMCS_POINTER, val);
+}
+
+
+long vmx_read_pml_address()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_PML_ADDRESS);
+    return ans;
+}
+
+void vmx_write_pml_address(long val)
+{
+    vmx_write_vmcs_field(VMX_PML_ADDRESS, val);
+}
+
+
+long vmx_read_tsc_offset()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_TSC_OFFSET);
+    return ans;
+}
+
+void vmx_write_tsc_offset(long val)
+{
+    vmx_write_vmcs_field(VMX_TSC_OFFSET, val);
+}
+
+
+long vmx_read_virtual_apic_address()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_VIRTUAL_APIC_ADDRESS);
+    return ans;
+}
+
+void vmx_write_virtual_apic_address(long val)
+{
+    vmx_write_vmcs_field(VMX_VIRTUAL_APIC_ADDRESS, val);
+}
+
+
+long vmx_read_apic_access_address()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_APIC_ACCESS_ADDRESS);
+    return ans;
+}
+
+void vmx_write_apic_access_address(long val)
+{
+    vmx_write_vmcs_field(VMX_APIC_ACCESS_ADDRESS, val);
+}
+
+
+long vmx_read_posted_interrupt_descriptor_address()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_POSTED_INTERRUPT_DESCRIPTOR_ADDRESS);
+    return ans;
+}
+
+void vmx_write_posted_interrupt_descriptor_address(long val)
+{
+    vmx_write_vmcs_field(VMX_POSTED_INTERRUPT_DESCRIPTOR_ADDRESS, val);
+}
+
+
+long vmx_read_vm_function_controls()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_VM_FUNCTION_CONTROLS);
+    return ans;
+}
+
+void vmx_write_vm_function_controls(long val)
+{
+    vmx_write_vmcs_field(VMX_VM_FUNCTION_CONTROLS, val);
+}
+
+
+long vmx_read_ept_pointer()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_EPT_POINTER);
+    return ans;
+}
+
+void vmx_write_ept_pointer(long val)
+{
+    vmx_write_vmcs_field(VMX_EPT_POINTER, val);
+}
+
+
+long vmx_read_eoi_exit_bitmap_0()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_EOI_EXIT_BITMAP_0);
+    return ans;
+}
+
+void vmx_write_eoi_exit_bitmap_0(long val)
+{
+    vmx_write_vmcs_field(VMX_EOI_EXIT_BITMAP_0, val);
+}
+
+
+long vmx_read_eoi_exit_bitmap_1()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_EOI_EXIT_BITMAP_1);
+    return ans;
+}
+
+void vmx_write_eoi_exit_bitmap_1(long val)
+{
+    vmx_write_vmcs_field(VMX_EOI_EXIT_BITMAP_1, val);
+}
+
+
+long vmx_read_eoi_exit_bitmap_2()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_EOI_EXIT_BITMAP_2);
+    return ans;
+}
+
+void vmx_write_eoi_exit_bitmap_2(long val)
+{
+    vmx_write_vmcs_field(VMX_EOI_EXIT_BITMAP_2, val);
+}
+
+
+long vmx_read_eoi_exit_bitmap_3()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_EOI_EXIT_BITMAP_3);
+    return ans;
+}
+
+void vmx_write_eoi_exit_bitmap_3(long val)
+{
+    vmx_write_vmcs_field(VMX_EOI_EXIT_BITMAP_3, val);
+}
+
+
+long vmx_read_eptp_list_address()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_EPTP_LIST_ADDRESS);
+    return ans;
+}
+
+void vmx_write_eptp_list_address(long val)
+{
+    vmx_write_vmcs_field(VMX_EPTP_LIST_ADDRESS, val);
+}
+
+
+long vmx_read_vmread_bitmap_address()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_VMREAD_BITMAP_ADDRESS);
+    return ans;
+}
+
+void vmx_write_vmread_bitmap_address(long val)
+{
+    vmx_write_vmcs_field(VMX_VMREAD_BITMAP_ADDRESS, val);
+}
+
+
+long vmx_read_vmwrite_bitmap_address()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_VMWRITE_BITMAP_ADDRESS);
+    return ans;
+}
+
+void vmx_write_vmwrite_bitmap_address(long val)
+{
+    vmx_write_vmcs_field(VMX_VMWRITE_BITMAP_ADDRESS, val);
+}
+
+
+long vmx_read_virtualization_exception_information_address()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_VIRTUALIZATION_EXCEPTION_INFORMATION_ADDRESS);
+    return ans;
+}
+
+void vmx_write_virtualization_exception_information_address(long val)
+{
+    vmx_write_vmcs_field(VMX_VIRTUALIZATION_EXCEPTION_INFORMATION_ADDRESS, val);
+}
+
+
+long vmx_read_xss_exiting_bitmap()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_XSS_EXITING_BITMAP);
+    return ans;
+}
+
+void vmx_write_xss_exiting_bitmap(long val)
+{
+    vmx_write_vmcs_field(VMX_XSS_EXITING_BITMAP, val);
+}
+
+/*************** 3rd block ***********/
+#define VMX_ENCLS_EXITING_BITMAP                            0x0000202E
+#define VMX_SUB_PAGE_PERMISSION_TABLE_POINTER               0x00002030
+#define VMX_TSC_MULTIPLIER                                  0x00002032
+#define VMX_TERTIARY_PROCESSOR_BASED_VM_EXECUTION_CONTROLS  0x00002034
+#define VMX_ENCLV_EXITING_BITMAP                            0x00002036
+
+long vmx_read_encls_exiting_bitmap()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_ENCLS_EXITING_BITMAP);
+    return ans;
+}
+
+void vmx_write_encls_exiting_bitmap(long val)
+{
+    vmx_write_vmcs_field(VMX_ENCLS_EXITING_BITMAP, val);
+}
+
+
+long vmx_read_sub_page_permission_table_pointer()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_SUB_PAGE_PERMISSION_TABLE_POINTER);
+    return ans;
+}
+
+void vmx_write_sub_page_permission_table_pointer(long val)
+{
+    vmx_write_vmcs_field(VMX_SUB_PAGE_PERMISSION_TABLE_POINTER, val);
+}
+
+
+long vmx_read_tsc_multiplier()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_TSC_MULTIPLIER);
+    return ans;
+}
+
+void vmx_write_tsc_multiplier(long val)
+{
+    vmx_write_vmcs_field(VMX_TSC_MULTIPLIER, val);
+}
+
+
+long vmx_read_tertiary_processor_based_vm_execution_controls()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_TERTIARY_PROCESSOR_BASED_VM_EXECUTION_CONTROLS);
+    return ans;
+}
+
+void vmx_write_tertiary_processor_based_vm_execution_controls(long val)
+{
+    vmx_write_vmcs_field(VMX_TERTIARY_PROCESSOR_BASED_VM_EXECUTION_CONTROLS, val);
+}
+
+
+long vmx_read_enclv_exiting_bitmap()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_ENCLV_EXITING_BITMAP);
+    return ans;
+}
+
+void vmx_write_enclv_exiting_bitmap(long val)
+{
+    vmx_write_vmcs_field(VMX_ENCLV_EXITING_BITMAP, val);
+}

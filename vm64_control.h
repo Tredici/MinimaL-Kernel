@@ -87,5 +87,71 @@ long vmx_read_io_rdi();
 long vmx_read_io_rip();
 long vmx_read_guest_linear_address();
 
+/* Read Write 64 bits control fields */
+/* 1st block */
+long vmx_read_address_of_io_bitmap_a();
+long vmx_read_address_of_io_bitmap_b();
+long vmx_read_address_of_msr_bitmaps();
+long vmx_read_vm_exit_msr_store_address();
+
+void vmx_write_address_of_io_bitmap_a(long val);
+void vmx_write_address_of_io_bitmap_b(long val);
+void vmx_write_address_of_msr_bitmaps(long val);
+void vmx_write_vm_exit_msr_store_address(long val);
+
+/* 2nd block */
+long vmx_read_vm_exit_msr_load_address();
+long vmx_read_vm_entry_msr_load_address();
+long vmx_read_executive_vmcs_pointer();
+long vmx_read_pml_address();
+long vmx_read_tsc_offset();
+long vmx_read_virtual_apic_address();
+long vmx_read_apic_access_address();
+long vmx_read_posted_interrupt_descriptor_address();
+long vmx_read_vm_function_controls();
+long vmx_read_ept_pointer();
+long vmx_read_eoi_exit_bitmap_0();
+long vmx_read_eoi_exit_bitmap_1();
+long vmx_read_eoi_exit_bitmap_2();
+long vmx_read_eoi_exit_bitmap_3();
+long vmx_read_eptp_list_address();
+long vmx_read_vmread_bitmap_address();
+long vmx_read_vmwrite_bitmap_address();
+long vmx_read_virtualization_exception_information_address();
+long vmx_read_xss_exiting_bitmap();
+
+void vmx_write_vm_exit_msr_load_address(long val);
+void vmx_write_vm_entry_msr_load_address(long val);
+void vmx_write_executive_vmcs_pointer(long val);
+void vmx_write_pml_address(long val);
+void vmx_write_tsc_offset(long val);
+void vmx_write_virtual_apic_address(long val);
+void vmx_write_apic_access_address(long val);
+void vmx_write_posted_interrupt_descriptor_address(long val);
+void vmx_write_vm_function_controls(long val);
+void vmx_write_ept_pointer(long val);
+void vmx_write_eoi_exit_bitmap_0(long val);
+void vmx_write_eoi_exit_bitmap_1(long val);
+void vmx_write_eoi_exit_bitmap_2(long val);
+void vmx_write_eoi_exit_bitmap_3(long val);
+void vmx_write_eptp_list_address(long val);
+void vmx_write_vmread_bitmap_address(long val);
+void vmx_write_vmwrite_bitmap_address(long val);
+void vmx_write_virtualization_exception_information_address(long val);
+void vmx_write_xss_exiting_bitmap(long val);
+
+/* 3rd block */
+long vmx_read_encls_exiting_bitmap();
+long vmx_read_sub_page_permission_table_pointer();
+long vmx_read_tsc_multiplier();
+long vmx_read_tertiary_processor_based_vm_execution_controls();
+long vmx_read_enclv_exiting_bitmap();
+
+void vmx_write_encls_exiting_bitmap(long val);
+void vmx_write_sub_page_permission_table_pointer(long val);
+void vmx_write_tsc_multiplier(long val);
+void vmx_write_tertiary_processor_based_vm_execution_controls(long val);
+void vmx_write_enclv_exiting_bitmap(long val);
+
 #endif
 
