@@ -12,7 +12,7 @@ void vmx_write_posted_interrupt_notification_vector(short val);
 void vmx_write_eptp_index(short val);
 
 
-/* Read Only fields! */
+/* Read Only 32 bits fields! */
 int vmx_guest_read_vm_instruction_error();
 int vmx_guest_read_vm_exit_reason();
 int vmx_guest_read_vm_exit_interruption_information();
