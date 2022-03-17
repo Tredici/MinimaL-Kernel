@@ -149,7 +149,7 @@ error64.o: error64.S error64.h error64.c
 interrupt64.o: interrupt64.h interrupt64.c interrupt64.S interrupt64_handlers.h interrupt64_handlers.c interrupt64_handlers.S
 	gcc -r $(CFLAGS) $^ -o $@
 
-vm64.o: vm64.S vm64.h vm64.c vm64_guest.h vm64_guest.c vm64_host.h vm64_host.c vm64_control.h vm64_control.c
+vm64.o: vm64.S vm64.h vm64.c vm64_guest.h vm64_guest.c vm64_host.h vm64_host.c vm64_control.h vm64_control.c vm64_helpers.h vm64_helpers.c
 	gcc -r $(CFLAGS) $^ -o $@
 
 kmain32.o: kmain32.c
