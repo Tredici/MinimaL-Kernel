@@ -604,6 +604,22 @@ long vmx_read_guest_linear_address()
 
 /**
  * See Intel Manual Vol. 3
+ *  [Table B-5. Encodings for 64-Bit Read-Only Data Field (0010_01xx_xxxx_xxxAb)]
+ *  Field Name              Encoding
+ *  Guest-physical address  00002400H
+ */
+#define VMX_GUEST_PHYSICAL_ADDRESS  0x00002400
+
+long vmx_read_guest_physical_address()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_PHYSICAL_ADDRESS);
+    return ans;
+}
+
+
+/**
+ * See Intel Manual Vol. 3
  *  [Table B-4. Encodings for 64-Bit Control Fields (0010_00xx_xxxx_xxxAb)]
  *  Field Name                                      Encoding
  *  Address of I/O bitmap A                         00002000H
