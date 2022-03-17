@@ -22,6 +22,8 @@ int vmx_read_idt_vectoring_error_code();
 int vmx_read_vm_exit_instruction_length();
 int vmx_read_vm_exit_instruction_information();
 
+
+/* Read Write 32 bits control fields */
 long vmx_read_pin_based_vm_execution_controls();
 long vmx_read_primary_processor_based_vm_execution_controls();
 long vmx_read_exception_bitmap();
@@ -59,6 +61,7 @@ void vmx_write_tpr_threshold(long val);
 void vmx_write_secondary_processor_based_vm_execution_controls(long val);
 void vmx_write_ple_gap(long val);
 void vmx_write_ple_window(long val);
+
 
 /* Read Write Natural-Width Control Fields */
 long vmx_read_cr0_guest_host_mask();
