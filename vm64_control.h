@@ -82,6 +82,7 @@ void vmx_write_cr3_target_value_1(long val);
 void vmx_write_cr3_target_value_2(long val);
 void vmx_write_cr3_target_value_3(long val);
 
+
 /* Read Only Natural width fields */
 long vmx_read_exit_qualification();
 long vmx_read_io_rcx();
