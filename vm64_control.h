@@ -91,6 +91,7 @@ long vmx_read_io_rdi();
 long vmx_read_io_rip();
 long vmx_read_guest_linear_address();
 
+
 /* Read Write 64 bits control fields */
 /* 1st block */
 long vmx_read_address_of_io_bitmap_a();
