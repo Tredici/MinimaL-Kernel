@@ -5,18 +5,17 @@
 /**
  * See Intel Manual Vol. 3
  *  [Table B-2. Encodings for 16-Bit Guest-State Fields (0000_10xx_xxxx_xxx0B)]
- *  Field Name          Index       Encoding
- *  Guest ES selector   000000000B  00000800H
- *  Guest CS selector   000000001B  00000802H
- *  Guest SS selector   000000010B  00000804H
- *  Guest DS selector   000000011B  00000806H
- *  Guest FS selector   000000100B  00000808H
- *  Guest GS selector   000000101B  0000080AH
- *
- * Guest LDTR selector      000000110B  0000080CH
- * Guest TR selector        000000111B  0000080EH
- * Guest interrupt status   000001000B  00000810H
- * PML index                000001001B  00000812H
+ *  Field Name              Index       Encoding
+ *  Guest ES selector       000000000B  00000800H
+ *  Guest CS selector       000000001B  00000802H
+ *  Guest SS selector       000000010B  00000804H
+ *  Guest DS selector       000000011B  00000806H
+ *  Guest FS selector       000000100B  00000808H
+ *  Guest GS selector       000000101B  0000080AH
+ *  Guest LDTR selector     000000110B  0000080CH
+ *  Guest TR selector       000000111B  0000080EH
+ *  Guest interrupt status  000001000B  00000810H
+ *  PML index               000001001B  00000812H
  */
 #define GUEST_CS_SELECTOR 0X00000802
 #define GUEST_SS_SELECTOR 0X00000804
