@@ -8,7 +8,7 @@ void vmx_debug_virtual_machine(struct vm64_registers* registers)
     printline64("***** DEBUGGING VM *****");
     if (!registers)
     {
-        panic("No data!");
+        panic64("No data!");
     }
 
     putstr64("RAX = "); puthex64(registers->RAX); newline64();
