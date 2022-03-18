@@ -76,6 +76,21 @@ void vmx_guest_write_rsp(long val);
 void vmx_guest_write_rip(long val);
 void vmx_guest_write_rflags(long val);
 
+long vmx_guest_read_pending_debug_exceptions();
+long vmx_guest_read_ia32_sysenter_esp();
+long vmx_guest_read_ia32_sysenter_eip();
+long vmx_guest_read_ia32_s_cet();
+long vmx_guest_read_ssp();
+long vmx_guest_read_ia32_interrupt_ssp_table_addr();
+
+void vmx_guest_write_pending_debug_exceptions(long val);
+void vmx_guest_write_ia32_sysenter_esp(long val);
+void vmx_guest_write_ia32_sysenter_eip(long val);
+void vmx_guest_write_ia32_s_cet(long val);
+void vmx_guest_write_ssp(long val);
+void vmx_guest_write_ia32_interrupt_ssp_table_addr(long val);
+
+
 long vmx_guest_read_vmcs_link_pointer();
 long vmx_guest_read_ia32_debugctl();
 long vmx_guest_read_ia32_pat();

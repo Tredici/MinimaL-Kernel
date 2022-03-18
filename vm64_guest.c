@@ -402,6 +402,104 @@ void vmx_guest_write_gs_base(long val)
     vmx_write_vmcs_field(GUEST_GS_BASE, val);
 }
 
+/**
+ * Following functions are used to manage control
+ * and segment registers
+ *
+ * See Intel Manual Vol. 3
+ *  [B.4.3 Natural-Width Guest-State Fields]
+ *  [Table B-14. Encodings for Natural-Width Guest-State Fields (0110_10xx_xxxx_xxx0B)]
+ *  Field Name                          Index       Encoding
+ *  Guest pending debug exceptions      000010001B  00006822H
+ *  Guest IA32_SYSENTER_ESP             000010010B  00006824H
+ *  Guest IA32_SYSENTER_EIP             000010011B  00006826H
+ *  Guest IA32_S_CET                    000010100B  00006828H
+ *  Guest SSP                           000010101B  0000682AH
+ *  Guest IA32_INTERRUPT_SSP_TABLE_ADDR 000010110B  0000682CH
+ */
+#define VMX_GUEST_PENDING_DEBUG_EXCEPTIONS      0x00006822
+#define VMX_GUEST_IA32_SYSENTER_ESP             0x00006824
+#define VMX_GUEST_IA32_SYSENTER_EIP             0x00006826
+#define VMX_GUEST_IA32_S_CET                    0x00006828
+#define VMX_GUEST_SSP                           0x0000682A
+#define VMX_GUEST_IA32_INTERRUPT_SSP_TABLE_ADDR 0x0000682C
+
+long vmx_guest_read_pending_debug_exceptions()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_PENDING_DEBUG_EXCEPTIONS);
+    return ans;
+}
+
+void vmx_guest_write_pending_debug_exceptions(long val)
+{
+    vmx_write_vmcs_field(VMX_GUEST_PENDING_DEBUG_EXCEPTIONS, val);
+}
+
+
+long vmx_guest_read_ia32_sysenter_esp()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_IA32_SYSENTER_ESP);
+    return ans;
+}
+
+void vmx_guest_write_ia32_sysenter_esp(long val)
+{
+    vmx_write_vmcs_field(VMX_GUEST_IA32_SYSENTER_ESP, val);
+}
+
+
+long vmx_guest_read_ia32_sysenter_eip()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_IA32_SYSENTER_EIP);
+    return ans;
+}
+
+void vmx_guest_write_ia32_sysenter_eip(long val)
+{
+    vmx_write_vmcs_field(VMX_GUEST_IA32_SYSENTER_EIP, val);
+}
+
+
+long vmx_guest_read_ia32_s_cet()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_IA32_S_CET);
+    return ans;
+}
+
+void vmx_guest_write_ia32_s_cet(long val)
+{
+    vmx_write_vmcs_field(VMX_GUEST_IA32_S_CET, val);
+}
+
+
+long vmx_guest_read_ssp()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_SSP);
+    return ans;
+}
+
+void vmx_guest_write_ssp(long val)
+{
+    vmx_write_vmcs_field(VMX_GUEST_SSP, val);
+}
+
+
+long vmx_guest_read_ia32_interrupt_ssp_table_addr()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_IA32_INTERRUPT_SSP_TABLE_ADDR);
+    return ans;
+}
+
+void vmx_guest_write_ia32_interrupt_ssp_table_addr(long val)
+{
+    vmx_write_vmcs_field(VMX_GUEST_IA32_INTERRUPT_SSP_TABLE_ADDR, val);
+}
 
 /**
  * Following functions are used to manage control
