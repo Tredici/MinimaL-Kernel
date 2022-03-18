@@ -14,7 +14,7 @@ void vmx_guest_write_ds(short val);
 void vmx_guest_write_ss(short val);
 void vmx_guest_write_es(short val);
 void vmx_guest_write_fs(short val);
-void vmx_guestw_itrd_gs(short val);
+void vmx_guest_write_gs(short val);
 
 int vmx_guest_read_cs_limit();
 int vmx_guest_read_ds_limit();
