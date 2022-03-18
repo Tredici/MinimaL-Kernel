@@ -94,7 +94,7 @@ short vmx_host_read_gs()
     return ans;
 }
 
-void vmx_hostw_itrd_gs(short val)
+void vmx_host_write_gs(short val)
 {
     vmx_write_vmcs_field(HOST_GS_SELECTOR, val);
 }
