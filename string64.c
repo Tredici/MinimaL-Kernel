@@ -204,8 +204,6 @@ const char* hex64(unsigned long n)
 {
     static char buffer[22] = "0x";
     int i = 0;
-    int digits = 0; /* number of digits in n */
-    unsigned long copy;
 
     // 64 bits = 16 hex digits
     for (i = 0; i != 16; ++i)
