@@ -30,5 +30,9 @@ short so_read_gs();
  */
 long so_read_rflags();
 
+/**
+ * Read Global descriptor table register. 
+ */
+int so_read_gdtr(void *gdt, unsigned short *limit);
 
 #endif

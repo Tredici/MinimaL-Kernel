@@ -92,3 +92,16 @@ so_read_rflags:
     pushf
     pop %rax
     ret
+
+.global so_read_gdtr
+so_read_gdtr:
+    mov $1, %rax
+    test %rdi, %rdi
+    jz 1f
+    test %rsi, %rsi
+    jz 1f
+    sub $10, %rsp
+    popw (%rsi) /* get limit */
+    popq (%rdi) /* get pointer */
+    xor %rax, %rax
+1:  ret
