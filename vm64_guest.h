@@ -8,6 +8,10 @@ short vmx_guest_read_ss();
 short vmx_guest_read_es();
 short vmx_guest_read_fs();
 short vmx_guest_read_gs();
+short vmx_guest_read_ldtr_selector();
+short vmx_guest_read_tr_selector();
+short vmx_guest_read_interrupt_status();
+short vmx_guest_read_pml_index();
 
 void vmx_guest_write_cs(short val);
 void vmx_guest_write_ds(short val);
@@ -15,6 +19,10 @@ void vmx_guest_write_ss(short val);
 void vmx_guest_write_es(short val);
 void vmx_guest_write_fs(short val);
 void vmx_guest_write_gs(short val);
+void vmx_guest_write_ldtr_selector(short val);
+void vmx_guest_write_tr_selector(short val);
+void vmx_guest_write_interrupt_status(short val);
+void vmx_guest_write_pml_index(short val);
 
 int vmx_guest_read_cs_limit();
 int vmx_guest_read_ds_limit();

@@ -12,6 +12,11 @@
  *  Guest DS selector   000000011B  00000806H
  *  Guest FS selector   000000100B  00000808H
  *  Guest GS selector   000000101B  0000080AH
+ *
+ * Guest LDTR selector      000000110B  0000080CH
+ * Guest TR selector        000000111B  0000080EH
+ * Guest interrupt status   000001000B  00000810H
+ * PML index                000001001B  00000812H
  */
 #define GUEST_CS_SELECTOR 0X00000802
 #define GUEST_SS_SELECTOR 0X00000804
@@ -19,6 +24,11 @@
 #define GUEST_ES_SELECTOR 0X00000800
 #define GUEST_FS_SELECTOR 0X00000808
 #define GUEST_GS_SELECTOR 0X0000080A
+
+#define VMX_GUEST_LDTR_SELECTOR      0x0000080C
+#define VMX_GUEST_TR_SELECTOR        0x0000080E
+#define VMX_GUEST_INTERRUPT_STATUS   0x00000810
+#define VMX_PML_INDEX                0x00000812
 
 short vmx_guest_read_cs()
 {
@@ -97,6 +107,57 @@ void vmx_guest_write_gs(short val)
     vmx_write_vmcs_field(GUEST_GS_SELECTOR, val);
 }
 
+
+short vmx_guest_read_ldtr_selector()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_LDTR_SELECTOR);
+    return ans;
+}
+
+void vmx_guest_write_ldtr_selector(short val)
+{
+    vmx_write_vmcs_field(VMX_GUEST_LDTR_SELECTOR, val);
+}
+
+
+short vmx_guest_read_tr_selector()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_TR_SELECTOR);
+    return ans;
+}
+
+void vmx_guest_write_tr_selector(short val)
+{
+    vmx_write_vmcs_field(VMX_GUEST_TR_SELECTOR, val);
+}
+
+
+short vmx_guest_read_interrupt_status()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_INTERRUPT_STATUS);
+    return ans;
+}
+
+void vmx_guest_write_interrupt_status(short val)
+{
+    vmx_write_vmcs_field(VMX_GUEST_INTERRUPT_STATUS, val);
+}
+
+
+short vmx_guest_read_pml_index()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_PML_INDEX);
+    return ans;
+}
+
+void vmx_guest_write_pml_index(short val)
+{
+    vmx_write_vmcs_field(VMX_PML_INDEX, val);
+}
 
 /*
  * See Intel Manual Vol. 3
