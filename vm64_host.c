@@ -100,6 +100,18 @@ void vmx_host_write_gs(short val)
 }
 
 
+short vmx_host_read_tr()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, HOST_TR_SELECTOR);
+    return ans;
+}
+
+void vmx_host_write_tr(short val)
+{
+    vmx_write_vmcs_field(HOST_TR_SELECTOR, val);
+}
+
 /**
  * See Intel Manual Vol. 3
  *  [Table B-15. Encodings for Natural-Width Host-State Fields (0110_11xx_xxxx_xxx0B)]

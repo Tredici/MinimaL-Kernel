@@ -16,6 +16,7 @@ short vmx_host_read_ss();
 short vmx_host_read_es();
 short vmx_host_read_fs();
 short vmx_host_read_gs();
+short vmx_host_read_tr();
 
 void vmx_host_write_cs(short val);
 void vmx_host_write_ds(short val);
@@ -23,6 +24,7 @@ void vmx_host_write_ss(short val);
 void vmx_host_write_es(short val);
 void vmx_host_write_fs(short val);
 void vmx_host_write_gs(short val);
+void vmx_host_write_tr(short val);
 
 long vmx_host_read_cr0();
 long vmx_host_read_cr3();
