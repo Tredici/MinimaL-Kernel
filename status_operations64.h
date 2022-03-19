@@ -33,7 +33,7 @@ long so_read_rflags();
 /**
  * Read Global descriptor table register. 
  */
-int so_read_gdtr(void *gdt, unsigned short *limit);
+int so_read_gdtr(void **gdt, unsigned short *limit);
 
 /**
  * Read Task Register
