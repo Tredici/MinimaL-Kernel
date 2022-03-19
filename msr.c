@@ -4,7 +4,8 @@
 #define MSR_IA32_SYSENTER_ESP   0x175
 #define MSR_IA32_SYSENTER_EIP   0x176
 #define MSR_IA32_DEBUGCTL       0x1D9
-
+#define MSR_IA32_VMX_EXIT_CTLS      0x483      
+#define MSR_IA32_VMX_TRUE_EXIT_CTLS 0x48F
 
 long msr_read_ia32_sysenter_cs()
 {
@@ -24,4 +25,14 @@ long msr_read_ia32_sysenter_eip()
 long msr_read_ia32_debugctl()
 {
     return msr_read(MSR_IA32_DEBUGCTL);
+}
+
+long msr_read_ia32_vmx_exit_ctls()
+{
+    return msr_read(MSR_IA32_VMX_EXIT_CTLS);
+}
+
+long msr_read_ia32_vmx_true_exit_ctls()
+{
+    return msr_read(MSR_IA32_VMX_TRUE_EXIT_CTLS);
 }
