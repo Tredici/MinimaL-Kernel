@@ -35,4 +35,11 @@ long so_read_rflags();
  */
 int so_read_gdtr(void *gdt, unsigned short *limit);
 
+/**
+ * Read Task Register
+ * See Intel Manual Vol. 3
+ *  [2.4.4 Task Register (TR)]
+ */
+unsigned short so_read_tr();
+
 #endif

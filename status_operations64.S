@@ -105,3 +105,13 @@ so_read_gdtr:
     popq (%rdi) /* get pointer */
     xor %rax, %rax
 1:  ret
+
+/**
+ * See Intel Manual Vol. 2
+ *  [STR—Store Task Register]
+ */
+.global so_read_tr
+so_read_tr:
+    xor %rax, %rax
+    str %ax
+    ret
