@@ -30,6 +30,8 @@ int vmx_guest_read_ss_limit();
 int vmx_guest_read_es_limit();
 int vmx_guest_read_fs_limit();
 int vmx_guest_read_gs_limit();
+int vmx_guest_read_ldtr_limit();
+int vmx_guest_read_tr_limit();
 
 void vmx_guest_write_cs_limit(int ans);
 void vmx_guest_write_ds_limit(int ans);
@@ -37,6 +39,9 @@ void vmx_guest_write_ss_limit(int ans);
 void vmx_guest_write_es_limit(int ans);
 void vmx_guest_write_fs_limit(int ans);
 void vmx_guest_write_gs_limit(int ans);
+void vmx_guest_write_ldtr_limit(int ans);
+void vmx_guest_write_tr_limit(int ans);
+
 
 long vmx_guest_read_cr0();
 long vmx_guest_read_cr3();

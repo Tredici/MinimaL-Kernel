@@ -258,6 +258,32 @@ void vmx_guest_write_gs_limit(int ans)
 }
 
 
+int vmx_guest_read_ldtr_limit()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, GUEST_LDTR_LIMIT);
+    return ans;
+}
+
+void vmx_guest_write_ldtr_limit(int ans)
+{
+    vmx_write_vmcs_field(GUEST_LDTR_LIMIT, ans);
+}
+
+
+int vmx_guest_read_tr_limit()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, GUEST_TR_LIMIT);
+    return ans;
+}
+
+void vmx_guest_write_tr_limit(int ans)
+{
+    vmx_write_vmcs_field(GUEST_TR_LIMIT, ans);
+}
+
+
 /**
  * Following functions are used to manage control
  * and segment registers
