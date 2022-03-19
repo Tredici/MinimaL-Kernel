@@ -42,4 +42,16 @@ int so_read_gdtr(void *gdt, unsigned short *limit);
  */
 unsigned short so_read_tr();
 
+/**
+ * Read debug registers
+ */
+long so_read_dr0();
+long so_read_dr1();
+long so_read_dr2();
+long so_read_dr3();
+long so_read_dr4();
+long so_read_dr5();
+long so_read_dr6();
+long so_read_dr7();
+
 #endif

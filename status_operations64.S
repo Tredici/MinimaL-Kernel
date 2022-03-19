@@ -115,3 +115,48 @@ so_read_tr:
     xor %rax, %rax
     str %ax
     ret
+
+/**
+ * See Intel Manual Vol. 2
+ *  [MOV—Move to/from Debug Registers]
+ */
+.global so_read_dr0
+so_read_dr0:
+    mov %dr0, %rax
+    ret
+
+.global so_read_dr1
+so_read_dr1:
+    mov %dr0, %rax
+    ret
+
+.global so_read_dr2
+so_read_dr2:
+    mov %dr0, %rax
+    ret
+
+.global so_read_dr3
+so_read_dr3:
+    mov %dr0, %rax
+    ret
+
+.global so_read_dr4
+so_read_dr4:
+    mov %dr0, %rax
+    ret
+
+.global so_read_dr5
+so_read_dr5:
+    mov %dr0, %rax
+    ret
+
+.global so_read_dr6
+so_read_dr6:
+    mov %dr0, %rax
+    ret
+
+.global so_read_dr7
+so_read_dr7:
+    mov %dr0, %rax
+    ret
+
