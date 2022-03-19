@@ -2,6 +2,7 @@
 #ifndef VM64_GUEST
 #define VM64_GUEST
 
+/* Read Write 16 bits guest fields */
 short vmx_guest_read_cs();
 short vmx_guest_read_ds();
 short vmx_guest_read_ss();
@@ -24,6 +25,8 @@ void vmx_guest_write_tr_selector(short val);
 void vmx_guest_write_interrupt_status(short val);
 void vmx_guest_write_pml_index(short val);
 
+
+/* Read Write 32 bits guest fields */
 int vmx_guest_read_cs_limit();
 int vmx_guest_read_ds_limit();
 int vmx_guest_read_ss_limit();
@@ -43,6 +46,7 @@ void vmx_guest_write_ldtr_limit(int ans);
 void vmx_guest_write_tr_limit(int ans);
 
 
+/* Read Write Natural-Width guest fields */
 long vmx_guest_read_cr0();
 long vmx_guest_read_cr3();
 long vmx_guest_read_cr4();
@@ -96,6 +100,7 @@ void vmx_guest_write_ssp(long val);
 void vmx_guest_write_ia32_interrupt_ssp_table_addr(long val);
 
 
+/* Read Write 64 bits guest fields */
 long vmx_guest_read_vmcs_link_pointer();
 long vmx_guest_read_ia32_debugctl();
 long vmx_guest_read_ia32_pat();
