@@ -7,6 +7,7 @@
 
 #define MSR_IA32_VMX_BASIC          0x480
 #define MSR_IA32_VMX_EXIT_CTLS      0x483      
+#define MSR_IA32_VMX_ENTRY_CTLS     0x484
 #define MSR_IA32_VMX_TRUE_EXIT_CTLS 0x48F
 
 long msr_read_ia32_sysenter_cs()
@@ -37,6 +38,11 @@ long msr_read_ia32_vmx_basic()
 long msr_read_ia32_vmx_exit_ctls()
 {
     return msr_read(MSR_IA32_VMX_EXIT_CTLS);
+}
+
+long msr_read_ia32_vmx_entry_ctls()
+{
+    return msr_read(MSR_IA32_VMX_ENTRY_CTLS);
 }
 
 long msr_read_ia32_vmx_true_exit_ctls()
