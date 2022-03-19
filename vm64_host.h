@@ -10,6 +10,7 @@
 #ifndef VM64_HOST
 #define VM64_HOST
 
+/* 16-Bit Host-State Fields */
 short vmx_host_read_cs();
 short vmx_host_read_ds();
 short vmx_host_read_ss();
@@ -26,6 +27,8 @@ void vmx_host_write_fs(short val);
 void vmx_host_write_gs(short val);
 void vmx_host_write_tr(short val);
 
+
+/* Natural-Width Host-State Fields */
 long vmx_host_read_cr0();
 long vmx_host_read_cr3();
 long vmx_host_read_cr4();
@@ -39,6 +42,8 @@ long vmx_host_read_ia32_sysenter_eip();
 long vmx_host_read_rsp();
 long vmx_host_read_rip();
 long vmx_host_read_ia32_s_cet();
+long vmx_host_read_ssp();
+long vmx_host_read_ia32_interrupt_ssp_table_addr();
 
 void vmx_host_write_cr0(long val);
 void vmx_host_write_cr3(long val);
@@ -53,7 +58,11 @@ void vmx_host_write_ia32_sysenter_eip(long val);
 void vmx_host_write_rsp(long val);
 void vmx_host_write_rip(long val);
 void vmx_host_write_ia32_s_cet(long val);
+void vmx_host_write_ssp(long val);
+void vmx_host_write_ia32_interrupt_ssp_table_addr(long val);
 
+
+/*  */
 long vmx_host_read_ia32_pat();
 long vmx_host_read_ia32_efer();
 long vmx_host_read_ia32_perf_global_ctrl();

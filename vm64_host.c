@@ -129,7 +129,9 @@ void vmx_host_write_tr(short val)
  *  Host RSP                000001010B  00006C14H
  *  Host RIP                000001011B  00006C16H
  *  Host IA32_S_CET         000001100B  00006C18H
- * 
+ *
+ *  Host SSP                            000001101B 00006C1AH
+ *  Host IA32_INTERRUPT_SSP_TABLE_ADDR  000001110B 00006C1CH
  */
 #define HOST_CR0                0x00006C00
 #define HOST_CR3                0x00006C02
@@ -145,6 +147,8 @@ void vmx_host_write_tr(short val)
 #define HOST_RIP                0x00006C16
 #define HOST_IA32_S_CET         0x00006C18
 
+#define VMX_HOST_SSP                            0x00006C1A
+#define VMX_HOST_IA32_INTERRUPT_SSP_TABLE_ADDR  0x00006C1C
 
 long vmx_host_read_cr0()
 {
@@ -313,6 +317,32 @@ long vmx_host_read_ia32_s_cet()
 void vmx_host_write_ia32_s_cet(long val)
 {
     vmx_write_vmcs_field(HOST_IA32_S_CET, val);
+}
+
+
+long vmx_host_read_ssp()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_HOST_SSP);
+    return ans;
+}
+
+void vmx_host_write_ssp(long val)
+{
+    vmx_write_vmcs_field(VMX_HOST_SSP, val);
+}
+
+
+long vmx_host_read_ia32_interrupt_ssp_table_addr()
+{
+    long ans;
+    vmx_read_vmcs_field(&ans, VMX_HOST_IA32_INTERRUPT_SSP_TABLE_ADDR);
+    return ans;
+}
+
+void vmx_host_write_ia32_interrupt_ssp_table_addr(long val)
+{
+    vmx_write_vmcs_field(VMX_HOST_IA32_INTERRUPT_SSP_TABLE_ADDR, val);
 }
 
 
