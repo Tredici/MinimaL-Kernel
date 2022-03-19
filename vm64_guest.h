@@ -45,6 +45,37 @@ void vmx_guest_write_gs_limit(int ans);
 void vmx_guest_write_ldtr_limit(int ans);
 void vmx_guest_write_tr_limit(int ans);
 
+int vmx_guest_read_gdtr_limit();
+int vmx_guest_read_idtr_limit();
+int vmx_guest_read_es_access_rights();
+int vmx_guest_read_cs_access_rights();
+int vmx_guest_read_ss_access_rights();
+int vmx_guest_read_ds_access_rights();
+int vmx_guest_read_fs_access_rights();
+int vmx_guest_read_gs_access_rights();
+int vmx_guest_read_ldtr_access_rights();
+int vmx_guest_read_tr_access_rights();
+int vmx_guest_read_interruptibility_state();
+int vmx_guest_read_activity_state();
+int vmx_guest_read_smbase();
+int vmx_guest_read_ia32_sysenter_cs();
+int vmx_guest_read_vmx_preemption_timer_value();
+
+void vmx_guest_write_gdtr_limit(int ans);
+void vmx_guest_write_idtr_limit(int ans);
+void vmx_guest_write_es_access_rights(int ans);
+void vmx_guest_write_cs_access_rights(int ans);
+void vmx_guest_write_ss_access_rights(int ans);
+void vmx_guest_write_ds_access_rights(int ans);
+void vmx_guest_write_fs_access_rights(int ans);
+void vmx_guest_write_gs_access_rights(int ans);
+void vmx_guest_write_ldtr_access_rights(int ans);
+void vmx_guest_write_tr_access_rights(int ans);
+void vmx_guest_write_interruptibility_state(int ans);
+void vmx_guest_write_activity_state(int ans);
+void vmx_guest_write_smbase(int ans);
+void vmx_guest_write_ia32_sysenter_cs(int ans);
+void vmx_guest_write_vmx_preemption_timer_value(int ans);
 
 /* Read Write Natural-Width guest fields */
 long vmx_guest_read_cr0();

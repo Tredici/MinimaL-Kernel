@@ -283,6 +283,236 @@ void vmx_guest_write_tr_limit(int ans)
     vmx_write_vmcs_field(GUEST_TR_LIMIT, ans);
 }
 
+/**
+ * See Intel Manual Vol. 3
+ *  [Table B-10. Encodings for 32-Bit Guest-State Fields (0100_10xx_xxxx_xxx0B)]
+ *  Field Name                      Index       Encoding
+ *  Guest GDTR limit                000001000B  00004810H
+ *  Guest IDTR limit                000001001B  00004812H
+ *  Guest ES access rights          000001010B  00004814H
+ *  Guest CS access rights          000001011B  00004816H
+ *  Guest SS access rights          000001100B  00004818H
+ *  Guest DS access rights          000001101B  0000481AH
+ *  Guest FS access rights          000001110B  0000481CH
+ *  Guest GS access rights          000001111B  0000481EH
+ *  Guest LDTR access rights        000010000B  00004820H
+ *  Guest TR access rights          000010001B  00004822H
+ *  Guest interruptibility state    000010010B  00004824H
+ *  Guest activity state            000010011B  00004826H
+ *  Guest SMBASE                    000010100B  00004828H
+ *  Guest IA32_SYSENTER_CS          000010101B  0000482AH
+ *  VMX-preemption timer value      000010111B  0000482EH
+ */
+#define VMX_GUEST_GDTR_LIMIT                0x00004810
+#define VMX_GUEST_IDTR_LIMIT                0x00004812
+#define VMX_GUEST_ES_ACCESS_RIGHTS          0x00004814
+#define VMX_GUEST_CS_ACCESS_RIGHTS          0x00004816
+#define VMX_GUEST_SS_ACCESS_RIGHTS          0x00004818
+#define VMX_GUEST_DS_ACCESS_RIGHTS          0x0000481A
+#define VMX_GUEST_FS_ACCESS_RIGHTS          0x0000481C
+#define VMX_GUEST_GS_ACCESS_RIGHTS          0x0000481E
+#define VMX_GUEST_LDTR_ACCESS_RIGHTS        0x00004820
+#define VMX_GUEST_TR_ACCESS_RIGHTS          0x00004822
+#define VMX_GUEST_INTERRUPTIBILITY_STATE    0x00004824
+#define VMX_GUEST_ACTIVITY_STATE            0x00004826
+#define VMX_GUEST_SMBASE                    0x00004828
+#define VMX_GUEST_IA32_SYSENTER_CS          0x0000482A
+#define VMX_VMX_PREEMPTION_TIMER_VALUE      0x0000482E
+
+
+int vmx_guest_read_gdtr_limit()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_GDTR_LIMIT);
+    return ans;
+}
+
+void vmx_guest_write_gdtr_limit(int ans)
+{
+    vmx_write_vmcs_field(VMX_GUEST_GDTR_LIMIT, ans);
+}
+
+
+int vmx_guest_read_idtr_limit()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_IDTR_LIMIT);
+    return ans;
+}
+
+void vmx_guest_write_idtr_limit(int ans)
+{
+    vmx_write_vmcs_field(VMX_GUEST_IDTR_LIMIT, ans);
+}
+
+
+int vmx_guest_read_es_access_rights()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_ES_ACCESS_RIGHTS);
+    return ans;
+}
+
+void vmx_guest_write_es_access_rights(int ans)
+{
+    vmx_write_vmcs_field(VMX_GUEST_ES_ACCESS_RIGHTS, ans);
+}
+
+
+int vmx_guest_read_cs_access_rights()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_CS_ACCESS_RIGHTS);
+    return ans;
+}
+
+void vmx_guest_write_cs_access_rights(int ans)
+{
+    vmx_write_vmcs_field(VMX_GUEST_CS_ACCESS_RIGHTS, ans);
+}
+
+
+int vmx_guest_read_ss_access_rights()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_SS_ACCESS_RIGHTS);
+    return ans;
+}
+
+void vmx_guest_write_ss_access_rights(int ans)
+{
+    vmx_write_vmcs_field(VMX_GUEST_SS_ACCESS_RIGHTS, ans);
+}
+
+
+int vmx_guest_read_ds_access_rights()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_DS_ACCESS_RIGHTS);
+    return ans;
+}
+
+void vmx_guest_write_ds_access_rights(int ans)
+{
+    vmx_write_vmcs_field(VMX_GUEST_DS_ACCESS_RIGHTS, ans);
+}
+
+
+int vmx_guest_read_fs_access_rights()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_FS_ACCESS_RIGHTS);
+    return ans;
+}
+
+void vmx_guest_write_fs_access_rights(int ans)
+{
+    vmx_write_vmcs_field(VMX_GUEST_FS_ACCESS_RIGHTS, ans);
+}
+
+
+int vmx_guest_read_gs_access_rights()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_GS_ACCESS_RIGHTS);
+    return ans;
+}
+
+void vmx_guest_write_gs_access_rights(int ans)
+{
+    vmx_write_vmcs_field(VMX_GUEST_GS_ACCESS_RIGHTS, ans);
+}
+
+
+int vmx_guest_read_ldtr_access_rights()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_LDTR_ACCESS_RIGHTS);
+    return ans;
+}
+
+void vmx_guest_write_ldtr_access_rights(int ans)
+{
+    vmx_write_vmcs_field(VMX_GUEST_LDTR_ACCESS_RIGHTS, ans);
+}
+
+
+int vmx_guest_read_tr_access_rights()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_TR_ACCESS_RIGHTS);
+    return ans;
+}
+
+void vmx_guest_write_tr_access_rights(int ans)
+{
+    vmx_write_vmcs_field(VMX_GUEST_TR_ACCESS_RIGHTS, ans);
+}
+
+
+int vmx_guest_read_interruptibility_state()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_INTERRUPTIBILITY_STATE);
+    return ans;
+}
+
+void vmx_guest_write_interruptibility_state(int ans)
+{
+    vmx_write_vmcs_field(VMX_GUEST_INTERRUPTIBILITY_STATE, ans);
+}
+
+
+int vmx_guest_read_activity_state()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_ACTIVITY_STATE);
+    return ans;
+}
+
+void vmx_guest_write_activity_state(int ans)
+{
+    vmx_write_vmcs_field(VMX_GUEST_ACTIVITY_STATE, ans);
+}
+
+
+int vmx_guest_read_smbase()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_SMBASE);
+    return ans;
+}
+
+void vmx_guest_write_smbase(int ans)
+{
+    vmx_write_vmcs_field(VMX_GUEST_SMBASE, ans);
+}
+
+
+int vmx_guest_read_ia32_sysenter_cs()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_GUEST_IA32_SYSENTER_CS);
+    return ans;
+}
+
+void vmx_guest_write_ia32_sysenter_cs(int ans)
+{
+    vmx_write_vmcs_field(VMX_GUEST_IA32_SYSENTER_CS, ans);
+}
+
+
+int vmx_guest_read_vmx_preemption_timer_value()
+{
+    long ans = 0;
+    vmx_read_vmcs_field(&ans, VMX_VMX_PREEMPTION_TIMER_VALUE);
+    return ans;
+}
+
+void vmx_guest_write_vmx_preemption_timer_value(int ans)
+{
+    vmx_write_vmcs_field(VMX_VMX_PREEMPTION_TIMER_VALUE, ans);
+}
 
 /**
  * Following functions are used to manage control
