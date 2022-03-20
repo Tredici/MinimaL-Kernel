@@ -34,4 +34,21 @@ void vmx_debug_vmx(struct vm64_registers* registers);
  */
 const char *vmx_error_reason(int number);
 
+/**
+ * During VMX operation not all values for
+ * CRO are supported.
+ *
+ * The function return 0 if the given value
+ * is valid, nozero otherwise.
+ */
+int vmx_validate_cr0(long cr0);
+/**
+ * During VMX operation not all values for
+ * CR4 are supported.
+ *
+ * The function return 0 if the given value
+ * is valid, nozero otherwise.
+ */
+int vmx_validate_cr4(long cr4);
+
 #endif
