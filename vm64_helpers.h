@@ -28,4 +28,10 @@ struct vm64_registers
 
 void vmx_debug_vmx(struct vm64_registers* registers);
 
+/**
+ * Return a statically allocated string
+ * describing the given error.
+ */
+const char *vmx_error_reason(int number);
+
 #endif
