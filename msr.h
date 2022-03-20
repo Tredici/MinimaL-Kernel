@@ -19,6 +19,12 @@ long msr_read_ia32_vmx_pinbased_ctls();
 long msr_read_ia32_vmx_procbased_ctls();
 long msr_read_ia32_vmx_exit_ctls();
 long msr_read_ia32_vmx_entry_ctls();
+
+long msr_read_ia32_vmx_cr0_fixed0();
+long msr_read_ia32_vmx_cr0_fixed1();
+long msr_read_ia32_vmx_cr4_fixed0();
+long msr_read_ia32_vmx_cr4_fixed1();
+
 long msr_read_ia32_vmx_true_exit_ctls();
 
 long msr_read_ia32_pkrs();

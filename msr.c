@@ -14,6 +14,12 @@
 #define MSR_IA32_VMX_PROCBASED_CTLS 0x482
 #define MSR_IA32_VMX_EXIT_CTLS      0x483      
 #define MSR_IA32_VMX_ENTRY_CTLS     0x484
+
+#define MSR_IA32_VMX_CR0_FIXED0     0x486
+#define MSR_IA32_VMX_CR0_FIXED1     0x487
+#define MSR_IA32_VMX_CR4_FIXED0     0x488
+#define MSR_IA32_VMX_CR4_FIXED1     0x489
+
 #define MSR_IA32_VMX_TRUE_EXIT_CTLS 0x48F
 
 #define MSR_IA32_PKRS       0x6E1
@@ -22,6 +28,7 @@
 #define MSR_IA32_GS_BASE    0xC0000101
 
 #define MSR_IA32_EFER       0xC0000080
+
 
 long msr_read_ia32_sysenter_cs()
 {
@@ -77,6 +84,28 @@ long msr_read_ia32_vmx_entry_ctls()
 {
     return msr_read(MSR_IA32_VMX_ENTRY_CTLS);
 }
+
+
+long msr_read_ia32_vmx_cr0_fixed0()
+{
+    return msr_read(MSR_IA32_VMX_CR0_FIXED0);
+}
+
+long msr_read_ia32_vmx_cr0_fixed1()
+{
+    return msr_read(MSR_IA32_VMX_CR0_FIXED1);
+}
+
+long msr_read_ia32_vmx_cr4_fixed0()
+{
+    return msr_read(MSR_IA32_VMX_CR4_FIXED0);
+}
+
+long msr_read_ia32_vmx_cr4_fixed1()
+{
+    return msr_read(MSR_IA32_VMX_CR4_FIXED1);
+}
+
 
 long msr_read_ia32_vmx_true_exit_ctls()
 {
