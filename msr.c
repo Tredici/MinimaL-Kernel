@@ -5,6 +5,8 @@
 #define MSR_IA32_SYSENTER_EIP   0x176
 #define MSR_IA32_DEBUGCTL       0x1D9
 
+#define MSR_IA32_PAT        0x277
+
 #define MSR_IA32_VMX_BASIC          0x480
 #define MSR_IA32_VMX_PINBASED_CTLS  0x481  
 #define MSR_IA32_VMX_PROCBASED_CTLS 0x482
@@ -35,6 +37,11 @@ long msr_read_ia32_sysenter_eip()
 long msr_read_ia32_debugctl()
 {
     return msr_read(MSR_IA32_DEBUGCTL);
+}
+
+long msr_read_ia32_pat()
+{
+    return msr_read(MSR_IA32_PAT);
 }
 
 long msr_read_ia32_vmx_basic()
