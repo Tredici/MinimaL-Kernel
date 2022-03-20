@@ -10,6 +10,9 @@
  *  [B.18 VMX INSTRUCTIONS]
  */
 
+
+#include "vm64_errors.h"
+
 /**
  * To be set to enable VMX
  *
@@ -56,6 +59,64 @@ VM64_MSG:
 .global vm64
 .text
 .code64
+
+#define GPR_TOTAL_SIZE (8*15)
+/**
+ * Macro definitions, see:
+ *  https://sourceware.org/binutils/docs/as.html#Macro
+ */
+.macro PUSHALL_GPR
+    push %r15
+    push %r14
+    push %r13
+    push %r12
+    push %r11
+    push %r10
+    push %r9
+    push %r8
+    push %rbp
+    push %rsi
+    push %rdi
+    push %rdx
+    push %rcx
+    push %rbx
+    push %rax
+.endm
+.macro CLEARALL_GPR
+    xor %rax,%rax
+    xor %rbx,%rbx
+    xor %rcx,%rcx
+    xor %rdx,%rdx
+    xor %rdi,%rdi
+    xor %rsi,%rsi
+    xor %rbp,%rbp
+    xor %r8, %r8
+    xor %r9, %r9
+    xor %r10,%r10
+    xor %r11,%r11
+    xor %r12,%r12
+    xor %r13,%r13
+    xor %r14,%r14
+    xor %r15,%r15
+.endm
+.macro POPALL_GPR
+    pop %rax
+    pop %rbx
+    pop %rcx
+    pop %rdx
+    pop %rdi
+    pop %rsi
+    pop %rbp
+    pop %r8
+    pop %r9
+    pop %r10
+    pop %r11
+    pop %r12
+    pop %r13
+    pop %r14
+    pop %r15
+.endm
+
 
 vm64:
     call check_vm_support
@@ -300,6 +361,91 @@ get_current_vmcs:
     pop %rax
     ret
 
+.global vmx_launch_current_vmcs
+vmx_launch_current_vmcs:
+    /**
+     * See Intel Manual Vol. 3
+     *  [23.5 HOST-STATE AREA]
+     * GP registers (and floating-point registers and so on)
+     * are not saved before entries so they must be stored
+     * and restored by software
+     */
+    PUSHALL_GPR
+
+    /**
+     * See Intel Manual Vol. 3
+     *  [26.5.3 Loading Host RIP, RSP, RFLAGS, and SSP]
+     *  RIP and RSP are loaded from the RIP field and the RSP field, respectively.
+     *
+     * RIP and RSP must be MANUALLY SAVED before launching a VM!
+     */
+    lea 1f(%rip), %rdi
+    call vmx_host_write_rip
+    mov %rsp, %rdi
+    call vmx_host_write_rsp
+
+    /* Clear all registers */
+    CLEARALL_GPR
+    /**
+     * See Intel Manual Vol. 3
+     *  [VMLAUNCH/VMRESUME—Launch/Resume Virtual Machine]
+     */
+    vmlaunch
+.1:
+    pushf   /* Store RFLAGS to detect VM statuts */
+
+        /* reserve 16 bytes for VM RIP and RSP */
+        sub $16, %rsp
+        /* PUSH VMX registers */
+        PUSHALL_GPR                 /* %rsp decremented by GPR_TOTAL_SIZE */
+        /* Get VM RIP and RSP */
+        call vmx_guest_read_rsp
+        mov %rax, GPR_TOTAL_SIZE(%rsp)      /* %rsp decremented by 8 */
+        call vmx_guest_read_rip
+        mov %rax, GPR_TOTAL_SIZE+8(%rsp)    /* %rsp decremented by 8 */
+        /* Call function to print register status */
+        mov %rsp, %rdi
+        call vmx_debug_virtual_machine
+        /* Clear stack */
+        add $(GPR_TOTAL_SIZE+2*8), %rsp
+
+    popf    /* Restore RFLAGS to detect VM statuts */
+
+    /* restore registers after vm exit */
+    POPALL_GPR
+
+    /**
+     * Check for absence of current VMCS
+     * See Intel Manual Vol. 3
+     *  [25.1 BASIC VM-ENTRY CHECKS]
+     *  3. If there is no current VMCS, RFLAGS.CF is set to 1
+     *      and control passes to the next instruction.
+     *  4. If there is a current VMCS but the current VMCS is
+     *      a shadow VMCS (see Section 23.10), RFLAGS.CF is
+     *      set to 1 and control passes to the next instruction.
+     *
+     *  [...]
+     *  If any of these checks fail, RFLAGS.ZF is set to 1 and
+     *  control passes to the next instruction. An error number
+     *  indicating the cause of the failure is stored in the VM
+     *  instruction error field. See Chapter 29 for the error
+     *  numbers.
+     */
+    /**
+     * About local symbols:
+     *  https://sourceware.org/binutils/docs/as/Symbol-Names.html
+     */
+    jnc 1f
+        mov $VMX_NO_CURRENT_VMCS, %rax
+        ret
+1:  jz 2f
+        mov $VMX_FAILED_VMCS_CHECKS, %rax
+        ret
+2:
+    xor %rax,%rax
+    ret
+
+
 /**
  * Read MSR IA32_VMX_BASIC and return
  * value in EAX
@@ -423,6 +569,19 @@ check_vm_support:
     pop %rbx
     ret
 
+.global vmx_get_guest_stack
+vmx_get_guest_stack:
+    lea VM_GUEST_STACK, %rax
+    ret
+.global vmx_get_guest_code
+vmx_get_guest_code:
+    lea vm_guest, %rax
+    ret
+
+vm_guest:
+    mov $0xf5f5, %eax
+    hlt
+
 .bss
 /**
  * VMCS (Virtual Machine Control Structure)
@@ -447,3 +606,5 @@ VMCS_region:
 VMXON_region:
     .skip 4096
 
+VM_GUEST_STACK:
+    .skip 4096
