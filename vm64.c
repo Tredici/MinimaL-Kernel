@@ -19,6 +19,23 @@ static void vmx_prepare_guest_state();
 static void vmx_configure_control_fields();
 static void vmx_set_default_controls_values();
 
+static void test_cr0_and_cr4()
+{
+    long test, crn;
+    if (test = vmx_validate_cr0(crn = so_read_cr0()))
+    {
+        putstr64("CRO BAD: "); puthex64(test); newline64();
+        putstr64("my CRO:  "); puthex64(crn); newline64();
+        panic64("INVALID CR0");
+    }
+    if (test = vmx_validate_cr4(crn = so_read_cr4()))
+    {
+        putstr64("CR4 BAD: "); puthex64(test); newline64();
+        putstr64("my CR4:  "); puthex64(crn); newline64();
+        panic64("INVALID CR4");
+    }
+}
+
 static int vmx_success(int status)
 {
     return !status;
@@ -90,11 +107,13 @@ int start_vm()
 
     vmx_set_default_controls_values();
 
-    putstr64("Saving host state... ");
+    test_cr0_and_cr4();
+
+    printline64("Saving host state... ");
     vmx_save_host_state();
     printline64("DONE!");
 
-    putstr64("Preparing guest state... ");
+    printline64("Preparing guest state... ");
     vmx_prepare_guest_state();
     printline64("DONE!");
 
@@ -236,6 +255,13 @@ static void vmx_save_host_state()
     /* syscall */
     vmx_host_write_ia32_sysenter_esp(msr_read_ia32_sysenter_esp());
     vmx_host_write_ia32_sysenter_eip(msr_read_ia32_sysenter_eip());
+
+    vmx_host_write_ia32_pat(msr_read_ia32_pat());
+    vmx_host_write_ia32_efer(msr_read_ia32_efer());
+    vmx_host_write_ia32_perf_global_ctrl(msr_read_ia32_ia32_perf_global_ctrl());
+
+    // msr_read_ia32_pkrs gives a #GP exception!
+    //vmx_host_write_ia32_pkrs(msr_read_ia32_pkrs());
 }
 
 static void vmx_prepare_guest_state()
@@ -272,6 +298,7 @@ static void vmx_prepare_guest_state()
     vmx_guest_write_cr0(so_read_cr0());
     vmx_guest_write_cr3(so_read_cr3());
     vmx_guest_write_cr4(so_read_cr4());
+
 
     vmx_guest_write_dr7(so_read_dr7());
 
@@ -814,6 +841,7 @@ static void vmx_configure_control_fields()
     }
 
     {
+        long tmp;
         /**
          * About VM-exits
          *
@@ -843,7 +871,12 @@ static void vmx_configure_control_fields()
          * Setting the field with exactly the content of MSR
          * IA32_VMX_EXIT_CTLS should work.
          */
-        vmx_write_vm_exit_controls(msr_read_ia32_vmx_exit_ctls());
+        {
+            const int Load_IA32_EFER = 1L << 21;
+            tmp = msr_read_ia32_vmx_exit_ctls();
+            tmp |= Load_IA32_EFER;
+            vmx_write_vm_exit_controls(tmp);
+        }
 
         /**
          *  [23.7.2 VM-Exit Controls for MSRs]
