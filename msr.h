@@ -19,4 +19,6 @@ long msr_read_ia32_vmx_true_exit_ctls();
 long msr_read_ia32_fs_base();
 long msr_read_ia32_gs_base();
 
+long msr_read_ia32_efer();
+
 #endif

@@ -15,6 +15,8 @@
 #define MSR_IA32_FS_BASE    0xC0000100
 #define MSR_IA32_GS_BASE    0xC0000101
 
+#define MSR_IA32_EFER       0xC0000080
+
 long msr_read_ia32_sysenter_cs()
 {
     return msr_read(MSR_IA32_SYSENTER_CS);
@@ -75,3 +77,7 @@ long msr_read_ia32_gs_base()
     return msr_read(MSR_IA32_GS_BASE);
 }
 
+long msr_read_ia32_efer()
+{
+    return msr_read(MSR_IA32_EFER);
+}
