@@ -6,11 +6,11 @@
 #define MSR_IA32_DEBUGCTL       0x1D9
 
 #define MSR_IA32_VMX_BASIC          0x480
+#define MSR_IA32_VMX_PINBASED_CTLS  0x481  
 #define MSR_IA32_VMX_PROCBASED_CTLS 0x482
 #define MSR_IA32_VMX_EXIT_CTLS      0x483      
 #define MSR_IA32_VMX_ENTRY_CTLS     0x484
 #define MSR_IA32_VMX_TRUE_EXIT_CTLS 0x48F
-
 
 long msr_read_ia32_sysenter_cs()
 {
@@ -35,6 +35,11 @@ long msr_read_ia32_debugctl()
 long msr_read_ia32_vmx_basic()
 {
     return msr_read(MSR_IA32_VMX_BASIC);
+}
+
+long msr_read_ia32_vmx_pinbased_ctls()
+{
+    return msr_read(MSR_IA32_VMX_PINBASED_CTLS);
 }
 
 long msr_read_ia32_vmx_procbased_ctls()
