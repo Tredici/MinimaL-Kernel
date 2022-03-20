@@ -7,6 +7,8 @@
 
 #define MSR_IA32_PAT        0x277
 
+#define MSR_IA32_PERF_GLOBAL_CTRL   0x38F
+
 #define MSR_IA32_VMX_BASIC          0x480
 #define MSR_IA32_VMX_PINBASED_CTLS  0x481  
 #define MSR_IA32_VMX_PROCBASED_CTLS 0x482
@@ -46,9 +48,9 @@ long msr_read_ia32_pat()
     return msr_read(MSR_IA32_PAT);
 }
 
-long msr_read_ia32_()
+long msr_read_ia32_ia32_perf_global_ctrl()
 {
-    return msr_read();
+    return msr_read(MSR_IA32_PERF_GLOBAL_CTRL);
 }
 
 long msr_read_ia32_vmx_basic()

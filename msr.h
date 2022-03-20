@@ -12,6 +12,8 @@ long msr_read_ia32_debugctl();
 
 long msr_read_ia32_pat();
 
+long msr_read_ia32_ia32_perf_global_ctrl();
+
 long msr_read_ia32_vmx_basic();
 long msr_read_ia32_vmx_pinbased_ctls();
 long msr_read_ia32_vmx_procbased_ctls();
