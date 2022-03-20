@@ -17,6 +17,25 @@ load_idt_register:
     lidt IDT_POINTER
     ret
 
+/**
+ * See Intel Manual Vol. 2
+ *  [SIDT—Store Interrupt Descriptor Table Register]
+ */
+.global store_idt_register
+store_idt_register:
+    /* check args */
+    mov $1, %eax
+    test %rdi, %rdi
+    jz 3f
+    test %rsi, %rsi
+    jz 3f
+    /* Get IDT */
+    sub $10, %rsp
+    sidt (%rsp)
+    popw (%rsi) /* get limit */
+    popq (%rdi) /* get pointer */
+    xor %eax,%eax
+3:  ret
 
 .bss
 IDT_POINTER:

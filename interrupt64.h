@@ -20,6 +20,11 @@ struct idt_gate_descriptor;
 
 void initialize_idt(void);
 void load_idt_register(struct idt_gate_descriptor *idt, unsigned short limit);
+/**
+ * Read IDT pointer.
+ * Return 0 on succes, nonzero otherwise.
+ */
+int store_idt_register(struct idt_gate_descriptor **idt, unsigned short *limit);
 
 
 #endif
