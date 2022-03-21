@@ -15,6 +15,45 @@
 #ifndef TR
 #define TR
 
-
+/**
+ * TSS in 64 bit mode
+ *
+ * See Intel Manual Vol. 3
+ *  [7.7 TASK MANAGEMENT IN 64-BIT MODE]
+ *  [Figure 7-11. 64-Bit TSS Format]
+ */
+struct TSS
+{
+    // Must be 0
+    /*   0 */ int reserved0;
+    /**
+     *  RSPn — The full 64-bit canonical forms of the stack
+     *  pointers (RSP) for privilege levels 0-2.
+     */
+    /*   4 */ long rsp0;
+    /*  12 */ long rsp1;
+    /*  20 */ long rsp2;
+    // Must be 0
+    /*  28 */ long reserved1;
+    /**
+     *  ISTn — The full 64-bit canonical forms of the interrupt
+     *  stack table (IST) pointers.
+     */
+    /*  36 */ long ist1;
+    /*  44 */ long ist2;
+    /*  52 */ long ist3;
+    /*  60 */ long ist4;
+    /*  68 */ long ist5;
+    /*  76 */ long ist6;
+    /*  84 */ long ist7;
+    // Must be 0
+    /*  92 */ long reserved2;
+    /* 100 */ short reserved3;
+    /**
+     *  I/O map base address — The 16-bit offset to the I/O
+     *  permission bit map from the 64-bit TSS base.
+     */
+    /* 102 */ short io_map_base_address;
+} __attribute__ ((packed));
 
 #endif
