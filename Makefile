@@ -112,7 +112,7 @@ trampoline.o: trampoline.S
 trampoline64.o: trampoline64.S
 	gcc $(CFLAGS) -c $<
 
-helpers_32bit.o: helpers_32bit.c helpers_32bit.h
+helpers_32bit.o: helpers_32bit.c helpers_32bit.h gdt.h
 	gcc -m32 $(CFLAGS) -c $^ 
 	objcopy -O elf64-x86-64 $@
 
