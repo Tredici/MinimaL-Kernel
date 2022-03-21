@@ -49,6 +49,9 @@ _start64:
     /* Initialize interrupt handling */
     call initialize_idt
 
+    /* create first stask */
+    call init_first_task_descriptor
+
     /* Call main function */
     call main64
     

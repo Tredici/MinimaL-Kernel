@@ -16,6 +16,48 @@
 #define TR
 
 /**
+ * Code and definitions to initialise
+ * GLOBAL DESCRIPTOR TABLE.
+ * See Intel manual Vol. 3:
+ *  [7.2.3 TSS Descriptor in 64-bit mode]
+ */
+struct segment_descriptor
+{
+    unsigned long limit_15_0 : 16;    /* 0 for 64 bit */
+    unsigned long base_15_0 : 16;     /* 0 for 64 bit */
+    unsigned long base_23_16 : 8;     /* 0 for 64 bit */
+    unsigned long type : 4;           /* Depends on system flag.
+            data/stack: set to 2
+            code:       set to 10
+
+            For details see Intel Manual Vol. 3
+            [3.4.5.1 Code- and Data-Segment Descriptor Types]
+            [Table 3-1. Code- and Data-Segment Types] */
+    unsigned long system : 1;         /* system segment? If set
+            contains reference to code or data segment.
+            It has nothing to do with user/system context.
+            MUST be 1 in this simple context! */
+    unsigned long dpl : 2;            /* descriptor privilege level */
+    unsigned long present : 1;        /* Is valid? */
+    unsigned long limit_19_16 : 4;    /* 0 for 64 bit */
+    unsigned long avl : 1;            /* Usable by system software.
+            Unnecessary in this context. */
+    unsigned long Long_mode_code : 1; /* IA-32e only! Only for code!
+            If L-bit is set, then D-bit must be cleared.
+            If not code MUST be 0! */
+    unsigned long d_b : 1;            /* default operand size */
+    unsigned long granularity : 1;    /* Granularity of limit field,
+                             * unnecessary in 64 bit context */
+    unsigned long base_31_24 : 8;
+
+    unsigned long base_63_32 : 32;  /* top 32 bits */
+    unsigned long : 8;              /* Reserved */
+    unsigned long : 5;              /* Must be zero */
+    unsigned long : 19;              /* Reserved */
+} __attribute__((packed));
+
+
+/**
  * TSS in 64 bit mode
  *
  * See Intel Manual Vol. 3
@@ -61,6 +103,10 @@ struct TSS
  * A task is a executable entity recognised by the system
  * hardware and associated with a TSS. A task is also
  * associated with a set of fields maintainig its status.
+ *
+ * To recap all elements of the task statate
+ * see Intel Manual Vol. 3
+ *  [7.1.2 Task State]
  */
 struct task_descriptor
 {
@@ -104,5 +150,16 @@ struct task_descriptor
 
 } __attribute__ ((packed));
 
+/**
+ * Initialize first task descriptor to set TR
+ * to a valid value. This is necessary in order
+ * to successfully save TR in the VMCS for VMX.
+ */
+void init_first_task_descriptor();
+
+/**
+ * Use the homonymous
+ */
+void load_tr(unsigned short tr);
 
 #endif
