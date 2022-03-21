@@ -12,6 +12,15 @@
 #define STACK_SIZE 0x4000
 
 /**
+ * See Intel Manual Vol. 3
+ *  [2.5 CONTROL REGISTERS] 
+ *  CR0.NE Numeric Error (bit 5 of CR0)
+ *
+ * Setted now for future use with VMX
+ */
+#define CR0_NE (1 << 5)
+
+/**
  * Value expected to be found in the EAX register after a
  * multiboot compliant bootloader as started the kernel.
  * It must be checked in order to ensure that everything
@@ -200,6 +209,11 @@ _start: /* kernel entrypoint */
 
     /* save pointer to Multiboot structure */
     mov %ebx, multiboot_info_structure
+
+    /* Set CR0.NE */
+    mov %cr0, %eax
+    or $CR0_NE, %eax
+    mov %eax, %cr0
 
     jmp trampoline
 
