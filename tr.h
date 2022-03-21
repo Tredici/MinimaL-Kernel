@@ -56,4 +56,53 @@ struct TSS
     /* 102 */ short io_map_base_address;
 } __attribute__ ((packed));
 
+/**
+ * The name "task" is inspired by the Intel documentation.
+ * A task is a executable entity recognised by the system
+ * hardware and associated with a TSS. A task is also
+ * associated with a set of fields maintainig its status.
+ */
+struct task_descriptor
+{
+    struct GPRegisters
+    {
+        long RAX;
+        long RBX;
+        long RCX;
+        long RDX;
+
+        long RDI;
+        long RSI;
+        long RBP;
+
+        long R8;
+        long R9;
+        long R10;
+        long R11;
+        long R12;
+        long R13;
+        long R14;
+        long R15;
+    } __attribute__ ((packed)) gpr;
+
+    struct
+    {
+        long RSP;
+        long RIP;
+    } __attribute__ ((packed)) current;
+
+    struct CRegisters
+    {
+        long cr3;
+    } __attribute__ ((packed)) cr;
+
+    /* PLACE FOR FUTURE FIELDS */
+
+    /* DO NOT ADD NEW FIELDS AFTER THERE! */
+    /* TSS must be the LAST field in this struct! */
+    struct TSS tss;
+
+} __attribute__ ((packed));
+
+
 #endif
