@@ -2,6 +2,7 @@
 #include "interrupt64_handlers.h"
 #include "video64bit.h"
 #include "error64.h"
+#include "string64.h"
 
 void handle_div0()
 {
@@ -14,7 +15,11 @@ void handle_int3()
 }
 
 
-void handle_gpe()
+void handle_gpe_c(long error)
 {
-    panic64("General Protection Exception!");
+    char buffer[80] = "General Protection Exception(";
+    char *tmp;
+    tmp = strcat64(buffer, ltoa64(error));
+    tmp = strcat64(tmp, ")");
+    panic64(buffer);
 }
