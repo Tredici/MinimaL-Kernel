@@ -35,6 +35,18 @@ char *strcpy64(char *dst, const char *src)
     return ans;
 }
 
+char *strcat64(char *dst, const char *src)
+{
+    // reach end of dst
+    while (*dst)
+        ++dst;
+    // concat src
+    while (*src)
+        *dst++ = *src++;
+
+    return dst;
+}
+
 int strlen64(const char *str)
 {
     int len = 0;

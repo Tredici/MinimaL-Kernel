@@ -9,6 +9,7 @@
 int isdigit64(char c);
 
 char *strcpy64(char *dst, const char *src);
+char *strcat64(char *dst, const char *src);
 
 int strlen64(const char *str);
 
