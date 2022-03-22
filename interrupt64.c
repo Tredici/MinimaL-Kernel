@@ -66,9 +66,9 @@ struct idt_gate_descriptor idt[IDT_ENTRYES]  __attribute__ ((aligned (4096)));
 static void set_pointer_to_handler(struct idt_gate_descriptor *idt_entry, u64 rip_handler)
 {
     // Pointer to handler
-    idt_entry->offset_15_0 = rip_handler & ((1 << 16) - 1);
-    idt_entry->offset_31_16 = (rip_handler >> 16) & ((1 << 16) - 1);
-    idt_entry->offset_63_32 = (rip_handler >> 32) & ((1 << 32) - 1);
+    idt_entry->offset_15_0 = rip_handler & 0xffff;
+    idt_entry->offset_31_16 = (rip_handler >> 16) & 0xffff;
+    idt_entry->offset_63_32 = (rip_handler >> 32) & 0xffffffff;
 }
 
 /**
