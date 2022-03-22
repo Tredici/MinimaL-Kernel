@@ -14,6 +14,20 @@ void handle_int3()
     panic64("Exception Breakpoint!");
 }
 
+void handle_ud()
+{
+    panic64("#UD!");
+}
+
+void handle_double_f()
+{
+    panic64("Double fault!");
+}
+
+void handle_stack_f()
+{
+    panic64("Stack fault!");
+}
 
 void handle_gpe_c(long error)
 {
@@ -22,4 +36,19 @@ void handle_gpe_c(long error)
     tmp = strcat64(buffer, ltoa64(error));
     tmp = strcat64(tmp, ")");
     panic64(buffer);
+}
+
+void handle_tss()
+{
+    panic64("Exception TSS!");
+}
+
+void handle_snp()
+{
+    panic64("Exception SNP!");
+}
+
+void handle_pfe()
+{
+    panic64("Page fault!");
 }

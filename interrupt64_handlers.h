@@ -27,9 +27,46 @@ void handle_div0();
 void handle_int3();
 
 /**
+ * @brief Function handling Invalid Opcode exception!
+ *
+ */
+void handle_ud();
+
+/**
+ * @brief Function handling Double fault abort!
+ *
+ */
+void handle_double_f();
+
+/**
+ * @brief Function handling Invalid TSS Exception
+ *
+ */
+void handle_tss();
+
+/**
+ * @brief Function handling Segment not present Exception
+ *
+ */
+void handle_snp();
+
+/**
+ * @brief Function handling Stack Fault Exception
+ *
+ */
+void handle_stack_f();
+
+/**
  * @brief Function handling General Protection Exception
  *
  */
 void handle_gpe();
+
+
+/**
+ * @brief Function handling General Protection Exception
+ *
+ */
+void handle_pfe();
 
 #endif

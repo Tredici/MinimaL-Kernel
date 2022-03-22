@@ -5,7 +5,13 @@
 
 #define INT_DIV0    0
 #define INT_DBG     3
+#define INT_UD      6
+#define INT_DOUBLEF 8
+#define INT_TSS     10
+#define INT_SNP     11
+#define INT_STACK_F 12
 #define INT_GPE     13
+#define INT_PFE     14
 
 #define IDT_ENTRYES 256
 #define IDT_LIMIT (256*16 - 1)
@@ -19,6 +25,7 @@
  *  [6.15 EXCEPTION AND INTERRUPT REFERENCE]
  */
 #define TYPE_64B_INTERRUPT_GATE 14
+#define TYPE_64B_ABORT_GATE TYPE_64B_INTERRUPT_GATE
 #define TYPE_64B_TRAP_GATE 15
 
 typedef unsigned long long int u64;
@@ -96,8 +103,20 @@ void initialize_idt()
     initialize_idt_entry(idt, INT_DIV0, TYPE_64B_INTERRUPT_GATE, (u64)&handle_div0);
     /* [Interrupt 3—Breakpoint Exception (#BP)] */
     initialize_idt_entry(idt, INT_DBG, TYPE_64B_TRAP_GATE, (u64)&handle_int3);
-    /* Interrupt 13—General Protection Exception (#GP) */
+    /* [Interrupt 6—Invalid Opcode Exception (#UD)] */
+    initialize_idt_entry(idt, INT_UD, TYPE_64B_TRAP_GATE, (u64)&handle_ud);
+    /* [Interrupt 8—Double Fault Exception (#DF)] */
+    initialize_idt_entry(idt, INT_DOUBLEF, TYPE_64B_ABORT_GATE, (u64)&handle_double_f);
+    /* [Interrupt 10—Invalid TSS Exception (#TS)] */
+    initialize_idt_entry(idt, INT_TSS, TYPE_64B_INTERRUPT_GATE, (u64)&handle_tss);
+    /* [Interrupt 11—Segment Not Present (#NP)] */
+    initialize_idt_entry(idt, INT_SNP, TYPE_64B_INTERRUPT_GATE, (u64)&handle_snp);
+    /* [Interrupt 12—Stack Fault Exception (#SS)] */
+    initialize_idt_entry(idt, INT_STACK_F, TYPE_64B_INTERRUPT_GATE, (u64)&handle_stack_f);
+    /* [Interrupt 13—General Protection Exception (#GP)] */
     initialize_idt_entry(idt, INT_GPE, TYPE_64B_INTERRUPT_GATE, (u64)&handle_gpe);
+    /* [Interrupt 14—Page-Fault Exception (#PF)] */
+    initialize_idt_entry(idt, INT_PFE, TYPE_64B_INTERRUPT_GATE, (u64)&handle_pfe);
 
     load_idt_register(idt, IDT_LIMIT);
 }
