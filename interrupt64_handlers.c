@@ -14,9 +14,13 @@ void handle_int3()
     panic64("Exception Breakpoint!");
 }
 
-void handle_ud()
+void handle_ud_c(void *rip)
 {
-    panic64("#UD!");
+    char buffer[80] = "#UD(";
+    char *tmp;
+    tmp = strcat64(buffer, hex64((long)rip));
+    tmp = strcat64(tmp, ")");
+    panic64(buffer);
 }
 
 void handle_double_f()
