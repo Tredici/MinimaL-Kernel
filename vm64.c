@@ -227,7 +227,7 @@ static void vmx_save_host_state()
     }
     vmx_host_write_gdtr_base((long)ptr);
     /* TR not used, is this valid? */
-    vmx_host_write_tr_base((long)ptr);
+    vmx_host_write_tr_base((long)ptr+so_read_tr());
 
     /* 16 bits host state field */
     /* Save segment selectors */
@@ -237,11 +237,10 @@ static void vmx_save_host_state()
     vmx_host_write_es(so_read_es());
     vmx_host_write_fs(so_read_fs());
     vmx_host_write_gs(so_read_gs());
-    vmx_host_write_tr(0L);
+    vmx_host_write_tr(so_read_tr());
 
     vmx_host_write_fs_base(msr_read_ia32_fs_base());
     vmx_host_write_gs_base(msr_read_ia32_gs_base());
-    vmx_host_write_tr_base(0L);
 
     /* Save control registers */
     vmx_host_write_cr0(so_read_cr0());
