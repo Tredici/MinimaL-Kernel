@@ -100,9 +100,11 @@ so_read_gdtr:
     jz 1f
     test %rsi, %rsi
     jz 1f
-    sub $10, %rsp
-    popw (%rsi) /* get limit */
-    popq (%rdi) /* get pointer */
+    sgdt -10(%rsp)
+    mov -10(%rsp), %ax
+    mov %ax, (%rsi) /* get limit */
+    mov -8(%rsp), %rax
+    mov %rax, (%rdi) /* get pointer */
     xor %rax, %rax
 1:  ret
 
