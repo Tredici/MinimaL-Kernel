@@ -288,8 +288,14 @@ static void vmx_prepare_guest_state()
     vmx_guest_write_gdtr_limit(limit);
 
     vmx_guest_write_ldtr_base(0L);
-    vmx_guest_write_tr_base(0L);
-    vmx_guest_write_rflags(0L);
+    const long tss = (long)xdt_read_address(ptr, so_read_tr());
+    vmx_guest_write_tr_base(tss);
+    /**
+     * See Intel Manual Vol. 1
+     *  [Figure 3-8. EFLAGS Register]
+     *  Bit 1 must be set in EFLAGS.
+     */
+    vmx_guest_write_rflags(2);
 
     /* Set guest RSP and RIP */
     vmx_guest_write_rsp((long)vmx_get_guest_stack());
