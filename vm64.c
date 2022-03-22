@@ -360,15 +360,18 @@ static void vmx_save_host_state()
 
 
     /* 32 bit field */
-    vmx_host_write_ia32_sysenter_cs(msr_read_ia32_sysenter_cs());
+    if (vmx_host_write_ia32_sysenter_cs(msr_read_ia32_sysenter_cs()))
+        panic64("vmx_host_write_ia32_sysenter_cs");
 
     /* syscall */
-    vmx_host_write_ia32_sysenter_esp(msr_read_ia32_sysenter_esp());
-    vmx_host_write_ia32_sysenter_eip(msr_read_ia32_sysenter_eip());
+    if (vmx_host_write_ia32_sysenter_esp(msr_read_ia32_sysenter_esp()))
+        panic64("vmx_host_write_ia32_sysenter_esp");
+    if (vmx_host_write_ia32_sysenter_eip(msr_read_ia32_sysenter_eip()))
+        panic64("vmx_host_write_ia32_sysenter_eip");
 
-    vmx_host_write_ia32_pat(msr_read_ia32_pat());
-    vmx_host_write_ia32_efer(msr_read_ia32_efer());
-    vmx_host_write_ia32_perf_global_ctrl(msr_read_ia32_ia32_perf_global_ctrl());
+    //vmx_host_write_ia32_pat(msr_read_ia32_pat());
+    //vmx_host_write_ia32_efer(msr_read_ia32_efer());
+    //vmx_host_write_ia32_perf_global_ctrl(msr_read_ia32_ia32_perf_global_ctrl());
 
     // msr_read_ia32_pkrs gives a #GP exception!
     //vmx_host_write_ia32_pkrs(msr_read_ia32_pkrs());
