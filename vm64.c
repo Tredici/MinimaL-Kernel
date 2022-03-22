@@ -20,21 +20,70 @@ static void vmx_prepare_guest_state();
 static void vmx_configure_control_fields();
 static void vmx_set_default_controls_values();
 
-static void test_cr0_and_cr4()
+/**
+ * Ensure validity of CR0 and CR4 value for HOST
+ * state area in VMCS.
+ *
+ * See Intel Manual Vol. 3
+ *  [25.2.2 Checks on Host Control Registers, MSRs, and SSP]
+ *  +The CR0 field must not set any bit to a value not
+ *   supported in VMX operation (see Section 22.8).
+ *  +The CR4 field must not set any bit to a value not
+ *   supported in VMX operation (see Section 22.8).
+ *  +If bit 23 in the CR4 field (corresponding to CET)
+ *   is 1, bit 16 in the CR0 field (WP) must also be 1.
+ */
+static void test_cr0_and_cr4(unsigned long cr0, unsigned long cr4)
 {
-    long test, crn;
-    if ((test = vmx_validate_cr0(crn = so_read_cr0())))
+    long test;
+    if ((test = vmx_validate_cr0(cr0)))
     {
         putstr64("CRO BAD: "); puthex64(test); newline64();
-        putstr64("my CRO:  "); puthex64(crn); newline64();
+        putstr64("my CRO:  "); puthex64(cr0); newline64();
         panic64("INVALID CR0");
     }
-    if ((test = vmx_validate_cr4(crn = so_read_cr4())))
+    if ((test = vmx_validate_cr4(cr4)))
     {
         putstr64("CR4 BAD: "); puthex64(test); newline64();
-        putstr64("my CR4:  "); puthex64(crn); newline64();
+        putstr64("my CR4:  "); puthex64(cr4); newline64();
         panic64("INVALID CR4");
     }
+    const long CR4_CET = 1L << 23;
+    const long CR0_WP = 1L << 16;
+    if (cr4 & CR4_CET && !(cr0 & CR0_WP))
+    {
+        panic64("CR4.CET and not CR0.WT");
+    }
+}
+
+/**
+ * Return 0 if selector is ok, nonzero otherwise.
+ * See Intel Manual Vol. 3
+ *  [25.2.3 Checks on Host Segment and Descriptor-Table Registers]
+ *  The following checks are performed on fields in the
+ *  host-state area that correspond to segment and
+ *  descriptortable registers:
+ *      +In the selector field for each of CS, SS, DS,
+ *       ES, FS, GS and TR, the RPL (bits 1:0) and the
+ *       TI flag (bit 2) must be 0.
+ *      +The selector fields for CS and TR cannot be
+ *       0000H.
+ *      +The selector field for SS cannot be 0000H if
+ *       the “host address-space size” VM-exit control
+ *       is 0.
+ *  On processors that support Intel 64 architecture,
+ *  the base-address fields for FS, GS, GDTR, IDTR, and
+ *  TR must contain canonical addresses.
+ */
+static int test_selector(unsigned short sel)
+{
+    const unsigned short RPL = (1 << 1) | (1 << 0);
+    const unsigned short TI  =  1 << 2;
+    if (sel & RPL)
+        return 1;
+    if (sel & TI)
+        return 1;
+    return 0;
 }
 
 static int vmx_success(int status)
@@ -107,8 +156,6 @@ int start_vm()
     printline64("VMCS region enabled!");
 
     vmx_set_default_controls_values();
-
-    test_cr0_and_cr4();
 
     printline64("Saving host state... ");
     vmx_save_host_state();
@@ -244,10 +291,18 @@ static void vmx_save_host_state()
     vmx_host_write_fs_base(msr_read_ia32_fs_base());
     vmx_host_write_gs_base(msr_read_ia32_gs_base());
 
+    /**
+     * See Intel Manual Vol. 3
+     *  [25.2.2 Checks on Host Control Registers, MSRs, and SSP]
+     */
+    test_cr0_and_cr4(so_read_cr0(), so_read_cr4());
     /* Save control registers */
-    vmx_host_write_cr0(so_read_cr0());
-    vmx_host_write_cr3(so_read_cr3());
-    vmx_host_write_cr4(so_read_cr4());
+    if (vmx_host_write_cr0(so_read_cr0()))
+        panic64("vmx_host_write_cr0");
+    if (vmx_host_write_cr3(so_read_cr3()))
+        panic64("vmx_host_write_cr3");
+    if (vmx_host_write_cr4(so_read_cr4()))
+        panic64("vmx_host_write_cr4");
 
 
     /* 32 bit field */
