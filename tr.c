@@ -51,7 +51,7 @@ void init_first_task_descriptor()
         gdt[FIRST_TASK_INDEX].base_15_0 = val & 0xffff;
         gdt[FIRST_TASK_INDEX].base_23_16 = (val >> 16) & 0xff;
         gdt[FIRST_TASK_INDEX].base_31_24 = (val >> 24) & 0xff;
-        gdt[FIRST_TASK_INDEX].base_63_32 = (val >> 32) & 0xffff;
+        gdt[FIRST_TASK_INDEX].base_63_32 = (val >> 32) & 0xffffffff;
         // set limit size
         gdt[FIRST_TASK_INDEX].limit_15_0 = sizeof(struct TSS)-1;
         /**
