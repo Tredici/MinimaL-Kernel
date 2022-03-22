@@ -270,13 +270,14 @@ struct segment_descriptor
     int granularity : 1;    /* Granularity of limit field,
                              * unnecessary in 64 bit context */
     int base_31_24 : 8;
+    long long : 64;         /* Not used */
 } __attribute__((packed));
 
 
 void intialise_gdt(void *ptr)
 {
     struct segment_descriptor *const gdt = (struct segment_descriptor *)ptr;
-    if (sizeof(struct segment_descriptor) != 8)
+    if (sizeof(struct segment_descriptor) != 16)
     {
         c_abort("sizeof(struct segment_descriptor)");
     };

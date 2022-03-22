@@ -19,7 +19,7 @@ _start64:
      * They are all mapped to the predefined (secondo) entry in GDT.
      * See trampoline.S for details.
      */
-    mov $0x10, %ax
+    mov $0x20, %ax
     mov %ax, %ss
     mov %ax, %ds
     mov %ax, %es

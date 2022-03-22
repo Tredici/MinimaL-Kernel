@@ -201,7 +201,7 @@ trampoline64:
      *
      * Reference first entry of GDT for code segment
      */
-    ljmp $0x08, $_start64
+    ljmp $0x10, $_start64
 
     hlt
 
