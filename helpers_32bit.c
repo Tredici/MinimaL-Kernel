@@ -220,8 +220,8 @@ void initialize_64bits_page_tables(void *pml4, void *pdpt, void *pdt)
      * Init 2rd level page
      * Map obly first 40 MB
      */
-    /* Use 40 MB by default, they should be enough */
-    for (i = 0; i != 20; ++i)
+    /* Use 400 MB by default, they should be enough */
+    for (i = 0; i != 200; ++i)
     {
         (*pde2mb) = (struct PDE_2MB_PAGE){};
 
