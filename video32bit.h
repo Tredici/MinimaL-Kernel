@@ -9,6 +9,7 @@ void clear_screen32();
 
 void putc32(char c);
 void puti32(int n);
+void puthex32(unsigned long long n);
 void putstr32(const char *str);
 void printline32(const char *str);
 void newline32();

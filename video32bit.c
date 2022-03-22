@@ -74,6 +74,11 @@ void puti32(int n)
     putstr32(itoa32(n));
 }
 
+void puthex32(unsigned long long n)
+{
+    putstr32(hex32(n));
+}
+
 void putstr32(const char *str)
 {
     if (!str)
