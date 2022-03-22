@@ -71,6 +71,10 @@ void init_first_task_descriptor()
          *  hold pointers to procedure entry points in code segments
          *  (call, interrupt, and trap gates) or which hold segment
          *  selectors for TSS’s (task gates).
+         *
+         * See Intel Manual Vol. 3
+         *  [Figure 7-4. Format of TSS and LDT Descriptors in 64-bit Mode]
+         * The field is 0 for TSS descriptor.
          */
         gdt[FIRST_TASK_INDEX].system = 0;
         /**
