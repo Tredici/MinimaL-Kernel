@@ -53,6 +53,17 @@ void init_first_task_descriptor()
         gdt[FIRST_TASK_INDEX].base_31_24 = (val >> 24) & 0xff;
         gdt[FIRST_TASK_INDEX].base_63_32 = (val >> 32) & 0xffffffff;
         // set limit size
+        /**
+         * See Intel Manual Vol. 3
+         *  [7.2.2 TSS Descriptor]
+         *  When the G flag is 0 in a TSS descriptor for a 32-bit TSS,
+         *  the limit field must have a value equal to or greater than
+         *  67H, one byte less than the minimum size of a TSS.
+         *  Attempting to switch to a task whose TSS descriptor has a
+         *  limit less than 67H generates an invalid-TSS exception (#TS).
+         *  A larger limit is required if an I/O permission bit map is
+         *  included or if the operating system stores additional data.
+         */
         gdt[FIRST_TASK_INDEX].limit_15_0 = sizeof(struct TSS)-1;
         /**
          * See Intel Manual Vol. 3
