@@ -3,6 +3,7 @@
 #include "video64bit.h"
 #include "error64.h"
 
+#include "tr.h"
 #include "msr.h"
 #include "vm64_host.h"
 #include "vm64_guest.h"
@@ -227,7 +228,8 @@ static void vmx_save_host_state()
     }
     vmx_host_write_gdtr_base((long)ptr);
     /* TR not used, is this valid? */
-    vmx_host_write_tr_base((long)ptr+so_read_tr());
+    const long tss = (long)xdt_read_address(ptr, so_read_tr());
+    vmx_host_write_tr_base(tss);
 
     /* 16 bits host state field */
     /* Save segment selectors */
