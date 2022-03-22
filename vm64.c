@@ -994,6 +994,21 @@ static void vmx_configure_control_fields()
             const long Load_IA32_EFER = 1L << 21;
             tmp = msr_read_ia32_vmx_exit_ctls();
             tmp |= Load_IA32_EFER;
+            /**
+             * See Intel Manual Vol. 3
+             *  [23.7.1 VM-Exit Controls]
+             *  [Table 23-12. Definitions of VM-Exit Controls]
+             *  Bit 9: Host address-space size
+             *  On processors that support Intel 64 architecture,
+             *  this control determines whether a logical processor
+             *  is in 64-bit mode after the next VM exit. Its value
+             *  is loaded into CS.L, IA32_EFER.LME, and IA32_EFER.LMA
+             *  on every VM exit.
+             *  This control must be 0 on processors that do not
+             *  support Intel 64 architecture.
+             */
+            const long Host_address_space_size = 1 << 9;
+            tmp |= Host_address_space_size;
             vmx_write_vm_exit_controls(tmp);
         }
 
