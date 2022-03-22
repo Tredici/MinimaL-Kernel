@@ -391,7 +391,7 @@ vmx_launch_current_vmcs:
      *  [VMLAUNCH/VMRESUME—Launch/Resume Virtual Machine]
      */
     vmlaunch
-.1:
+1:
     pushf   /* Store RFLAGS to detect VM statuts */
 
         /* reserve 16 bytes for VM RIP and RSP */
