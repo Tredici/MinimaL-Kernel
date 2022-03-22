@@ -22,13 +22,13 @@ static void vmx_set_default_controls_values();
 static void test_cr0_and_cr4()
 {
     long test, crn;
-    if (test = vmx_validate_cr0(crn = so_read_cr0()))
+    if ((test = vmx_validate_cr0(crn = so_read_cr0())))
     {
         putstr64("CRO BAD: "); puthex64(test); newline64();
         putstr64("my CRO:  "); puthex64(crn); newline64();
         panic64("INVALID CR0");
     }
-    if (test = vmx_validate_cr4(crn = so_read_cr4()))
+    if ((test = vmx_validate_cr4(crn = so_read_cr4())))
     {
         putstr64("CR4 BAD: "); puthex64(test); newline64();
         putstr64("my CR4:  "); puthex64(crn); newline64();
