@@ -103,3 +103,15 @@ void init_first_task_descriptor()
     load_tr(FIRST_TASK_OFFSET);
 
 }
+
+void* xdt_read_address(void *table, short offset)
+{
+    struct segment_descriptor *const xdt =
+        (struct segment_descriptor *)table;
+    struct segment_descriptor *const item = xdt
+        +(offset/sizeof(struct segment_descriptor));
+    return (void*)(((long)item->base_63_32<<32)
+         | ((long)item->base_31_24<<24)
+         | ((long)item->base_23_16<<16)
+         |  (long)item->base_15_0);
+}

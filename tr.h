@@ -162,4 +162,10 @@ void init_first_task_descriptor();
  */
 void load_tr(unsigned short tr);
 
+/**
+ * Given the GDT or the LDT return the pointer
+ * stored at the given offset.
+ */
+void* xdt_read_address(void *table, short offset);
+
 #endif
