@@ -340,8 +340,10 @@ static void vmx_save_host_state()
             panic64("vmx_host_write_tr");
     }
 
-    vmx_host_write_fs_base(msr_read_ia32_fs_base());
-    vmx_host_write_gs_base(msr_read_ia32_gs_base());
+    if (vmx_host_write_fs_base(msr_read_ia32_fs_base()))
+        panic64("vmx_host_write_fs_base");
+    if (vmx_host_write_gs_base(msr_read_ia32_gs_base()))
+        panic64("vmx_host_write_gs_base");
 
     /**
      * See Intel Manual Vol. 3
