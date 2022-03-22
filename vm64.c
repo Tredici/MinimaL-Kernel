@@ -267,16 +267,19 @@ static void vmx_save_host_state()
     {
         panic64("store_idt_register");
     }
-    vmx_host_write_idtr_base((long)ptr);
+    if (vmx_host_write_idtr_base((long)ptr))
+        panic64("vmx_host_write_idtr_base");
 
     if (so_read_gdtr(&ptr, &limit))
     {
         panic64("so_read_gdtr");
     }
-    vmx_host_write_gdtr_base((long)ptr);
+    if(vmx_host_write_gdtr_base((long)ptr))
+        panic64("vmx_host_write_gdtr_base");
     /* TR not used, is this valid? */
     const long tss = (long)xdt_read_address(ptr, so_read_tr());
-    vmx_host_write_tr_base(tss);
+    if(vmx_host_write_tr_base(tss))
+        panic64("vmx_host_write_tr_base");
 
     /**
      * See Intel Manual Vol. 3
