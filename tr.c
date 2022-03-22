@@ -6,8 +6,8 @@
  * The fourth position in the GDT will be used
  * for the kernel task.
  */
-#define FIRST_TASK_OFFSET 0X20
-#define FIRST_TASK_INDEX  2
+#define FIRST_TASK_INDEX  3
+#define FIRST_TASK_OFFSET (FIRST_TASK_INDEX * sizeof(struct segment_descriptor))
 
 void *get_kernel_stack();
 
@@ -101,6 +101,5 @@ void init_first_task_descriptor()
     }
     /* load TR */
     load_tr(FIRST_TASK_OFFSET);
-
 
 }
