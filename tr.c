@@ -43,6 +43,7 @@ void init_first_task_descriptor()
     {
         // Prepare kernel stack
         kernel_task.tss.rsp0 = (long)get_kernel_stack();
+        kernel_task.tss.io_map_base_address = sizeof(struct  TSS)-1;
 
         // Clear everything
         gdt[FIRST_TASK_INDEX] = (struct segment_descriptor){};
