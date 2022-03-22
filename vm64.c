@@ -278,15 +278,64 @@ static void vmx_save_host_state()
     const long tss = (long)xdt_read_address(ptr, so_read_tr());
     vmx_host_write_tr_base(tss);
 
+    /**
+     * See Intel Manual Vol. 3
+     *  [25.2.3 Checks on Host Segment and Descriptor-Table Registers]
+     *  The following checks are performed on fields in the
+     *  host-state area that correspond to segment and descriptor
+     *  table registers:
+     */
     /* 16 bits host state field */
     /* Save segment selectors */
-    vmx_host_write_cs(so_read_cs());
-    vmx_host_write_ds(so_read_ds());
-    vmx_host_write_ss(so_read_ss());
-    vmx_host_write_es(so_read_es());
-    vmx_host_write_fs(so_read_fs());
-    vmx_host_write_gs(so_read_gs());
-    vmx_host_write_tr(so_read_tr());
+    {
+        long sel = so_read_cs();
+        if (test_selector(sel) || !sel)
+            panic64("Invalid cs!");
+        if (vmx_host_write_cs(sel))
+            panic64("vmx_host_write_cs");
+    }
+    {
+        long sel = so_read_ds();
+        if (test_selector(sel))
+            panic64("Invalid ds!");
+        if (vmx_host_write_ds(sel))
+            panic64("vmx_host_write_ds");
+    }
+    {
+        long sel = so_read_ss();
+        if (test_selector(sel))
+            panic64("Invalid ss!");
+        if (vmx_host_write_ss(sel))
+            panic64("vmx_host_write_ss");
+    }
+    {
+        long sel = so_read_es();
+        if (test_selector(sel))
+            panic64("Invalid es!");
+        if (vmx_host_write_es(sel))
+            panic64("vmx_host_write_es");
+    }
+    {
+        long sel = so_read_fs();
+        if (test_selector(sel))
+            panic64("Invalid fs!");
+        if (vmx_host_write_fs(sel))
+            panic64("vmx_host_write_fs");
+    }
+    {
+        long sel = so_read_gs();
+        if (test_selector(sel))
+            panic64("Invalid gs!");
+        if (vmx_host_write_gs(sel))
+            panic64("vmx_host_write_gs");
+    }
+    {
+        long sel = so_read_tr();
+        if (test_selector(sel) || !sel)
+            panic64("Invalid tr!");
+        if (vmx_host_write_tr(sel))
+            panic64("vmx_host_write_tr");
+    }
 
     vmx_host_write_fs_base(msr_read_ia32_fs_base());
     vmx_host_write_gs_base(msr_read_ia32_gs_base());
