@@ -19,13 +19,13 @@ short vmx_host_read_fs();
 short vmx_host_read_gs();
 short vmx_host_read_tr();
 
-void vmx_host_write_cs(short val);
-void vmx_host_write_ds(short val);
-void vmx_host_write_ss(short val);
-void vmx_host_write_es(short val);
-void vmx_host_write_fs(short val);
-void vmx_host_write_gs(short val);
-void vmx_host_write_tr(short val);
+int vmx_host_write_cs(short val);
+int vmx_host_write_ds(short val);
+int vmx_host_write_ss(short val);
+int vmx_host_write_es(short val);
+int vmx_host_write_fs(short val);
+int vmx_host_write_gs(short val);
+int vmx_host_write_tr(short val);
 
 
 /* Natural-Width Host-State Fields */
@@ -45,21 +45,21 @@ long vmx_host_read_ia32_s_cet();
 long vmx_host_read_ssp();
 long vmx_host_read_ia32_interrupt_ssp_table_addr();
 
-void vmx_host_write_cr0(long val);
-void vmx_host_write_cr3(long val);
-void vmx_host_write_cr4(long val);
-void vmx_host_write_fs_base(long val);
-void vmx_host_write_gs_base(long val);
-void vmx_host_write_tr_base(long val);
-void vmx_host_write_gdtr_base(long val);
-void vmx_host_write_idtr_base(long val);
-void vmx_host_write_ia32_sysenter_esp(long val);
-void vmx_host_write_ia32_sysenter_eip(long val);
-void vmx_host_write_rsp(long val);
-void vmx_host_write_rip(long val);
-void vmx_host_write_ia32_s_cet(long val);
-void vmx_host_write_ssp(long val);
-void vmx_host_write_ia32_interrupt_ssp_table_addr(long val);
+int vmx_host_write_cr0(long val);
+int vmx_host_write_cr3(long val);
+int vmx_host_write_cr4(long val);
+int vmx_host_write_fs_base(long val);
+int vmx_host_write_gs_base(long val);
+int vmx_host_write_tr_base(long val);
+int vmx_host_write_gdtr_base(long val);
+int vmx_host_write_idtr_base(long val);
+int vmx_host_write_ia32_sysenter_esp(long val);
+int vmx_host_write_ia32_sysenter_eip(long val);
+int vmx_host_write_rsp(long val);
+int vmx_host_write_rip(long val);
+int vmx_host_write_ia32_s_cet(long val);
+int vmx_host_write_ssp(long val);
+int vmx_host_write_ia32_interrupt_ssp_table_addr(long val);
 
 
 /*  */
@@ -68,13 +68,13 @@ long vmx_host_read_ia32_efer();
 long vmx_host_read_ia32_perf_global_ctrl();
 long vmx_host_read_ia32_pkrs();
 
-void vmx_host_write_ia32_pat(long val);
-void vmx_host_write_ia32_efer(long val);
-void vmx_host_write_ia32_perf_global_ctrl(long val);
-void vmx_host_write_ia32_pkrs(long val);
+int vmx_host_write_ia32_pat(long val);
+int vmx_host_write_ia32_efer(long val);
+int vmx_host_write_ia32_perf_global_ctrl(long val);
+int vmx_host_write_ia32_pkrs(long val);
 
 long vmx_host_read_ia32_sysenter_cs();
 
-void vmx_host_write_ia32_sysenter_cs(long val);
+int vmx_host_write_ia32_sysenter_cs(long val);
 
 #endif

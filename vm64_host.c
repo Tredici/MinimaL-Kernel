@@ -29,9 +29,9 @@ short vmx_host_read_cs()
     return ans;
 }
 
-void vmx_host_write_cs(short val)
+int vmx_host_write_cs(short val)
 {
-    vmx_write_vmcs_field(HOST_CS_SELECTOR, val);
+    return vmx_write_vmcs_field(HOST_CS_SELECTOR, val);
 }
 
 
@@ -42,9 +42,9 @@ short vmx_host_read_ds()
     return ans;
 }
 
-void vmx_host_write_ds(short val)
+int vmx_host_write_ds(short val)
 {
-    vmx_write_vmcs_field(HOST_SS_SELECTOR, val);
+    return vmx_write_vmcs_field(HOST_SS_SELECTOR, val);
 }
 
 
@@ -55,9 +55,9 @@ short vmx_host_read_ss()
     return ans;
 }
 
-void vmx_host_write_ss(short val)
+int vmx_host_write_ss(short val)
 {
-    vmx_write_vmcs_field(HOST_DS_SELECTOR, val);
+    return vmx_write_vmcs_field(HOST_DS_SELECTOR, val);
 }
 
 
@@ -68,9 +68,9 @@ short vmx_host_read_es()
     return ans;
 }
 
-void vmx_host_write_es(short val)
+int vmx_host_write_es(short val)
 {
-    vmx_write_vmcs_field(HOST_ES_SELECTOR, val);
+    return vmx_write_vmcs_field(HOST_ES_SELECTOR, val);
 }
 
 
@@ -81,9 +81,9 @@ short vmx_host_read_fs()
     return ans;
 }
 
-void vmx_host_write_fs(short val)
+int vmx_host_write_fs(short val)
 {
-    vmx_write_vmcs_field(HOST_FS_SELECTOR, val);
+    return vmx_write_vmcs_field(HOST_FS_SELECTOR, val);
 }
 
 
@@ -94,9 +94,9 @@ short vmx_host_read_gs()
     return ans;
 }
 
-void vmx_host_write_gs(short val)
+int vmx_host_write_gs(short val)
 {
-    vmx_write_vmcs_field(HOST_GS_SELECTOR, val);
+    return vmx_write_vmcs_field(HOST_GS_SELECTOR, val);
 }
 
 
@@ -107,9 +107,9 @@ short vmx_host_read_tr()
     return ans;
 }
 
-void vmx_host_write_tr(short val)
+int vmx_host_write_tr(short val)
 {
-    vmx_write_vmcs_field(HOST_TR_SELECTOR, val);
+    return vmx_write_vmcs_field(HOST_TR_SELECTOR, val);
 }
 
 /**
@@ -157,9 +157,9 @@ long vmx_host_read_cr0()
     return ans;
 }
 
-void vmx_host_write_cr0(long val)
+int vmx_host_write_cr0(long val)
 {
-    vmx_write_vmcs_field(HOST_CR0, val);
+    return vmx_write_vmcs_field(HOST_CR0, val);
 }
 
 
@@ -170,9 +170,9 @@ long vmx_host_read_cr3()
     return ans;
 }
 
-void vmx_host_write_cr3(long val)
+int vmx_host_write_cr3(long val)
 {
-    vmx_write_vmcs_field(HOST_CR3, val);
+    return vmx_write_vmcs_field(HOST_CR3, val);
 }
 
 
@@ -183,9 +183,9 @@ long vmx_host_read_cr4()
     return ans;
 }
 
-void vmx_host_write_cr4(long val)
+int vmx_host_write_cr4(long val)
 {
-    vmx_write_vmcs_field(HOST_CR4, val);
+    return vmx_write_vmcs_field(HOST_CR4, val);
 }
 
 
@@ -196,9 +196,9 @@ long vmx_host_read_fs_base()
     return ans;
 }
 
-void vmx_host_write_fs_base(long val)
+int vmx_host_write_fs_base(long val)
 {
-    vmx_write_vmcs_field(HOST_FS_BASE, val);
+    return vmx_write_vmcs_field(HOST_FS_BASE, val);
 }
 
 
@@ -209,9 +209,9 @@ long vmx_host_read_gs_base()
     return ans;
 }
 
-void vmx_host_write_gs_base(long val)
+int vmx_host_write_gs_base(long val)
 {
-    vmx_write_vmcs_field(HOST_GS_BASE, val);
+    return vmx_write_vmcs_field(HOST_GS_BASE, val);
 }
 
 
@@ -222,9 +222,9 @@ long vmx_host_read_tr_base()
     return ans;
 }
 
-void vmx_host_write_tr_base(long val)
+int vmx_host_write_tr_base(long val)
 {
-    vmx_write_vmcs_field(HOST_TR_BASE, val);
+    return vmx_write_vmcs_field(HOST_TR_BASE, val);
 }
 
 
@@ -235,9 +235,9 @@ long vmx_host_read_gdtr_base()
     return ans;
 }
 
-void vmx_host_write_gdtr_base(long val)
+int vmx_host_write_gdtr_base(long val)
 {
-    vmx_write_vmcs_field(HOST_GDTR_BASE, val);
+    return vmx_write_vmcs_field(HOST_GDTR_BASE, val);
 }
 
 
@@ -248,9 +248,9 @@ long vmx_host_read_idtr_base()
     return ans;
 }
 
-void vmx_host_write_idtr_base(long val)
+int vmx_host_write_idtr_base(long val)
 {
-    vmx_write_vmcs_field(HOST_IDTR_BASE, val);
+    return vmx_write_vmcs_field(HOST_IDTR_BASE, val);
 }
 
 
@@ -261,9 +261,9 @@ long vmx_host_read_ia32_sysenter_esp()
     return ans;
 }
 
-void vmx_host_write_ia32_sysenter_esp(long val)
+int vmx_host_write_ia32_sysenter_esp(long val)
 {
-    vmx_write_vmcs_field(HOST_IA32_SYSENTER_ESP, val);
+    return vmx_write_vmcs_field(HOST_IA32_SYSENTER_ESP, val);
 }
 
 
@@ -274,9 +274,9 @@ long vmx_host_read_ia32_sysenter_eip()
     return ans;
 }
 
-void vmx_host_write_ia32_sysenter_eip(long val)
+int vmx_host_write_ia32_sysenter_eip(long val)
 {
-    vmx_write_vmcs_field(HOST_IA32_SYSENTER_EIP, val);
+    return vmx_write_vmcs_field(HOST_IA32_SYSENTER_EIP, val);
 }
 
 
@@ -287,9 +287,9 @@ long vmx_host_read_rsp()
     return ans;
 }
 
-void vmx_host_write_rsp(long val)
+int vmx_host_write_rsp(long val)
 {
-    vmx_write_vmcs_field(HOST_RSP, val);
+    return vmx_write_vmcs_field(HOST_RSP, val);
 }
 
 
@@ -301,9 +301,9 @@ long vmx_host_read_rip()
     return ans;
 }
 
-void vmx_host_write_rip(long val)
+int vmx_host_write_rip(long val)
 {
-    vmx_write_vmcs_field(HOST_RIP, val);
+    return vmx_write_vmcs_field(HOST_RIP, val);
 }
 
 
@@ -314,9 +314,9 @@ long vmx_host_read_ia32_s_cet()
     return ans;
 }
 
-void vmx_host_write_ia32_s_cet(long val)
+int vmx_host_write_ia32_s_cet(long val)
 {
-    vmx_write_vmcs_field(HOST_IA32_S_CET, val);
+    return vmx_write_vmcs_field(HOST_IA32_S_CET, val);
 }
 
 
@@ -327,9 +327,9 @@ long vmx_host_read_ssp()
     return ans;
 }
 
-void vmx_host_write_ssp(long val)
+int vmx_host_write_ssp(long val)
 {
-    vmx_write_vmcs_field(VMX_HOST_SSP, val);
+    return vmx_write_vmcs_field(VMX_HOST_SSP, val);
 }
 
 
@@ -340,9 +340,9 @@ long vmx_host_read_ia32_interrupt_ssp_table_addr()
     return ans;
 }
 
-void vmx_host_write_ia32_interrupt_ssp_table_addr(long val)
+int vmx_host_write_ia32_interrupt_ssp_table_addr(long val)
 {
-    vmx_write_vmcs_field(VMX_HOST_IA32_INTERRUPT_SSP_TABLE_ADDR, val);
+    return vmx_write_vmcs_field(VMX_HOST_IA32_INTERRUPT_SSP_TABLE_ADDR, val);
 }
 
 
@@ -367,9 +367,9 @@ long vmx_host_read_ia32_pat()
     return ans;
 }
 
-void vmx_host_write_ia32_pat(long val)
+int vmx_host_write_ia32_pat(long val)
 {
-    vmx_write_vmcs_field(HOST_IA32_PAT, val);
+    return vmx_write_vmcs_field(HOST_IA32_PAT, val);
 }
 
 
@@ -380,9 +380,9 @@ long vmx_host_read_ia32_efer()
     return ans;
 }
 
-void vmx_host_write_ia32_efer(long val)
+int vmx_host_write_ia32_efer(long val)
 {
-    vmx_write_vmcs_field(HOST_IA32_EFER, val);
+    return vmx_write_vmcs_field(HOST_IA32_EFER, val);
 }
 
 
@@ -393,9 +393,9 @@ long vmx_host_read_ia32_perf_global_ctrl()
     return ans;
 }
 
-void vmx_host_write_ia32_perf_global_ctrl(long val)
+int vmx_host_write_ia32_perf_global_ctrl(long val)
 {
-    vmx_write_vmcs_field(HOST_IA32_PERF_GLOBAL_CTRL, val);
+    return vmx_write_vmcs_field(HOST_IA32_PERF_GLOBAL_CTRL, val);
 }
 
 
@@ -406,9 +406,9 @@ long vmx_host_read_ia32_pkrs()
     return ans;
 }
 
-void vmx_host_write_ia32_pkrs(long val)
+int vmx_host_write_ia32_pkrs(long val)
 {
-    vmx_write_vmcs_field(HOST_IA32_PKRS, val);
+    return vmx_write_vmcs_field(HOST_IA32_PKRS, val);
 }
 
 
@@ -427,9 +427,9 @@ long vmx_host_read_ia32_sysenter_cs()
     return ans;
 }
 
-void vmx_host_write_ia32_sysenter_cs(long val)
+int vmx_host_write_ia32_sysenter_cs(long val)
 {
-    vmx_write_vmcs_field(HOST_IA32_SYSENTER_CS, val);
+    return vmx_write_vmcs_field(HOST_IA32_SYSENTER_CS, val);
 }
 
 
