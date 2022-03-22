@@ -97,6 +97,43 @@ const char* itoa32(int n)
     return buffer;
 }
 
+static char hexdigit32(int n)
+{
+    switch (n)
+    {
+    case  1: return '1';
+    case  2: return '2';
+    case  3: return '3';
+    case  4: return '4';
+    case  5: return '5';
+    case  6: return '6';
+    case  7: return '7';
+    case  8: return '8';
+    case  9: return '9';
+    case 10: return 'a';
+    case 11: return 'b';
+    case 12: return 'c';
+    case 13: return 'd';
+    case 14: return 'e';
+    case 15: return 'f';
+    default: return '0';
+    }
+}
+
+const char* hex32(unsigned long n)
+{
+    static char buffer[22] = "0x";
+    int i = 0;
+
+    // 32 bits = 8 hex digits
+    for (i = 0; i != 8; ++i)
+    {
+        buffer[2+i] = hexdigit32((n >> 4*(15 - i)) & 0x0f);
+    }
+
+    return buffer;
+}
+
 int atoi32(const char* str)
 {
     int number = 0;

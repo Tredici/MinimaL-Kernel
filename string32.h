@@ -13,6 +13,7 @@ char *strcpy32(char *dst, const char *src);
 int strlen32(const char *str);
 
 const char* itoa32(int n);
+const char* hex32(unsigned long n);
 
 int atoi32(const char* str);
 
