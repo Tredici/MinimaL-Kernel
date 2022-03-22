@@ -77,7 +77,7 @@ static inline void initialize_idt_entry(struct idt_gate_descriptor idt[], int ex
     idt[exception_number] = (struct idt_gate_descriptor){};
     idt[exception_number].present = 1;
     idt[exception_number].type = type;
-    idt[exception_number].segment_selector = 0x08; /* Always this for code */
+    idt[exception_number].segment_selector = 0x10; /* Always this for code */
     set_pointer_to_handler(&idt[exception_number], rip_handler);
 }
 
