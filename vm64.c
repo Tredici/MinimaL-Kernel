@@ -988,7 +988,7 @@ static void vmx_configure_control_fields()
          * IA32_VMX_EXIT_CTLS should work.
          */
         {
-            const int Load_IA32_EFER = 1L << 21;
+            const long Load_IA32_EFER = 1L << 21;
             tmp = msr_read_ia32_vmx_exit_ctls();
             tmp |= Load_IA32_EFER;
             vmx_write_vm_exit_controls(tmp);
