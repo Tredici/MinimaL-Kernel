@@ -575,6 +575,7 @@ vmx_get_guest_code:
 
 vm_guest:
     mov $0xf5f5, %eax
+    mov $0xf5f5, test
     hlt
 
 .bss

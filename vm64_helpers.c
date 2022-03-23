@@ -3,6 +3,9 @@
 #include "error64.h"
 #include "vm64_guest.h"
 #include "msr.h"
+#include "vm64_control.h"
+
+int test = 0;
 
 void vmx_debug_virtual_machine(struct vm64_registers* registers)
 {
@@ -33,10 +36,12 @@ void vmx_debug_virtual_machine(struct vm64_registers* registers)
     putstr64("R15 = "); puthex64(registers->R15); newline64();
 
     putstr64("RIP = "); puthex64(registers->RIP); newline64();
+    putstr64("test = "); puti64(test); newline64();
 
     //  putstr64("    code  = "); puthex64(vmx_get_guest_code()); newline64();
     //  putstr64("    stack = "); puthex64(vmx_get_guest_stack()); newline64();
     putstr64("Guest Activity state = "); puti64(vmx_guest_read_activity_state()); newline64();
+    putstr64("EXIT REASON = "); puthex64((unsigned)vmx_read_vm_exit_reason()); newline64();
 }
 
 /**
@@ -88,6 +93,14 @@ const char *vmx_error_reason(int number)
 
     return vmx_errors[number];
 }
+
+/**
+ * See Intel Manual Vol. 3
+ *  [23.9 VM-EXIT INFORMATION FIELDS]
+ *
+ * It is foundamental to understand why exit does occur!
+ */
+
 
 /**
  * See Intel Manual Vol. 3
