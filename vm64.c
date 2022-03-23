@@ -1211,20 +1211,4 @@ static void vmx_configure_control_fields()
          */
         vmx_write_vm_entry_msr_load_count(0L);
     }
-
-
-    /* 64 bits */
-    //vmx_write_address_of_io_bitmap_a;
-    //vmx_write_address_of_io_bitmap_b;
-    //vmx_write_vm_exit_msr_store_address;
-
-    //vmx_write_vm_exit_msr_load_address;
-    //vmx_write_vm_entry_msr_load_address;
-    //vmx_write_executive_vmcs_pointer;
-    //vmx_write_tsc_offset;
-
-    /* 32 bits */
-
-
-    /* natural width */
 }
