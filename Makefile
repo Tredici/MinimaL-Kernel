@@ -4,6 +4,7 @@ CC := gcc
 CC32 := $(CC) -m32
 
 MINIKERNEL := minikernel
+BUILD :=
 
 # Da man gcc
 #	-ffreestanding
@@ -69,8 +70,7 @@ CFLAGS=-fno-pic -no-pie -fno-stack-protector -ffreestanding -g3 -Wall -fno-commo
 #			https://stackoverflow.com/questions/28474675/arm-common-section-and-fno-common-flag
 LINKER := -nostdlib -T likerops.ld
 
-$(MINIKERNEL): header.o error.o trampoline.o helpers_32bit.o video32bit.o kmain32.o string32.o io32.o kmain64.o trampoline64.o string64.o io64.o video64bit.o error64.o interrupt64.o vm64.o status_operations64.o msr.o tr.o
-	gcc -g $(CFLAGS) $(LINKER) $^ -o $(MINIKERNEL)
+build: $(MINIKERNEL)
 
 .PHONY: rebuild
 rebuild: clean $(MINIKERNEL)
@@ -100,67 +100,91 @@ header.o: header.S
 #
 # It converts "elf32" to "elf64" permitting linking
 	objcopy -O elf64-x86-64 $@
+BUILD += header.o
 
 error.o: error.S
 	gcc -m32 $(CFLAGS) -c $<
 	objcopy -O elf64-x86-64 $@
+BUILD += error.o
 
 trampoline.o: trampoline.S
 	gcc -m32 $(CFLAGS) -c $<
 	objcopy -O elf64-x86-64 $@
+BUILD += trampoline64.o
 
 trampoline64.o: trampoline64.S
 	gcc $(CFLAGS) -c $<
+BUILD += trampoline.o
 
 helpers_32bit.o: helpers_32bit.c helpers_32bit.h
 	gcc -m32 $(CFLAGS) -c $^ 
 	objcopy -O elf64-x86-64 $@
+BUILD += helpers_32bit.o
 
 io32.o: io32.S io32.h
 	gcc -m32 $(CFLAGS) -c $^
 	objcopy -O elf64-x86-64 $@
+BUILD += io32.o
 
 io64.o: io64.S io64.h
 	gcc $(CFLAGS) -c $^
+BUILD += io64.o
 
 msr.o: msr.h msr.c msr.S
 	gcc -r $(CFLAGS) $^ -o $@
+BUILD += msr.o
 
 tr.o: tr.h tr.c tr.S
 	gcc -r $(CFLAGS) $^ -o $@
+BUILD += tr.o
 
 status_operations64.o: status_operations64.h status_operations64.c status_operations64.S
 	gcc -r $(CFLAGS) $^ -o $@
+BUILD += status_operations64.o
 
 video32bit.o: video32bit.c video32bit.h string32.h
 	gcc -m32 $(CFLAGS) -c $^
 	objcopy -O elf64-x86-64 $@
+BUILD += video32bit.o
 
 video64bit.o: video64bit.c video64bit.h
 	gcc $(CFLAGS) -c $^
+BUILD += video64bit.o
 
 string32.o: string32.c string32.h
 	gcc -m32 $(CFLAGS) -c $^
 	objcopy -O elf64-x86-64 $@
+BUILD += string32.o
 
 string64.o: string64.c string64.h
 	gcc $(CFLAGS) -c $^
+BUILD += string64.o
 
 error64.o: error64.S error64.h error64.c
 	gcc -r $(CFLAGS) $^ -o $@
+BUILD += error64.o
 
 interrupt64.o: interrupt64.h interrupt64.c interrupt64.S interrupt64_handlers.h interrupt64_handlers.c interrupt64_handlers.S
 	gcc -r $(CFLAGS) $^ -o $@
+BUILD += interrupt64.o
 
 vm64.o: vm64.S vm64.h vm64.c vm64_guest.h vm64_guest.c vm64_host.h vm64_host.c vm64_control.h vm64_control.c vm64_helpers.h vm64_helpers.c vm64_errors.h
 	gcc -r $(CFLAGS) $^ -o $@
+BUILD += vm64.o
 
 kmain32.o: kmain32.c
 	gcc -m32 $(CFLAGS) -c $^
 	objcopy -O elf64-x86-64 $@
+BUILD += kmain32.o
 
 kmain64.o: kmain64.c
 	gcc -m64 $(CFLAGS) -c $^
+BUILD += kmain64.o
+
+
+$(MINIKERNEL): $(BUILD)
+	gcc -g $(CFLAGS) $(LINKER) $^ -o $(MINIKERNEL)
+
 
 .PHONY: clean
 clean:
