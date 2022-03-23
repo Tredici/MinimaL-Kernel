@@ -562,7 +562,7 @@ static void vmx_prepare_guest_state()
                                 | (1 << offset_DB)
                                 | (1 << offset_G);
 0xc093;
-        const int data_access   = (9 << offset_type)
+        const int data_access   = (3 << offset_type)
                                 | (1 << offset_S)
                                 | (0 << offset_DPL)
                                 | (1 << offset_P)
