@@ -73,7 +73,7 @@ LINKER := -nostdlib -T likerops.ld
 build: $(MINIKERNEL)
 
 .PHONY: rebuild
-rebuild: clean $(MINIKERNEL)
+rebuild: clean build
 
 .PHONY: launch
 launch: $(MINIKERNEL)
