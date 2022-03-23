@@ -458,6 +458,11 @@ static void vmx_prepare_guest_state()
     vmx_guest_write_ia32_sysenter_esp(msr_read_ia32_sysenter_esp());
     vmx_guest_write_ia32_sysenter_eip(msr_read_ia32_sysenter_eip());
 
+    {
+        /* OTHER GUEST MSR */
+        vmx_guest_write_ia32_efer(msr_read_ia32_efer());
+    }
+
     /**
      * Access rights
      *
@@ -1000,9 +1005,11 @@ static void vmx_configure_control_fields()
          * IA32_VMX_EXIT_CTLS should work.
          */
         {
-            const long Load_IA32_EFER = 1L << 21;
+            //const long Save_IA32_EFER = 1L << 20;
+            //const long Load_IA32_EFER = 1L << 21;
             tmp = msr_read_ia32_vmx_exit_ctls();
-            tmp |= Load_IA32_EFER;
+            //tmp |= Save_IA32_EFER;
+            //tmp |= Load_IA32_EFER;
             /**
              * See Intel Manual Vol. 3
              *  [23.7.1 VM-Exit Controls]
@@ -1084,7 +1091,34 @@ static void vmx_configure_control_fields()
          * Setting the field with exactly the content of MSR
          * IA32_VMX_ENTRY_CTLS should work.
          */
-        vmx_write_vm_entry_controls(msr_read_ia32_vmx_entry_ctls());
+        {
+            long tmp = msr_read_ia32_vmx_entry_ctls();
+            /**
+             * Guest should be executed in 64 bit mode.
+             *
+             * See Intel Manual Vol. 3
+             *  [Table 23-14. Definitions of VM-Entry Controls]
+             *  Bit 9: IA-32e mode guest
+             *  On processors that support Intel 64 architecture, this
+             *  control determines whether the logical processor is in
+             *  IA-32e mode after VM entry. Its value is loaded into
+             *  IA32_EFER.LMA as part of VM entry.
+             *  This control must be 0 on processors that do not support
+             *  Intel 64 architecture.
+             */
+            const long IA_32e_mode_guest = 1 << 9;
+            tmp |= IA_32e_mode_guest;
+            /**
+             * See Intel Manual Vol. 3
+             *  [Table 23-14. Definitions of VM-Entry Controls]
+             *  Bit 15: Load IA32_EFER
+             *  This control determines whether the IA32_EFER MSR is
+             *  loaded on VM entry.
+             */
+            //const long Load_IA32_EFER = 1 << 15;
+            //tmp |= Load_IA32_EFER;
+            vmx_write_vm_entry_controls(tmp);
+        }
 
         /**
          *  [23.8.2 VM-Entry Controls for MSRs]
