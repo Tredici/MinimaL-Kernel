@@ -438,7 +438,7 @@ vmx_launch_current_vmcs:
     jnc 1f
         mov $VMX_NO_CURRENT_VMCS, %rax
         ret
-1:  jz 2f
+1:  jnz 2f
         mov $VMX_FAILED_VMCS_CHECKS, %rax
         ret
 2:
