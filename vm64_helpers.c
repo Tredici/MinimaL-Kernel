@@ -41,7 +41,15 @@ void vmx_debug_virtual_machine(struct vm64_registers* registers)
     //  putstr64("    code  = "); puthex64(vmx_get_guest_code()); newline64();
     //  putstr64("    stack = "); puthex64(vmx_get_guest_stack()); newline64();
     putstr64("Guest Activity state = "); puti64(vmx_guest_read_activity_state()); newline64();
-    putstr64("EXIT REASON = "); puthex64((unsigned)vmx_read_vm_exit_reason()); newline64();
+    {
+        unsigned long r = (unsigned)vmx_read_vm_exit_reason();
+        putstr64("EXIT REASON = ");
+        puthex64(r);
+        putstr64(" [");
+        putstr64(vmx_exit_reason(r));
+        putstr64("]");
+        newline64();
+    }
 }
 
 /**
@@ -100,7 +108,97 @@ const char *vmx_error_reason(int number)
  *
  * It is foundamental to understand why exit does occur!
  */
+static const char *vmx_exits[] = {
+/*[ 0]*/ "Exception or non-maskable interrupt (NMI)",
+/*[ 1]*/ "External interrupt",
+/*[ 2]*/ "Triple fault",
+/*[ 3]*/ "INIT signal",
+/*[ 4]*/ "Start-up IPI (SIPI)",
+/*[ 5]*/ "I/O system-management interrupt (SMI)",
+/*[ 6]*/ "Other SMI",
+/*[ 7]*/ "Interrupt window",
+/*[ 8]*/ "NMI window",
+/*[ 9]*/ "Task switch",
+/*[10]*/ "CPUID",
+/*[11]*/ "GETSEC",
+/*[12]*/ "HLT",
+/*[13]*/ "INVD",
+/*[14]*/ "INVLPG",
+/*[15]*/ "RDPMC",
+/*[16]*/ "RDTSC",
+/*[17]*/ "RSM",
+/*[18]*/ "VMCALL",
+/*[19]*/ "VMCLEAR",
+/*[20]*/ "VMLAUNCH",
+/*[21]*/ "VMPTRLD",
+/*[22]*/ "VMPTRST",
+/*[23]*/ "VMREAD",
+/*[24]*/ "VMRESUME",
+/*[25]*/ "VMWRITE",
+/*[26]*/ "VMXOFF",
+/*[27]*/ "VMXON",
+/*[28]*/ "Control-register accesses",
+/*[29]*/ "MOV DR",
+/*[30]*/ "I/O instruction",
+/*[31]*/ "RDMSR",
+/*[32]*/ "WRMSR",
+/*[33]*/ "VM-entry failure due to invalid guest state",
+/*[34]*/ "VM-entry failure due to MSR loading",
+/*[35]*/ "UNKNOWN",
+/*[36]*/ "MWAIT",
+/*[37]*/ "Monitor trap flag",
+/*[38]*/ "UNKNOWN",
+/*[39]*/ "MONITOR",
+/*[40]*/ "PAUSE",
+/*[41]*/ "VM-entry failure due to machine-check event",
+/*[42]*/ "UNKNOWN",
+/*[43]*/ "TPR below threshold",
+/*[44]*/ "APIC access",
+/*[45]*/ "Virtualized EOI",
+/*[46]*/ "Access to GDTR or IDTR",
+/*[47]*/ "Access to LDTR or TR",
+/*[48]*/ "EPT violation",
+/*[49]*/ "EPT misconfiguration",
+/*[50]*/ "INVEPT",
+/*[51]*/ "RDTSCP",
+/*[52]*/ "VMX-preemption timer expired",
+/*[53]*/ "INVVPID",
+/*[54]*/ "WBINVD or WBNOINVD",
+/*[55]*/ "XSETBV",
+/*[56]*/ "APIC write",
+/*[57]*/ "RDRAND",
+/*[58]*/ "INVPCID",
+/*[59]*/ "VMFUNC",
+/*[60]*/ "ENCLS",
+/*[61]*/ "RDSEED",
+/*[62]*/ "Page-modification log full",
+/*[63]*/ "XSAVES",
+/*[64]*/ "XRSTORS",
+/*[65]*/ "UNKNOWN",
+/*[66]*/ "SPP-related event",
+/*[67]*/ "UMWAIT",
+/*[68]*/ "TPAUSE",
+/*[69]*/ "LOADIWKEY",
+};
+const char *vmx_exit_reason(int number)
+{
+    /**
+     * Only the low 16 bits are used.
+     * See Intel Manual Vol. 3
+     *  [APPENDIX C VMX BASIC EXIT REASONS]
+     *  The low 16 bits of the exit-reason field form
+     *  the basic exit reason which provides basic
+     *  informa tion about the cause of the VM exit or
+     *  VM-entry failure.
+     */
+    number &= 0xffff;
+    if (number < 0 || number >= sizeof(vmx_exits)/sizeof(*vmx_exits))
+    {
+        return (void*)0;
+    }
 
+    return vmx_exits[number];
+}
 
 /**
  * See Intel Manual Vol. 3

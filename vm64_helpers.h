@@ -35,6 +35,12 @@ void vmx_debug_vmx(struct vm64_registers* registers);
 const char *vmx_error_reason(int number);
 
 /**
+ * Return a statically allocated string
+ * describing the reason of the VMX exit.
+ */
+const char *vmx_exit_reason(int number);
+
+/**
  * During VMX operation not all values for
  * CRO are supported.
  *
