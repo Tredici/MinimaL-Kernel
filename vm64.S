@@ -435,14 +435,9 @@ vmx_launch_current_vmcs:
      * About local symbols:
      *  https://sourceware.org/binutils/docs/as/Symbol-Names.html
      */
-    jnc 1f
-        mov $VMX_NO_CURRENT_VMCS, %rax
-        ret
-1:  jnz 2f
-        mov $VMX_FAILED_VMCS_CHECKS, %rax
-        ret
-2:
-    xor %rax,%rax
+    pushfq
+    pop %rax
+    and $VMmask, %rax
     ret
 
 
