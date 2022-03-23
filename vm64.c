@@ -389,9 +389,6 @@ static void vmx_prepare_guest_state()
     vmx_guest_write_idtr_base((long)ptr);
     vmx_guest_write_idtr_limit(limit);
 
-    vmx_guest_write_ldtr_base(0L);
-    vmx_guest_write_ldtr_limit(0L);
-
     if (so_read_gdtr(&ptr, &limit))
     {
         panic64("so_read_gdtr");
@@ -399,7 +396,6 @@ static void vmx_prepare_guest_state()
     vmx_guest_write_gdtr_base((long)ptr);
     vmx_guest_write_gdtr_limit(limit);
 
-    vmx_guest_write_ldtr_base(0L);
     const long tss = (long)xdt_read_address(ptr, so_read_tr());
     vmx_guest_write_tr_base(tss);
     /**
@@ -418,10 +414,11 @@ static void vmx_prepare_guest_state()
     }
 
     /* Set guest control registers */
-    vmx_guest_write_cr0(so_read_cr0());
-    vmx_guest_write_cr3(so_read_cr3());
-    vmx_guest_write_cr4(so_read_cr4());
-
+    {
+        vmx_guest_write_cr0(so_read_cr0());
+        vmx_guest_write_cr3(so_read_cr3());
+        vmx_guest_write_cr4(so_read_cr4());
+    }
 
     vmx_guest_write_dr7(so_read_dr7());
 
@@ -435,6 +432,19 @@ static void vmx_prepare_guest_state()
     vmx_guest_write_ds_base(0L);
     vmx_guest_write_ds_limit(-1L);
     /* SS */
+    /**
+     * See Intel Manual Vol. 3
+     *  [25.3.1.2 Checks on Guest Segment Registers]
+     *  Selector fields.
+     *      +SS. If the guest will not be virtual-8086 and
+     *       the “unrestricted guest” VM-execution control
+     *       is 0, the RPL (bits 1:0) must equal the RPL of
+     *       the selector field for CS.
+     */
+    if ((so_read_ss() & 3) != (so_read_cs() & 3))
+    {
+        panic64("CS[1:0] must be equal to SS[1:0]");
+    }
     vmx_guest_write_ss((long)so_read_ss());
     vmx_guest_write_ss_base(0L);
     vmx_guest_write_ss_limit(-1L);
@@ -444,23 +454,25 @@ static void vmx_prepare_guest_state()
     vmx_guest_write_es_limit(-1L);
     /* FS */
     vmx_guest_write_fs((long)so_read_fs());
-    vmx_guest_write_fs_base(0L);
     vmx_guest_write_fs_limit(-1L);
     /* GS */
     vmx_guest_write_gs((long)so_read_gs());
-    vmx_guest_write_gs_base(0L);
     vmx_guest_write_gs_limit(-1L);
 
-    vmx_guest_write_ldtr_selector(0L);
-    vmx_guest_write_tr_selector(so_read_tr());
+    {   /* Set FS and GS BASE! */
+        vmx_guest_write_gs_base(msr_read_ia32_gs_base());
+        vmx_guest_write_fs_base(msr_read_ia32_fs_base());
+    }
 
     /* syscall */
+    vmx_guest_write_ia32_debugctl(0);
+    vmx_guest_write_ia32_sysenter_cs(msr_read_ia32_sysenter_cs());
     vmx_guest_write_ia32_sysenter_esp(msr_read_ia32_sysenter_esp());
     vmx_guest_write_ia32_sysenter_eip(msr_read_ia32_sysenter_eip());
 
     {
         /* OTHER GUEST MSR */
-        vmx_guest_write_ia32_efer(msr_read_ia32_efer());
+        //vmx_guest_write_ia32_efer(msr_read_ia32_efer());
     }
 
     /**
@@ -511,32 +523,94 @@ static void vmx_prepare_guest_state()
      */
     {
         const int offset_type   = 0;
-        const int offset_S      = 4;
+        const int offset_S      = 4;  // Set for code and data
         const int offset_DPL    = 5;
         const int offset_P      = 7;
         const int offset_L      = 13; // Long mode code
         const int offset_DB     = 14; // Default operand size
-
-        const int code_access   = (10 << offset_type)
-                                | (0 << offset_S)
+        const int offset_G      = 15;
+        /**
+         * See Intel Manual Vol. 3
+         *  [25.3.1.2 Checks on Guest Segment Registers]
+         *  This section specifies the checks on the fields for
+         *  CS, SS, DS, ES, FS, GS, TR, and LDTR. The following
+         *  terms are used in defining these checks:
+         *      +The guest will be IA-32e mode if the “IA-32e mode
+         *       guest” VM-entry control is 1.
+         *      +Any one of these registers is said to be usable
+         *       if the unusable bit (bit 16) is 0 in the
+         *       access-rights field for that register.
+         */
+0xa09b;
+        /**
+         *  The following are the checks on these fields:
+         */
+        // See 32 bit conde in helpers_32bit.c
+        const int code_access   = (11 << offset_type) //execute read-accessed
+                                | (1 << offset_S)
                                 | (0 << offset_DPL)
                                 | (1 << offset_P)
                                 | (1 << offset_L)
-                                | (0 << offset_DB);
+                                | (0 << offset_DB)
+                                | (1 << offset_G);
 
-        const int data_access   = (2 << offset_type)
+        const int stack_access  = (3 << offset_type) //execute read-accessed
+                                | (1 << offset_S)
+                                | (0 << offset_DPL)
+                                | (1 << offset_P)
+                                | (0 << offset_L)
+                                | (1 << offset_DB)
+                                | (1 << offset_G);
+0xc093;
+        const int data_access   = (9 << offset_type)
+                                | (1 << offset_S)
+                                | (0 << offset_DPL)
+                                | (1 << offset_P)
+                                | (0 << offset_L)
+                                | (1 << offset_DB)
+                                | (1 << offset_G);
+
+        // See [void init_first_task_descriptor()]
+        // 11 and not 9 beacuse it is busy (used)!
+        /**
+         * See Intel Manual Vol. 3
+         *  [25.3.1.2 Checks on Guest Segment Registers]
+         *  All settings are required by the spec.
+         */
+        const int tr_access     = (11 << offset_type)
                                 | (0 << offset_S)
                                 | (0 << offset_DPL)
                                 | (1 << offset_P)
                                 | (0 << offset_L)
                                 | (0 << offset_DB);
 
+        const int unusable  = 1 << 16;
+
+        /**
+         * IMPORTANT!
+         *  THE LOW 16 BITS CORRESPOND TO BITS 23:8 OF THE UPPER
+         *           32 BITS OF A 64-BIT SEGMENT DESCRIPTOR!
+         * Go up for details!
+         * See [struct segment_descriptor] in tr.h for a reference!
+         */
         vmx_guest_write_es_access_rights(code_access);
         vmx_guest_write_cs_access_rights(data_access);
-        vmx_guest_write_ss_access_rights(data_access);
+        vmx_guest_write_ss_access_rights(stack_access);
         vmx_guest_write_ds_access_rights(data_access);
         vmx_guest_write_fs_access_rights(data_access);
         vmx_guest_write_gs_access_rights(data_access);
+
+        {   /* TASK REGISTER */
+            vmx_guest_write_tr_access_rights(tr_access);
+            vmx_guest_write_tr_selector(so_read_tr());
+            vmx_guest_write_tr_limit(103);  // sizeof(struct TSS)-1
+        }
+        {   /* LOCAL DESCRIPTOR TABLE */
+            vmx_guest_write_ldtr_selector(0);
+            vmx_guest_write_ldtr_access_rights(unusable);
+            vmx_guest_write_ldtr_base(0L);
+            vmx_guest_write_ldtr_limit(-1);
+        }
     }
 
     {
