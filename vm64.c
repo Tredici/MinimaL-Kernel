@@ -543,7 +543,7 @@ static void vmx_prepare_guest_state()
          *       if the unusable bit (bit 16) is 0 in the
          *       access-rights field for that register.
          */
-0xa09b;
+
         /**
          *  The following are the checks on these fields:
          */
@@ -563,7 +563,7 @@ static void vmx_prepare_guest_state()
                                 | (0 << offset_L)
                                 | (1 << offset_DB)
                                 | (1 << offset_G);
-0xc093;
+
         const int data_access   = (3 << offset_type)
                                 | (1 << offset_S)
                                 | (0 << offset_DPL)
