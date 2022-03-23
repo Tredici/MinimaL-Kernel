@@ -19,6 +19,7 @@ static void vmx_save_host_state();
 static void vmx_prepare_guest_state();
 static void vmx_configure_control_fields();
 static void vmx_configure_vmentry_fields();
+static void vmx_configure_vmexit_fields();
 static void vmx_set_default_controls_values();
 
 /**
@@ -1049,92 +1050,7 @@ static void vmx_configure_control_fields()
     }
 
     vmx_configure_vmentry_fields();
-
-    {
-        /**
-         * About VMX-entries
-         *
-         * See Intel Manual Vol. 3
-         *  [23.8 VM-ENTRY CONTROL FIELDS]
-         *  The VM-entry control fields govern the behavior of VM
-         *  entries. They are discussed in Sections 23.8.1 through
-         *  23.8.3.
-         */
-        /**
-         * See Intel Manual Vol. 3
-         *  [23.8.1 VM-Entry Controls]
-         *  The VM-entry controls constitute a 32-bit vector that
-         *  governs the basic operation of VM entries. Table 23-14
-         *  lists the controls supported. See Chapter 23 for how these
-         *  controls affect VM entries.
-         *  [...]
-         *  All other bits in this field are reserved, some to 0 and
-         *  some to 1. Software should consult the VMX capability MSRs
-         *  IA32_VMX_ENTRY_CTLS and IA32_VMX_TRUE_ENTRY_CTLS (see
-         *  Appendix A.5) to determine how it should set the reserved
-         *  bits. Failure to set reserved bits properly causes
-         *  subsequent VM entries to fail (see Section 25.2.1.3).
-         *
-         * See Intel Manual Vol. 3
-         *  [A.5 VM-ENTRY CONTROLS]
-         *  The IA32_VMX_ENTRY_CTLS MSR (index 484H) reports on the
-         *  allowed settings of most of the VM-entry controls (see
-         *  Section 23.8.1):
-         *      -Bits 31:0 indicate the allowed 0-settings of these
-         *       controls. VM entry allows control X (bit X of the
-         *       VM-entry controls) to be 0 if bit X in the MSR is
-         *       cleared to 0; if bit X in the MSR is set to 1, VM
-         *       entry fails if control X is 0.
-         *
-         * Setting the field with exactly the content of MSR
-         * IA32_VMX_ENTRY_CTLS should work.
-         */
-        {
-            long tmp = msr_read_ia32_vmx_entry_ctls();
-            /**
-             * Guest should be executed in 64 bit mode.
-             *
-             * See Intel Manual Vol. 3
-             *  [Table 23-14. Definitions of VM-Entry Controls]
-             *  Bit 9: IA-32e mode guest
-             *  On processors that support Intel 64 architecture, this
-             *  control determines whether the logical processor is in
-             *  IA-32e mode after VM entry. Its value is loaded into
-             *  IA32_EFER.LMA as part of VM entry.
-             *  This control must be 0 on processors that do not support
-             *  Intel 64 architecture.
-             */
-            const long IA_32e_mode_guest = 1 << 9;
-            tmp |= IA_32e_mode_guest;
-            /**
-             * See Intel Manual Vol. 3
-             *  [Table 23-14. Definitions of VM-Entry Controls]
-             *  Bit 15: Load IA32_EFER
-             *  This control determines whether the IA32_EFER MSR is
-             *  loaded on VM entry.
-             */
-            //const long Load_IA32_EFER = 1 << 15;
-            //tmp |= Load_IA32_EFER;
-            vmx_write_vm_entry_controls(tmp);
-        }
-
-        /**
-         *  [23.8.2 VM-Entry Controls for MSRs]
-         *  A VMM may specify a list of MSRs to be loaded on VM entries.
-         *  The following VM-entry control fields manage this
-         *  functionality:
-         *      -VM-entry MSR-load count (32 bits). [...]
-         *      -VM-entry MSR-load address (64 bits). [...]
-         *       If the VM-entry MSR-load count is not zero, the
-         *       address must be 16-byte aligned.
-         *
-         *  See Section 25.4 for details of how this area is used on
-         *  VM entries.
-         *
-         * Not used, set count to 0.
-         */
-        vmx_write_vm_entry_msr_load_count(0L);
-    }
+    vmx_configure_vmexit_fields();
 }
 
 static void vmx_configure_vmentry_fields()
@@ -1215,4 +1131,91 @@ static void vmx_configure_vmentry_fields()
      */
     vmx_write_vm_exit_msr_store_count(0L);
     vmx_write_vm_exit_msr_load_count(0L);
+}
+
+static void vmx_configure_vmexit_fields()
+{
+    /**
+     * About VMX-entries
+     *
+     * See Intel Manual Vol. 3
+     *  [23.8 VM-ENTRY CONTROL FIELDS]
+     *  The VM-entry control fields govern the behavior of VM
+     *  entries. They are discussed in Sections 23.8.1 through
+     *  23.8.3.
+     */
+    /**
+     * See Intel Manual Vol. 3
+     *  [23.8.1 VM-Entry Controls]
+     *  The VM-entry controls constitute a 32-bit vector that
+     *  governs the basic operation of VM entries. Table 23-14
+     *  lists the controls supported. See Chapter 23 for how these
+     *  controls affect VM entries.
+     *  [...]
+     *  All other bits in this field are reserved, some to 0 and
+     *  some to 1. Software should consult the VMX capability MSRs
+     *  IA32_VMX_ENTRY_CTLS and IA32_VMX_TRUE_ENTRY_CTLS (see
+     *  Appendix A.5) to determine how it should set the reserved
+     *  bits. Failure to set reserved bits properly causes
+     *  subsequent VM entries to fail (see Section 25.2.1.3).
+     *
+     * See Intel Manual Vol. 3
+     *  [A.5 VM-ENTRY CONTROLS]
+     *  The IA32_VMX_ENTRY_CTLS MSR (index 484H) reports on the
+     *  allowed settings of most of the VM-entry controls (see
+     *  Section 23.8.1):
+     *      -Bits 31:0 indicate the allowed 0-settings of these
+     *       controls. VM entry allows control X (bit X of the
+     *       VM-entry controls) to be 0 if bit X in the MSR is
+     *       cleared to 0; if bit X in the MSR is set to 1, VM
+     *       entry fails if control X is 0.
+     *
+     * Setting the field with exactly the content of MSR
+     * IA32_VMX_ENTRY_CTLS should work.
+     */
+    {
+        long tmp = msr_read_ia32_vmx_entry_ctls();
+        /**
+         * Guest should be executed in 64 bit mode.
+         *
+         * See Intel Manual Vol. 3
+         *  [Table 23-14. Definitions of VM-Entry Controls]
+         *  Bit 9: IA-32e mode guest
+         *  On processors that support Intel 64 architecture, this
+         *  control determines whether the logical processor is in
+         *  IA-32e mode after VM entry. Its value is loaded into
+         *  IA32_EFER.LMA as part of VM entry.
+         *  This control must be 0 on processors that do not support
+         *  Intel 64 architecture.
+         */
+        const long IA_32e_mode_guest = 1 << 9;
+        tmp |= IA_32e_mode_guest;
+        /**
+         * See Intel Manual Vol. 3
+         *  [Table 23-14. Definitions of VM-Entry Controls]
+         *  Bit 15: Load IA32_EFER
+         *  This control determines whether the IA32_EFER MSR is
+         *  loaded on VM entry.
+         */
+        //const long Load_IA32_EFER = 1 << 15;
+        //tmp |= Load_IA32_EFER;
+        vmx_write_vm_entry_controls(tmp);
+    }
+
+    /**
+     *  [23.8.2 VM-Entry Controls for MSRs]
+     *  A VMM may specify a list of MSRs to be loaded on VM entries.
+     *  The following VM-entry control fields manage this
+     *  functionality:
+     *      -VM-entry MSR-load count (32 bits). [...]
+     *      -VM-entry MSR-load address (64 bits). [...]
+     *       If the VM-entry MSR-load count is not zero, the
+     *       address must be 16-byte aligned.
+     *
+     *  See Section 25.4 for details of how this area is used on
+     *  VM entries.
+     *
+     * Not used, set count to 0.
+     */
+    vmx_write_vm_entry_msr_load_count(0L);
 }
