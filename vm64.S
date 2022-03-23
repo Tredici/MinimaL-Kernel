@@ -566,7 +566,7 @@ check_vm_support:
 
 .global vmx_get_guest_stack
 vmx_get_guest_stack:
-    lea VM_GUEST_STACK, %rax
+    lea VM_GUEST_STACK_TOP, %rax
     ret
 .global vmx_get_guest_code
 vmx_get_guest_code:
@@ -604,3 +604,4 @@ VMXON_region:
 
 VM_GUEST_STACK:
     .skip 4096
+VM_GUEST_STACK_TOP:
