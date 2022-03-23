@@ -18,6 +18,7 @@
 static void vmx_save_host_state();
 static void vmx_prepare_guest_state();
 static void vmx_configure_control_fields();
+static void vmx_configure_vmentry_fields();
 static void vmx_set_default_controls_values();
 
 /**
@@ -1047,84 +1048,7 @@ static void vmx_configure_control_fields()
         /***** NOT USED *****/
     }
 
-    {
-        long tmp;
-        /**
-         * About VM-exits
-         *
-         * See Intel Manual Vol. 3
-         *  [23.7 VM-EXIT CONTROL FIELDS]
-         *  The VM-exit control fields govern the behavior of VM exits.
-         *  They are discussed in Section 23.7.1 and Section 23.7.2.
-         *  [...]
-         *  All other bits in this field are reserved, some to 0 and
-         *  some to 1. Software should consult the VMX capability MSRs
-         *  IA32_VMX_EXIT_CTLS and IA32_VMX_TRUE_EXIT_CTLS (see Appendix
-         *  A.4) to determine how it should set the reserved bits.
-         *  Failure to set reserved bits properly causes subsequent VM
-         *  entries to fail (see Section 25.2.1.2).
-         *
-         * See Intel Manual Vol. 3
-         *  [A.4 VM-EXIT CONTROLS]
-         *  The IA32_VMX_EXIT_CTLS MSR (index 483H) reports on the
-         *  allowed settings of most of the VM-exit controls (see
-         *  Section 23.7.1):
-         *      -Bits 31:0 indicate the allowed 0-settings of these
-         *       controls. VM entry allows control X (bit X of the
-         *       VM-exit controls) to be 0 if bit X in the MSR is
-         *       cleared to 0; if bit X in the MSR is set to 1, VM
-         *       entry fails if control X is 0
-         *
-         * Setting the field with exactly the content of MSR
-         * IA32_VMX_EXIT_CTLS should work.
-         */
-        {
-            //const long Save_IA32_EFER = 1L << 20;
-            //const long Load_IA32_EFER = 1L << 21;
-            tmp = msr_read_ia32_vmx_exit_ctls();
-            //tmp |= Save_IA32_EFER;
-            //tmp |= Load_IA32_EFER;
-            /**
-             * See Intel Manual Vol. 3
-             *  [23.7.1 VM-Exit Controls]
-             *  [Table 23-12. Definitions of VM-Exit Controls]
-             *  Bit 9: Host address-space size
-             *  On processors that support Intel 64 architecture,
-             *  this control determines whether a logical processor
-             *  is in 64-bit mode after the next VM exit. Its value
-             *  is loaded into CS.L, IA32_EFER.LME, and IA32_EFER.LMA
-             *  on every VM exit.
-             *  This control must be 0 on processors that do not
-             *  support Intel 64 architecture.
-             */
-            const long Host_address_space_size = 1 << 9;
-            tmp |= Host_address_space_size;
-            vmx_write_vm_exit_controls(tmp);
-        }
-
-        /**
-         *  [23.7.2 VM-Exit Controls for MSRs]
-         *  A VMM may specify lists of MSRs to be stored and loaded on
-         *  VM exits. The following VM-exit control fields determine
-         *  how MSRs are stored on VM exits:
-         *      -VM-exit MSR-store count (32 bits). [...]
-         *      -VM-exit MSR-store address (64 bits). [...]
-         *       If the VM-exit MSR-store count is not zero, the address
-         *      must be 16-byte aligned.
-         *  [...]
-         *  The following VM-exit control fields determine how MSRs are loaded
-         *  on VM exits:
-         *      -VM-exit MSR-load count (32 bits). [...]
-         *      -VM-exit MSR-load address (64 bits). [...]
-         *       If the VM-exit MSR-load count is not zero, the address
-         *       must be 16-byte aligned.
-         *  See Section 26.6 for how this area is used on VM exits.
-         *
-         * Not used, set counts to 0.
-         */
-        vmx_write_vm_exit_msr_store_count(0L);
-        vmx_write_vm_exit_msr_load_count(0L);
-    }
+    vmx_configure_vmentry_fields();
 
     {
         /**
@@ -1211,4 +1135,84 @@ static void vmx_configure_control_fields()
          */
         vmx_write_vm_entry_msr_load_count(0L);
     }
+}
+
+static void vmx_configure_vmentry_fields()
+{
+    long tmp;
+    /**
+     * About VM-exits
+     *
+     * See Intel Manual Vol. 3
+     *  [23.7 VM-EXIT CONTROL FIELDS]
+     *  The VM-exit control fields govern the behavior of VM exits.
+     *  They are discussed in Section 23.7.1 and Section 23.7.2.
+     *  [...]
+     *  All other bits in this field are reserved, some to 0 and
+     *  some to 1. Software should consult the VMX capability MSRs
+     *  IA32_VMX_EXIT_CTLS and IA32_VMX_TRUE_EXIT_CTLS (see Appendix
+     *  A.4) to determine how it should set the reserved bits.
+     *  Failure to set reserved bits properly causes subsequent VM
+     *  entries to fail (see Section 25.2.1.2).
+     *
+     * See Intel Manual Vol. 3
+     *  [A.4 VM-EXIT CONTROLS]
+     *  The IA32_VMX_EXIT_CTLS MSR (index 483H) reports on the
+     *  allowed settings of most of the VM-exit controls (see
+     *  Section 23.7.1):
+     *      -Bits 31:0 indicate the allowed 0-settings of these
+     *       controls. VM entry allows control X (bit X of the
+     *       VM-exit controls) to be 0 if bit X in the MSR is
+     *       cleared to 0; if bit X in the MSR is set to 1, VM
+     *       entry fails if control X is 0
+     *
+     * Setting the field with exactly the content of MSR
+     * IA32_VMX_EXIT_CTLS should work.
+     */
+    {
+        //const long Save_IA32_EFER = 1L << 20;
+        //const long Load_IA32_EFER = 1L << 21;
+        tmp = msr_read_ia32_vmx_exit_ctls();
+        //tmp |= Save_IA32_EFER;
+        //tmp |= Load_IA32_EFER;
+        /**
+         * See Intel Manual Vol. 3
+         *  [23.7.1 VM-Exit Controls]
+         *  [Table 23-12. Definitions of VM-Exit Controls]
+         *  Bit 9: Host address-space size
+         *  On processors that support Intel 64 architecture,
+         *  this control determines whether a logical processor
+         *  is in 64-bit mode after the next VM exit. Its value
+         *  is loaded into CS.L, IA32_EFER.LME, and IA32_EFER.LMA
+         *  on every VM exit.
+         *  This control must be 0 on processors that do not
+         *  support Intel 64 architecture.
+         */
+        const long Host_address_space_size = 1 << 9;
+        tmp |= Host_address_space_size;
+        vmx_write_vm_exit_controls(tmp);
+    }
+
+    /**
+     *  [23.7.2 VM-Exit Controls for MSRs]
+     *  A VMM may specify lists of MSRs to be stored and loaded on
+     *  VM exits. The following VM-exit control fields determine
+     *  how MSRs are stored on VM exits:
+     *      -VM-exit MSR-store count (32 bits). [...]
+     *      -VM-exit MSR-store address (64 bits). [...]
+     *       If the VM-exit MSR-store count is not zero, the address
+     *      must be 16-byte aligned.
+     *  [...]
+     *  The following VM-exit control fields determine how MSRs are loaded
+     *  on VM exits:
+     *      -VM-exit MSR-load count (32 bits). [...]
+     *      -VM-exit MSR-load address (64 bits). [...]
+     *       If the VM-exit MSR-load count is not zero, the address
+     *       must be 16-byte aligned.
+     *  See Section 26.6 for how this area is used on VM exits.
+     *
+     * Not used, set counts to 0.
+     */
+    vmx_write_vm_exit_msr_store_count(0L);
+    vmx_write_vm_exit_msr_load_count(0L);
 }
