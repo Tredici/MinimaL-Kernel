@@ -410,8 +410,12 @@ static void vmx_prepare_guest_state()
     vmx_guest_write_rflags(2);
 
     /* Set guest RSP and RIP */
-    vmx_guest_write_rsp((long)vmx_get_guest_stack());
-    vmx_guest_write_rip((long)vmx_get_guest_code());
+    {
+        long rsp = (long)vmx_get_guest_stack();
+        vmx_guest_write_rsp(rsp);
+        long rip = (long)vmx_get_guest_code();
+        vmx_guest_write_rip(rip);
+    }
 
     /* Set guest control registers */
     vmx_guest_write_cr0(so_read_cr0());
@@ -750,7 +754,10 @@ static void vmx_configure_control_fields()
          *       in the MSR is set to 1; if bit 32+X in the MSR is
          *       cleared to 0, VM entry fails if control X is 1.
          */
-        vmx_write_pin_based_vm_execution_controls(ctls & (ctls >> 32));
+        {
+            ctls &= ctls >> 32;
+            vmx_write_pin_based_vm_execution_controls(ctls);
+        }
         /**
          *  [23.6.2 Processor-Based VM-Execution Controls]
          * See also
@@ -778,11 +785,13 @@ static void vmx_configure_control_fields()
          *  Failure to set reserved bits properly causes subsequent VM
          *  entries to fail (see Section 25.2.1.1).
          */
-        ctls = msr_read_ia32_vmx_procbased_ctls();
-        vmx_write_primary_processor_based_vm_execution_controls(
-            (1L << 7) // HLT cause exiting
-            | (ctls & (ctls >> 32))
-        );
+        {
+            ctls = msr_read_ia32_vmx_procbased_ctls();
+            const long HLT_exiting = 1L << 7;
+            ctls &= ctls >> 32;
+            ctls |= HLT_exiting;
+            vmx_write_primary_processor_based_vm_execution_controls(ctls);
+        }
         /**
          *  [23.6.3 Exception Bitmap]
          *  The exception bitmap is a 32-bit field that contains one bit
