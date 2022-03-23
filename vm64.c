@@ -593,8 +593,8 @@ static void vmx_prepare_guest_state()
          * Go up for details!
          * See [struct segment_descriptor] in tr.h for a reference!
          */
-        vmx_guest_write_es_access_rights(code_access);
-        vmx_guest_write_cs_access_rights(data_access);
+        vmx_guest_write_es_access_rights(data_access);
+        vmx_guest_write_cs_access_rights(code_access);
         vmx_guest_write_ss_access_rights(stack_access);
         vmx_guest_write_ds_access_rights(data_access);
         vmx_guest_write_fs_access_rights(data_access);
