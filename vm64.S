@@ -575,6 +575,9 @@ vmx_get_guest_code:
 
 vm_guest:
     mov $0xf5f5, %eax
+    mov $0xbbbb, %ebx
+    mov $0xcccc, %ecx
+    mov $0xdddd, %edx
     mov $123456789, test
     hlt
 
