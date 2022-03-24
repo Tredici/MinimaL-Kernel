@@ -111,7 +111,6 @@ int start_vm()
     {
         panic64("VMX not supported!");
     }
-    printline64("Ciaooooooooooooo");
     putstr64("Rev Id = "); putu64(read_vmcs_revision_identifier()); newline64();
     putstr64("VMX    = "); putl64(read_IA32_VMX_BASIC()); newline64();
     set_cr4_vmxe();
@@ -188,14 +187,6 @@ int start_vm()
         }
         newline64();
     }
-    // status = vmx_clear_vmcs(vmcs_region);
-    // if (!vmx_success(status))
-    // {
-    //     panic64("Disaster VMCLEAR");
-    // }
-    // printline64("VMCS successfully cleared!");
-
-    printline64("Paninooo");
 
     return 0;
 }
