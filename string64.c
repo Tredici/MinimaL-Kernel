@@ -1,4 +1,4 @@
-#include "string32.h"
+#include "string64.h"
 
 /**
  * @brief Does char rapresent digit
