@@ -1,0 +1,3 @@
+[submodule "modules/C-page-allocator"]
+	path = modules/C-page-allocator
+	url = git@github.com:Tredici/C-page-allocator.git
