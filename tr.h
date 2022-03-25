@@ -110,6 +110,10 @@ struct TSS
  */
 struct task_descriptor
 {
+    /**
+     * For fields offset see
+     * "task_descriptor_offsets.h"
+     */
     struct GPRegisters
     {
         long RAX;
@@ -131,11 +135,19 @@ struct task_descriptor
         long R15;
     } __attribute__ ((packed)) gpr;
 
+    /**
+     * To be used for 
+     * See Intel Manual Vol. 3
+     *  [Figure 6-9. IA-32e Mode Stack Usage After Privilege Level Change]
+     */
     struct
     {
-        long RSP;
         long RIP;
-    } __attribute__ ((packed)) current;
+        long CS;
+        long RFLAGS;
+        long RSP;
+        long SS;
+    } __attribute__ ((packed)) *current;
 
     struct CRegisters
     {
@@ -149,6 +161,14 @@ struct task_descriptor
     struct TSS tss;
 
 } __attribute__ ((packed));
+
+/**
+ * Return a pointer to the task descriptor of
+ * the current task.
+ *
+ * Never fails.
+ */
+struct task_descriptor *get_current_task();
 
 /**
  * Initialize first task descriptor to set TR

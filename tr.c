@@ -19,6 +19,17 @@ void *get_kernel_stack();
 static struct task_descriptor kernel_task;
 
 /**
+ * Hold a pointer to the current task;
+ */
+struct task_descriptor *current_task;
+
+
+struct task_descriptor *get_current_task()
+{
+    return current_task;
+}
+
+/**
  * See Intel Manual Vol. 3
  *  [7.7 TASK MANAGEMENT IN 64-BIT MODE]
  *  The operating system must create at least one
@@ -39,6 +50,8 @@ void init_first_task_descriptor()
         panic64("sizeof(struct segment_descriptor) != 16L");
     }
 
+    // set kernel_task as current task
+    current_task = &kernel_task;
     /* Prepare GDT field for TSS */
     {
         // Prepare kernel stack
