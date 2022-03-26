@@ -3,19 +3,23 @@
 #include "video64bit.h"
 #include "error64.h"
 #include "string64.h"
+#include "tr.h"
 
-void handle_div0()
+void handle_div0_c()
 {
+    print_current_task_status();
     panic64("Exception DIV0!");
 }
 
-void handle_int3()
+void handle_int3_c()
 {
+    print_current_task_status();
     panic64("Exception Breakpoint!");
 }
 
 void handle_ud_c(void *rip)
 {
+    print_current_task_status();
     char buffer[80] = "#UD(";
     char *tmp;
     tmp = strcat64(buffer, hex64((long)rip));
@@ -23,18 +27,21 @@ void handle_ud_c(void *rip)
     panic64(buffer);
 }
 
-void handle_double_f()
+void handle_double_f_c()
 {
+    print_current_task_status();
     panic64("Double fault!");
 }
 
-void handle_stack_f()
+void handle_stack_f_c()
 {
+    print_current_task_status();
     panic64("Stack fault!");
 }
 
 void handle_gpe_c(long error)
 {
+    print_current_task_status();
     char buffer[80] = "General Protection Exception(";
     char *tmp;
     tmp = strcat64(buffer, ltoa64(error));
@@ -42,17 +49,20 @@ void handle_gpe_c(long error)
     panic64(buffer);
 }
 
-void handle_tss()
+void handle_tss_c()
 {
+    print_current_task_status();
     panic64("Exception TSS!");
 }
 
-void handle_snp()
+void handle_snp_c()
 {
+    print_current_task_status();
     panic64("Exception SNP!");
 }
 
-void handle_pfe()
+void handle_pfe_c()
 {
+    print_current_task_status();
     panic64("Page fault!");
 }
