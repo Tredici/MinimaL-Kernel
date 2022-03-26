@@ -171,6 +171,12 @@ struct task_descriptor
 struct task_descriptor *get_current_task();
 
 /**
+ * Print to screen current task status registers.
+ * Current task is obtained using get_current_task.
+ */
+void print_current_task_status();
+
+/**
  * Initialize first task descriptor to set TR
  * to a valid value. This is necessary in order
  * to successfully save TR in the VMCS for VMX.
