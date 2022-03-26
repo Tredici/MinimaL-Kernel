@@ -1,6 +1,7 @@
 #include "tr.h"
 #include "status_operations64.h"
 #include "error64.h"
+#include "video64bit.h"
 
 /**
  * The fourth position in the GDT will be used
@@ -127,4 +128,41 @@ void* xdt_read_address(void *table, short offset)
          | ((long)item->base_31_24<<24)
          | ((long)item->base_23_16<<16)
          |  (long)item->base_15_0);
+}
+
+
+void print_current_task_status()
+{
+    struct task_descriptor *current = get_current_task();
+    putstr64("RIP = "); puthex64(current->current->RIP);
+    putstr64("  RSP = "); puthex64(current->current->RSP);
+    newline64();
+    putstr64("RBP = "); puthex64(current->gpr.RBP);
+    putstr64("  RFLAGS = "); puthex64(current->current->RFLAGS);
+    newline64();
+
+    putstr64("RAX = "); puthex64(current->gpr.RAX);
+    putstr64("  RBX = "); puthex64(current->gpr.RBX);
+    newline64();
+    putstr64("RCX = "); puthex64(current->gpr.RCX);
+    putstr64("  RDX = "); puthex64(current->gpr.RDX);
+    newline64();
+
+    putstr64("RDI = "); puthex64(current->gpr.RDI);
+    putstr64("  RSI = "); puthex64(current->gpr.RSI);
+    newline64();
+    /* 8 news */
+    putstr64("R8  = "); puthex64(current->gpr.R8);
+    putstr64("  R9  = "); puthex64(current->gpr.R9);
+    newline64();
+    putstr64("R10 = "); puthex64(current->gpr.R10);
+    putstr64("  R11 = "); puthex64(current->gpr.R11);
+    newline64();
+    putstr64("R12 = "); puthex64(current->gpr.R12);
+    putstr64("  R13 = "); puthex64(current->gpr.R13);
+    newline64();
+    putstr64("R14 = "); puthex64(current->gpr.R14);
+    putstr64("  R15 = "); puthex64(current->gpr.R15);
+    newline64();
+
 }

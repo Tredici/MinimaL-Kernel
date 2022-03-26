@@ -51,16 +51,82 @@
 
 .endm
 
+.global handle_div0
+handle_div0:
+    SAVE_TASK_STATE
+    call handle_div0_c
+    iretq
+
+.global handle_int3
+handle_int3:
+    SAVE_TASK_STATE
+    call handle_int3_c
+    iretq
+
 .global handle_ud
 handle_ud:
     SAVE_TASK_STATE
+    /* Pass %RIP causing fault */
     mov (%rsp), %rdi
     call handle_ud_c
     iretq
 
 
+.global handle_double_f
+handle_double_f:
+    add $0x08, %rsp
+    SAVE_TASK_STATE
+    sub $0x08, %rsp
+    /* Error code is alwais 0 */
+    call handle_double_f_c
+    iretq
+
+
+.global handle_stack_f
+handle_stack_f:
+    add $0x08, %rsp
+    SAVE_TASK_STATE
+    sub $0x08, %rsp
+    mov (%rsp), %rdi
+    call handle_stack_f_c
+    iretq
+
+
 .global handle_gpe
 handle_gpe:
+    add $0x08, %rsp
+    SAVE_TASK_STATE
+    sub $0x08, %rsp
     mov (%rsp), %rdi
     call handle_gpe_c
+    iretq
+
+
+.global handle_tss
+handle_tss:
+    add $0x08, %rsp
+    SAVE_TASK_STATE
+    sub $0x08, %rsp
+    mov (%rsp), %rdi
+    call handle_tss_c
+    iretq
+
+
+.global handle_snp
+handle_snp:
+    add $0x08, %rsp
+    SAVE_TASK_STATE
+    sub $0x08, %rsp
+    mov (%rsp), %rdi
+    call handle_snp_c
+    iretq
+
+
+.global handle_pfe
+handle_pfe:
+    add $0x08, %rsp
+    SAVE_TASK_STATE
+    sub $0x08, %rsp
+    mov (%rsp), %rdi
+    call handle_pfe_c
     iretq
