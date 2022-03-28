@@ -19,7 +19,7 @@ void *kalloc_page();
 /**
  * Deallocate page.
  */
-int kfree_page(void *page);
+void kfree_page(void *page);
 
 /**
  * Allocate kernel dynamic memory.

@@ -40,9 +40,12 @@ void *kalloc_page()
     return page_allocator_allocate(&pa);
 }
 
-int kfree_page(void *page)
+void kfree_page(void *page)
 {
-    return page_allocator_free(&pa, page);
+    if (page_allocator_free(&pa, page))
+    {
+        panic64("page_allocator_free");
+    };
 }
 
 void *kalloc(unsigned long size)
