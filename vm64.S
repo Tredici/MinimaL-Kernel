@@ -386,6 +386,7 @@ vmx_launch_current_vmcs:
 
     /* Clear all registers */
     CLEARALL_GPR
+    mov $0x7777, %R8
     /**
      * See Intel Manual Vol. 3
      *  [VMLAUNCH/VMRESUME—Launch/Resume Virtual Machine]
@@ -489,7 +490,7 @@ vmx_read_vmcs_field:
 .global vmx_write_vmcs_field
 vmx_write_vmcs_field:
     /**
-     *  [VMREAD—Read Field from Virtual-Machine Control Structure]
+     *  [VMWRITE—Write Field to Virtual-Machine Control Structure]
      */
     vmwrite %rsi, %rdi
     pushf
