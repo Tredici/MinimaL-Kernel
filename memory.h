@@ -11,5 +11,24 @@
  */
 void memory_init();
 
+/**
+ * Allocate page.
+ */
+void *kalloc_page();
+
+/**
+ * Deallocate page.
+ */
+int kfree_page(void *page);
+
+/**
+ * Allocate kernel dynamic memory.
+ */
+void *kalloc(unsigned long size);
+
+/**
+ * Free kernel dynamic memory.
+ */
+void kfree(void *ptr);
 
 #endif
