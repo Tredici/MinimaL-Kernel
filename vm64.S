@@ -118,17 +118,6 @@ VM64_MSG:
 .endm
 
 
-vm64:
-    call check_vm_support
-    call enable_vmx
-
-    call init_vm64_data_structures
-
-    /* Enter VM */
-    /* Exit VM */
-
-    ret
-
 .global set_cr4_vmxe
 set_cr4_vmxe:
     /**
@@ -230,24 +219,49 @@ read_vmcs_revision_identifier:
     /* now %rax contains VMX revision identifier */
     ret
 
+/**
+ * See Intel Manual Vol. 3
+ *  [23.11.5 VMXON Region]
+ *  Before executing VMXON, software allocates a region of
+ *  memory (called the VMXON region) 1 that the logical
+ *  processor uses to support VMX operation. The physical
+ *  address of this region (the VMXON pointer) is provided
+ *  in an operand to VMXON.
+ */
 .global get_vmx_region
 get_vmx_region:
+    call kalloc_page
+        test %rax, %rax
+        jz 1f
+    push %rax
     /* Put processor VMCS revision identifier in %rax */
     call read_vmcs_revision_identifier
     /* Write VMCS revision identifier in VMXON region */
-    lea VMXON_region, %rbx
+    pop %rbx
     mov %eax, (%rbx)
     mov %rbx, %rax
+1:
     ret
 
+/**
+ * VMCS (Virtual Machine Control Structure)
+ * must be 4KB aligned.
+ * See Intel Volume 3
+ *  [23.1 OVERVIEW]
+ */
 .global get_vmcs_region
 get_vmcs_region:
+    call kalloc_page
+        test %rax, %rax
+        jz 1f
+    push %rax
     /* Put processor VMCS revision identifier in %rax */
     call read_vmcs_revision_identifier
     /* Write VMCS revision identifier in VMXON region */
-    lea VMCS_region, %rbx
+    pop %rbx
     mov %eax, (%rbx)
     mov %rbx, %rax
+1:
     ret
 
 /**
@@ -497,40 +511,6 @@ vmx_write_vmcs_field:
     and $VMmask, %rax
     ret
 
-.global init_vm64_data_structures
-init_vm64_data_structures:
-    /**
-     *  [23.11.3 Initializing a VMCS]
-     *  Software should initialize fields in a VMCS (using
-     *  VMWRITE) before using the VMCS for VM entry.
-     *
-     *  1.  VMCLEAR should be executed for a VMCS before
-     *      it is used for VM entry for the first time.
-     *  2.  VMLAUNCH should be used for the first VM entry
-     *      using a VMCS after VMCLEAR has been executed for
-     *      that VMCS.
-     *  3.  VMRESUME should be used for any subsequent VM
-     *      entry using a VMCS (until the next execution of
-     *      VMCLEAR for the VMCS).
-     */
-    call read_vmcs_revision_identifier
-    /**
-     * Now bit 30:0 contains VMCS revision identifier
-     * used by the processor (bit 31 is always 0 and
-     * this is always ok), this must be copied in
-     * the first four bytes of the VMCS
-     */
-    lea VMCS_region, %rbx
-    mov %eax, (%rbx)
-    /**
-     * Load VMCS pointer.
-     * See Intel Manual Vol. 3
-     *  [22.5 VIRTUAL-MACHINE CONTROL STRUCTURE]
-     *  [29.3 VMPTRLD—Load Pointer to Virtual-Machine Control Structure]
-     */
-    vmptrld (%rbx)
-    ret
-
 /**
  * Processor support for VM should be checked
  * See Vol. 3:
@@ -582,28 +562,6 @@ vm_guest:
     hlt
 
 .bss
-/**
- * VMCS (Virtual Machine Control Structure)
- * must be 4KB aligned.
- * See Intel Volume 3
- *  [23.1 OVERVIEW]
- */
-.align 4096
-VMCS_region:
-    .skip 4096
-
-/**
- * See Intel Manual Vol. 3
- *  [23.11.5 VMXON Region]
- *  Before executing VMXON, software allocates a region of
- *  memory (called the VMXON region) 1 that the logical
- *  processor uses to support VMX operation. The physical
- *  address of this region (the VMXON pointer) is provided
- *  in an operand to VMXON.
- */
-.align 4096
-VMXON_region:
-    .skip 4096
 
 VM_GUEST_STACK:
     .skip 4096
