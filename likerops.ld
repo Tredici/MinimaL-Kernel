@@ -133,7 +133,7 @@ SECTIONS
      * spazio nel file ma essere generata solo al momento del
      * caricamento.
      */
-    .bss : { *(.bss) _end_of_bss = .; }
+    .bss : { *(.bss) _end_of_bss = .; _heap_base = .; }
     /**
      * E alla fine si scarta tutto il resto per evitare
      * stranezze.
