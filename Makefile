@@ -181,9 +181,6 @@ kmain64.o: kmain64.c
 	gcc -m64 $(CFLAGS) -c $^
 BUILD += kmain64.o
 
-memory.o: memory.c modules/C-memory-manager/memory_manager.h modules/C-memory-manager/memory_manager.c modules/C-page-allocator/page_allocator.c modules/C-page-allocator/page_allocator.h modules/C-page-allocator/bitarray.c modules/C-page-allocator/bitarray.h
-	gcc -r $(CFLAGS) $^ -o $@
-BUILD += memory.o
 
 $(MINIKERNEL): $(BUILD)
 	gcc -g $(CFLAGS) $(LINKER) $^ -o $(MINIKERNEL)
