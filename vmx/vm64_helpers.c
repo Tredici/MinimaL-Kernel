@@ -1,8 +1,8 @@
 #include "vm64_helpers.h"
-#include "video64bit.h"
-#include "error64.h"
+#include "../video64bit.h"
+#include "../error64.h"
 #include "vm64_guest.h"
-#include "msr.h"
+#include "../msr.h"
 #include "vm64_control.h"
 
 int test = 0;

@@ -168,7 +168,7 @@ interrupt64.o: interrupt64.h interrupt64.c interrupt64.S interrupt64_handlers.h 
 	gcc -r $(CFLAGS) $^ -o $@
 BUILD += interrupt64.o
 
-vm64.o: vm64.S vm64.h vm64.c vm64_guest.h vm64_guest.c vm64_host.h vm64_host.c vm64_control.h vm64_control.c vm64_helpers.h vm64_helpers.c vm64_errors.h
+vm64.o: vmx/vm64.S vmx/vm64.h vmx/vm64.c vmx/vm64_guest.h vmx/vm64_guest.c vmx/vm64_host.h vmx/vm64_host.c vmx/vm64_control.h vmx/vm64_control.c vmx/vm64_helpers.h vmx/vm64_helpers.c vmx/vm64_errors.h
 	gcc -r $(CFLAGS) $^ -o $@
 BUILD += vm64.o
 

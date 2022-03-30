@@ -3,7 +3,7 @@
  */
 
 #include "video64bit.h"
-#include "vm64.h"
+#include "vmx/vm64.h"
 
 void main64()
 {

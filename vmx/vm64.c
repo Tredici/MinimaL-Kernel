@@ -1,17 +1,17 @@
 
 #include "vm64.h"
-#include "video64bit.h"
-#include "error64.h"
+#include "../video64bit.h"
+#include "../error64.h"
 
-#include "tr.h"
-#include "msr.h"
+#include "../tr.h"
+#include "../msr.h"
 #include "vm64_host.h"
 #include "vm64_guest.h"
 #include "vm64_control.h"
 #include "vm64_helpers.h"
-#include "status_operations64.h"
-#include "interrupt64.h"
-#include "memory.h"
+#include "../status_operations64.h"
+#include "../interrupt64.h"
+#include "../memory.h"
 
 #define VMsucceed (1<<0 | 1<<2 | 1<<4 | 1<<6 | 1<<7 | 1<<11)
 #define VMfailinvalid (1<<2 | 1<<4 | 1<<6 | 1<<7 | 1<<11)
