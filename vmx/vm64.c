@@ -10,7 +10,7 @@
 #include "vm64_control.h"
 #include "vm64_helpers.h"
 #include "../status_operations64.h"
-#include "../interrupt64.h"
+#include "../interrupt/interrupt64.h"
 #include "../memory.h"
 
 #define VMsucceed (1<<0 | 1<<2 | 1<<4 | 1<<6 | 1<<7 | 1<<11)

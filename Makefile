@@ -164,7 +164,7 @@ error64.o: error64.S error64.h error64.c
 	gcc -r $(CFLAGS) $^ -o $@
 BUILD += error64.o
 
-interrupt64.o: interrupt64.h interrupt64.c interrupt64.S interrupt64_handlers.h interrupt64_handlers.c interrupt64_handlers.S
+interrupt64.o: interrupt/interrupt64.h interrupt/interrupt64.c interrupt/interrupt64.S interrupt/interrupt64_handlers.h interrupt/interrupt64_handlers.c interrupt/interrupt64_handlers.S
 	gcc -r $(CFLAGS) $^ -o $@
 BUILD += interrupt64.o
 

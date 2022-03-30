@@ -1,6 +1,6 @@
 
 #include "interrupt64.h"
-#include "error64.h"
+#include "../error64.h"
 #include "interrupt64_handlers.h"
 
 #define INT_DIV0    0

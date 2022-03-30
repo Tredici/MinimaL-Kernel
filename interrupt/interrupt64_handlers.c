@@ -1,9 +1,9 @@
 
 #include "interrupt64_handlers.h"
-#include "video64bit.h"
-#include "error64.h"
-#include "string64.h"
-#include "tr.h"
+#include "../video64bit.h"
+#include "../error64.h"
+#include "../string64.h"
+#include "../tr.h"
 
 void handle_div0_c()
 {
