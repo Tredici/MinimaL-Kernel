@@ -26,7 +26,7 @@ struct vm64_registers
     long RIP;
 };
 
-void vmx_debug_vmx(struct vm64_registers* registers);
+void vmx_debug_virtual_machine(struct vm64_registers* registers);
 
 /**
  * Return a statically allocated string
