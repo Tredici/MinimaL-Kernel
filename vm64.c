@@ -188,6 +188,13 @@ int start_vm()
         newline64();
     }
 
+    status = vmxoff();
+    if (!vmx_success(status))
+    {
+        panic64("vmxoff");
+    }
+    printline64("VMX exited!");
+
     return 0;
 }
 
