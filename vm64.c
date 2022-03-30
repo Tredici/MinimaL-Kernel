@@ -11,6 +11,7 @@
 #include "vm64_helpers.h"
 #include "status_operations64.h"
 #include "interrupt64.h"
+#include "memory.h"
 
 #define VMsucceed (1<<0 | 1<<2 | 1<<4 | 1<<6 | 1<<7 | 1<<11)
 #define VMfailinvalid (1<<2 | 1<<4 | 1<<6 | 1<<7 | 1<<11)
@@ -99,6 +100,21 @@ static int vmx_fail_invalid(int status)
     return status == 1;
 }
 
+void vmx_exit(void *vmx_region)
+{
+    int status = vmxoff();
+    if (!vmx_success(status))
+    {
+        panic64("vmxoff");
+    }
+    kfree_page(vmx_region);
+}
+
+void dispose_vmcs_region(void *vmcs_region)
+{
+    kfree_page(vmcs_region);
+}
+
 int start_vm()
 {
     int status;
@@ -116,6 +132,10 @@ int start_vm()
     set_cr4_vmxe();
     printline64("CR4.VMXE set!");
     void *vmx_region = get_vmx_region();
+    if (!vmx_region)
+    {
+        panic64("get_vmcs_region");
+    }
     putstr64("vmx_region = "); puthex64((unsigned long)vmx_region); newline64();
     putstr64("vmx_region = "); puti64((unsigned long)vmx_region); newline64();
     putstr64("*vmx_region = "); puthex64(*(unsigned long*)vmx_region); newline64();
@@ -132,6 +152,10 @@ int start_vm()
 
     printline64("enter_vmx success");
     void *vmcs_region = get_vmcs_region();
+    if (!vmcs_region)
+    {
+        panic64("get_vmcs_region");
+    }
     /**
      * See Intel Manual Vol. 3
      *  [23.11.3 Initializing a VMCS]
@@ -188,13 +212,9 @@ int start_vm()
         newline64();
     }
 
-    status = vmxoff();
-    if (!vmx_success(status))
-    {
-        panic64("vmxoff");
-    }
-    printline64("VMX exited!");
-
+    dispose_vmcs_region(vmcs_region);
+    vmx_exit(vmx_region);
+    putstr64("VMX exited!");
     return 0;
 }
 

@@ -52,6 +52,9 @@ _start64:
     /* create first stask */
     call init_first_task_descriptor
 
+    /* initialize memory management system */
+    call memory_init
+
     /* Call main function */
     call main64
     
