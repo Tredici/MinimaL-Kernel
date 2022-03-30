@@ -421,6 +421,29 @@ vmx_launch_current_vmcs:
         /* Call function to print register status */
         mov %rsp, %rdi
         call vmx_debug_virtual_machine
+        /* if function returned non zero execute vmresume */
+        test %rax, %rax
+        jz 9f  /* conclude iterations */
+
+        /* Prepare status for VMRESUME */
+        /* restore HOST exit points */
+        lea 1b(%rip), %rdi  /* Same as before */
+        call vmx_host_write_rip /* HOST RIP */
+        lea (GPR_TOTAL_SIZE+2*8+8)(%rsp), %rdi /* Ignore VM registers+RFLAGS */
+        call vmx_host_write_rsp /* HOST RSP */
+        /* restore VM registers */
+        /* VM RSP */
+        mov GPR_TOTAL_SIZE(%rsp), %rdi
+        call vmx_guest_write_rsp
+        /* VM RIP */
+        mov GPR_TOTAL_SIZE+8(%rsp), %rdi
+        call vmx_guest_write_rip
+        /* restore VM GR registers */
+        POPALL_GPR
+        /* RESUME vm */
+        vmresume
+
+9:
         /* Clear stack */
         add $(GPR_TOTAL_SIZE+2*8), %rsp
 
@@ -559,7 +582,12 @@ vm_guest:
     mov $0xbbbb, %ebx
     mov $0xcccc, %ecx
     mov $0xdddd, %edx
-    mov $123456789, test
+    movl $123456789, test
+    /**
+     * See Intel Manual Vol. 3
+     *  [VMCALL—Call to VM Monitor]
+     */
+    vmcall
     hlt
 
 .bss
