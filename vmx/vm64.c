@@ -214,7 +214,7 @@ int start_vm()
 
     dispose_vmcs_region(vmcs_region);
     vmx_exit(vmx_region);
-    putstr64("VMX exited!");
+    printline64("VMX exited!");
     return 0;
 }
 
