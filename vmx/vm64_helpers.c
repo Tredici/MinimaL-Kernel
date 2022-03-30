@@ -115,75 +115,145 @@ const char *vmx_error_reason(int number)
  * It is foundamental to understand why exit does occur!
  */
 static const char *vmx_exits[] = {
+#define VMX_EXIT_NMI 0
 /*[ 0]*/ "Exception or non-maskable interrupt (NMI)",
+#define VMX_EXIT_EXTERNAL_INTERRUPT 1
 /*[ 1]*/ "External interrupt",
+#define VMX_EXIT_TRIPLE_FAULT 2
 /*[ 2]*/ "Triple fault",
+#define VMX_EXIT_INIT_SIGNAL 3
 /*[ 3]*/ "INIT signal",
+#define VMX_EXIT_SIPI 4
 /*[ 4]*/ "Start-up IPI (SIPI)",
+#define VMX_EXIT_IO_SMI 5
 /*[ 5]*/ "I/O system-management interrupt (SMI)",
+#define VMX_EXIT_OTHER_SMI 6
 /*[ 6]*/ "Other SMI",
+#define VMX_EXIT_INTERRUPTWINDOW 7
 /*[ 7]*/ "Interrupt window",
+#define VMX_EXIT_NMI_WINDOW 8
 /*[ 8]*/ "NMI window",
+#define VMX_EXIT_TASK_SWITCH 9
 /*[ 9]*/ "Task switch",
+#define VMX_EXIT_CPUID 10
 /*[10]*/ "CPUID",
+#define VMX_EXIT_GETSEC 11
 /*[11]*/ "GETSEC",
+#define VMX_EXIT_HLT 12
 /*[12]*/ "HLT",
+#define VMX_EXIT_INVD 13
 /*[13]*/ "INVD",
+#define VMX_EXIT_INVLPG 14
 /*[14]*/ "INVLPG",
+#define VMX_EXIT_RDPMC 15
 /*[15]*/ "RDPMC",
+#define VMX_EXIT_RDTSC 16
 /*[16]*/ "RDTSC",
+#define VMX_EXIT_RSM 17
 /*[17]*/ "RSM",
+#define VMX_EXIT_VMCALL 18
 /*[18]*/ "VMCALL",
+#define VMX_EXIT_VMCLEAR 19
 /*[19]*/ "VMCLEAR",
+#define VMX_EXIT_VMLAUNCH 20
 /*[20]*/ "VMLAUNCH",
+#define VMX_EXIT_VMPTRLD 21
 /*[21]*/ "VMPTRLD",
+#define VMX_EXIT_VMPTRST 22
 /*[22]*/ "VMPTRST",
+#define VMX_EXIT_VMREAD 23
 /*[23]*/ "VMREAD",
+#define VMX_EXIT_VMRESUME 24
 /*[24]*/ "VMRESUME",
+#define VMX_EXIT_VMWRITE 25
 /*[25]*/ "VMWRITE",
+#define VMX_EXIT_VMXOFF 26
 /*[26]*/ "VMXOFF",
+#define VMX_EXIT_VMXON 27
 /*[27]*/ "VMXON",
+#define VMX_EXIT_CONTROL_REGISTER_ACCESSES 28
 /*[28]*/ "Control-register accesses",
+#define VMX_EXIT_MOV_DR 29
 /*[29]*/ "MOV DR",
+#define VMX_EXIT_IO 30
 /*[30]*/ "I/O instruction",
+#define VMX_EXIT_RDMSR 31
 /*[31]*/ "RDMSR",
+#define VMX_EXIT_WRMSR 32
 /*[32]*/ "WRMSR",
+#define VMX_EXIT_VM_ENTRY_FAILURE_DUE_TO_INVALID_GUEST_STATE 33
 /*[33]*/ "VM-entry failure due to invalid guest state",
+#define VMX_EXIT_VM_ENTRY_FAILURE_DUE_TO_MSR_LOADING 34
 /*[34]*/ "VM-entry failure due to MSR loading",
+#define VMX_EXIT_UNKNOWN 35
 /*[35]*/ "UNKNOWN",
+#define VMX_EXIT_MWAIT 36
 /*[36]*/ "MWAIT",
+#define VMX_EXIT_MONITOR_TRAP_FLAG 37
 /*[37]*/ "Monitor trap flag",
+//#define VMX_EXIT_UNKNOWN 38
 /*[38]*/ "UNKNOWN",
+#define VMX_EXIT_MONITOR 39
 /*[39]*/ "MONITOR",
+#define VMX_EXIT_PAUSE 40
 /*[40]*/ "PAUSE",
+#define VMX_EXIT_VM_ENTRY_FAILURE_DUE_TO_MACHINE_CHECK_EVENT 41
 /*[41]*/ "VM-entry failure due to machine-check event",
+//#define VMX_EXIT_UNKNOWN 42
 /*[42]*/ "UNKNOWN",
+#define VMX_EXIT_TPR_BELOW_THRESHOLD 43
 /*[43]*/ "TPR below threshold",
+#define VMX_EXIT_APIC_ACCESS 44
 /*[44]*/ "APIC access",
+#define VMX_EXIT_VIRTUALIZED_EOI 45
 /*[45]*/ "Virtualized EOI",
+#define VMX_EXIT_ACCESS_TO_GDTR_OR_IDTR 46
 /*[46]*/ "Access to GDTR or IDTR",
+#define VMX_EXIT_ACCESS_TO_LDTR_OR_TR 47
 /*[47]*/ "Access to LDTR or TR",
+#define VMX_EXIT_EPT_VIOLATION 48
 /*[48]*/ "EPT violation",
+#define VMX_EXIT_EPT_MISCONFIGURATION 49
 /*[49]*/ "EPT misconfiguration",
+#define VMX_EXIT_INVEPT 50
 /*[50]*/ "INVEPT",
+#define VMX_EXIT_RDTSCP 51
 /*[51]*/ "RDTSCP",
+#define VMX_EXIT_VMX_PREEMPTION_TIMER_EXPIRED 52
 /*[52]*/ "VMX-preemption timer expired",
+#define VMX_EXIT_INVVPID 53
 /*[53]*/ "INVVPID",
+#define VMX_EXIT_WBINVD_OR_WBNOINVD 54
 /*[54]*/ "WBINVD or WBNOINVD",
+#define VMX_EXIT_XSETBV 55
 /*[55]*/ "XSETBV",
+#define VMX_EXIT_APIC_WRITE 56
 /*[56]*/ "APIC write",
+#define VMX_EXIT_RDRAND 57
 /*[57]*/ "RDRAND",
+#define VMX_EXIT_INVPCID 58
 /*[58]*/ "INVPCID",
+#define VMX_EXIT_VMFUNC 59
 /*[59]*/ "VMFUNC",
+#define VMX_EXIT_ENCLS 60
 /*[60]*/ "ENCLS",
+#define VMX_EXIT_RDSEED 61
 /*[61]*/ "RDSEED",
+#define VMX_EXIT_PAGE_MODIFICATION_LOG_FULL 62
 /*[62]*/ "Page-modification log full",
+#define VMX_EXIT_XSAVES 63
 /*[63]*/ "XSAVES",
+#define VMX_EXIT_XRSTORS 64
 /*[64]*/ "XRSTORS",
+//#define VMX_EXIT_UNKNOWN 65
 /*[65]*/ "UNKNOWN",
+#define VMX_EXIT_SPP_RELATED_EVENT 66
 /*[66]*/ "SPP-related event",
+#define VMX_EXIT_UMWAIT 67
 /*[67]*/ "UMWAIT",
+#define VMX_EXIT_TPAUSE 68
 /*[68]*/ "TPAUSE",
+#define VMX_EXIT_LOADIWKEY 69
 /*[69]*/ "LOADIWKEY",
 };
 const char *vmx_exit_reason(int number)
