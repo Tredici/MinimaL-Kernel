@@ -7,6 +7,30 @@
 
 int test = 0;
 
+void vmx_print_vm_gp_registers(struct vm64_registers* registers)
+{
+    putstr64("RAX = "); puthex64(registers->RAX);
+    putstr64("    RBX = "); puthex64(registers->RBX); newline64();
+    putstr64("RCX = "); puthex64(registers->RCX);
+    putstr64("    RDX = "); puthex64(registers->RDX); newline64();
+
+    putstr64("RSI = "); puthex64(registers->RSI);
+    putstr64("    RDI = "); puthex64(registers->RDI); newline64();
+    putstr64("RBP = "); puthex64(registers->RBP);
+    putstr64("    RSP = "); puthex64(registers->RSP); newline64();
+
+    putstr64("R8  = "); puthex64(registers->R8);
+    putstr64("    R9  = "); puthex64(registers->R9); newline64();
+    putstr64("R10 = "); puthex64(registers->R10);
+    putstr64("    R11 = "); puthex64(registers->R11); newline64();
+    putstr64("R12 = "); puthex64(registers->R12);
+    putstr64("    R13 = "); puthex64(registers->R13); newline64();
+    putstr64("R14 = "); puthex64(registers->R14);
+    putstr64("    R15 = "); puthex64(registers->R15); newline64();
+
+    putstr64("RIP = "); puthex64(registers->RIP); newline64();
+}
+
 void vmx_debug_virtual_machine(struct vm64_registers* registers)
 {
     clear_screen64();
@@ -16,26 +40,8 @@ void vmx_debug_virtual_machine(struct vm64_registers* registers)
         panic64("No data!");
     }
 
-    putstr64("RAX = "); puthex64(registers->RAX); newline64();
-    putstr64("RBX = "); puthex64(registers->RBX); newline64();
-    putstr64("RCX = "); puthex64(registers->RCX); newline64();
-    putstr64("RDX = "); puthex64(registers->RDX); newline64();
+    vmx_print_vm_gp_registers(registers);
 
-    putstr64("RSI = "); puthex64(registers->RSI); newline64();
-    putstr64("RDI = "); puthex64(registers->RDI); newline64();
-    putstr64("RBP = "); puthex64(registers->RBP); newline64();
-    putstr64("RSP = "); puthex64(registers->RSP); newline64();
-
-    putstr64("R8  = "); puthex64(registers->R8); newline64();
-    putstr64("R9  = "); puthex64(registers->R9); newline64();
-    putstr64("R10 = "); puthex64(registers->R10); newline64();
-    putstr64("R11 = "); puthex64(registers->R11); newline64();
-    putstr64("R12 = "); puthex64(registers->R12); newline64();
-    putstr64("R13 = "); puthex64(registers->R13); newline64();
-    putstr64("R14 = "); puthex64(registers->R14); newline64();
-    putstr64("R15 = "); puthex64(registers->R15); newline64();
-
-    putstr64("RIP = "); puthex64(registers->RIP); newline64();
     putstr64("test = "); puti64(test); newline64();
 
     //  putstr64("    code  = "); puthex64(vmx_get_guest_code()); newline64();

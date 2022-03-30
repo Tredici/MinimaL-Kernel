@@ -26,6 +26,12 @@ struct vm64_registers
     long RIP;
 };
 
+/**
+ * Print General Purpose registers values
+ * of the VM.
+ */
+void vmx_print_vm_gp_registers(struct vm64_registers* registers);
+
 void vmx_debug_virtual_machine(struct vm64_registers* registers);
 
 /**
