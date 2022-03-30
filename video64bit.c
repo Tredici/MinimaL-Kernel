@@ -116,8 +116,9 @@ void printline64(const char *str)
 
 void newline64()
 {
-    col = 0;
-    row = (row+1) % TEXT_ROWS;
+    do {
+        putc64(' ');
+    } while (col != 0);
 }
 
 void disable_cursor64()
