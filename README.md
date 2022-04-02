@@ -7,6 +7,12 @@ Sarà sistemata poi.
 Progettino (si spera) molto semplice per scrivere un kernel minimale per x86_64 che sfrutti il supporto hardware per la virtualizzazione e ci lanci una "mini-VM" (1 solo "processo") che cerchi di eseguire istruzioni non implicitamente permesse, intercettate dal mini kernel hypervisor ed eseguite in modo da dare parvenza alla VM che tutto sia andato come richiesto.
 
 
+# Code Flow
+- header.S: kernel entry point (32 bit)
+- trampoline.S: 32 bit configuration code
+- trampoline64.S: 64 bit entry point
+- kmain64.c: 64 bit kernel main
+
 # Reference:
 Elenco dei posti dove cercare le informazioni per capire che è stato fatto:
 - make (build system): https://www.gnu.org/software/make/manual/make.html
